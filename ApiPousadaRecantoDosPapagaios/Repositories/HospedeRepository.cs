@@ -26,7 +26,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var hospedes = new List<Hospede>();
 
-            var comando = $"SELECT * FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E WHERE H.HSP_ID_INT = E.END_ID_HOSPEDE_INT";
+            var comando = $"SELECT * FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E WHERE H.HSP_ID_INT = E.END_ID_HOSPEDE_INT AND H.HSP_EXCLUIDO_BIT = 0";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -47,11 +47,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                     {
                         Cep = (string)sqlDataReader["END_CEP_CHAR"],
                         Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (int)sqlDataReader["END_NUMERO_INT"],
+                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
                         Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
                         Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
                         Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_STR"],
+                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
                         Pais = (string)sqlDataReader["END_PAIS_STR"]
                     },
                 });
@@ -60,6 +60,44 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
 
             return hospedes;
+        }
+
+        public async Task<Hospede> Obter(string cpfHospede)
+        {
+            Hospede hospede = null;
+
+            var comando = $"SELECT H.HSP_NOME_STR, H.HSP_CPF_CHAR, H.HSP_DTNASC_DATE, H.HSP_EMAIL_STR, H.HSP_LOGIN_CPF_CHAR, H.HSP_LOGIN_SENHA_STR, HSP_CELULAR_STR, E.END_CEP_CHAR, E.END_LOGRADOURO_STR, E.END_NUMERO_CHAR, E.END_COMPLEMENTO_STR, E.END_BAIRRO_STR, E.END_CIDADE_STR, E.END_ESTADO_CHAR, E.END_PAIS_STR FROM HOSPEDE AS H, ENDERECO E WHERE (H.HSP_CPF_CHAR = {cpfHospede}) AND (E.END_CPF_HOSPEDE_STR = {cpfHospede}) AND (H.HSP_EXCLUIDO_BIT = 0)";
+
+            await sqlConnection.OpenAsync();
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+            while (sqlDataReader.Read())
+            {
+                hospede = new Hospede
+                {
+                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
+                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
+                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
+                    Email = (string)sqlDataReader["HSP_EMAIL_STR"],
+                    Login = (string)sqlDataReader["HSP_LOGIN_CPF_CHAR"],
+                    Senha = (string)sqlDataReader["HSP_LOGIN_SENHA_STR"],
+                    Celular = (string)sqlDataReader["HSP_CELULAR_STR"],
+                    Endereco = new Endereco
+                    {
+                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
+                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+                        Pais = (string)sqlDataReader["END_PAIS_STR"]
+                    },
+                };
+            }
+
+            return hospede;
         }
 
         public async Task Inserir(Hospede hospede)
@@ -102,6 +140,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
 
             return hospede;
+        }
+
+        public async Task Remover(string cpfHospede)
+        {
+            var comando = $"UPDATE dbo.HOSPEDE SET dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1 WHERE dbo.HOSPEDE.HSP_CPF_CHAR = '{cpfHospede}'";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            await sqlCommand.ExecuteNonQueryAsync();
+
+            await sqlConnection.CloseAsync();
         }
     }
 }
