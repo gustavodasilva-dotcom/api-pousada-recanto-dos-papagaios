@@ -2,6 +2,7 @@
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,6 +53,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             var hospede = await _hospedeRepository.Obter(cpfHospede);
 
+            if (hospede == null)
+                throw new Exception();
+
             return new HospedeViewModel
             {
                 NomeCompleto = hospede.NomeCompleto,
@@ -77,13 +81,17 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
         {
+            // TODO: Implementar validações para verificar, por exemplo, se o CPF está cadastrado no banco de dados.
+            // Entretanto, discutir com o grupo o que fazer a respeito das chaves UNIQUE de CPF e outras no
+            // banco de dados, pois elas podem gerar conflitos com as validações.
+
             var hospedeInsert = new Hospede
             {
                 NomeCompleto = hospedeInputModel.NomeCompleto,
                 Cpf = hospedeInputModel.Cpf,
                 DataDeNascimento = hospedeInputModel.DataDeNascimento,
                 Email = hospedeInputModel.Email,
-                Login = hospedeInputModel.Login,
+                Login = hospedeInputModel.Login, // TODO: Verificar com o grupo como será o login, CPF ou nome de usuário.
                 Senha = hospedeInputModel.Senha,
                 Celular = hospedeInputModel.Celular,
                 Excluido = 0
@@ -131,11 +139,76 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
+        public async Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel)
+        {
+            // TODO: Verificar o funcionamento incorreto deste código comentado.
+            //var hospede = await _hospedeRepository.Obter(cpfHospede);
+
+            //if (hospede == null)
+            //    throw new Exception();
+
+            var hospedeInsert = new Hospede
+            {
+                NomeCompleto = hospedeInputModel.NomeCompleto,
+                Cpf = hospedeInputModel.Cpf,
+                DataDeNascimento = hospedeInputModel.DataDeNascimento,
+                Email = hospedeInputModel.Email,
+                Login = hospedeInputModel.Login,
+                Senha = hospedeInputModel.Senha,
+                Celular = hospedeInputModel.Celular
+            };
+
+            await _hospedeRepository.Atualizar(cpfHospede, hospedeInsert);
+
+            var enderecoInsert = new Endereco
+            {
+                Cep = hospedeInputModel.Endereco.Cep,
+                Logradouro = hospedeInputModel.Endereco.Logradouro,
+                Numero = hospedeInputModel.Endereco.Numero,
+                Complemento = hospedeInputModel.Endereco.Complemento,
+                Bairro = hospedeInputModel.Endereco.Bairro,
+                Cidade = hospedeInputModel.Endereco.Cidade,
+                Estado = hospedeInputModel.Endereco.Estado,
+                Pais = hospedeInputModel.Endereco.Pais
+            };
+
+            await _enderecoRepository.Atualizar(cpfHospede, enderecoInsert);
+
+            return new HospedeViewModel
+            {
+                NomeCompleto = hospedeInsert.NomeCompleto,
+                Cpf = hospedeInsert.Cpf,
+                DataDeNascimento = hospedeInsert.DataDeNascimento,
+                Email = hospedeInsert.Email,
+                Login = hospedeInsert.Login,
+                Senha = hospedeInsert.Senha,
+                Celular = hospedeInsert.Celular,
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = enderecoInsert.Cep,
+                    Logradouro = enderecoInsert.Logradouro,
+                    Numero = enderecoInsert.Numero,
+                    Complemento = enderecoInsert.Complemento,
+                    Bairro = enderecoInsert.Bairro,
+                    Cidade = enderecoInsert.Cidade,
+                    Estado = enderecoInsert.Estado,
+                    Pais = enderecoInsert.Pais
+                }
+            };
+        }
+
         public async Task Remover(string cpfHospede)
         {
+            // TODO: Verificar o funcionamento incorreto deste código comentado.
+            //var hospede = await _hospedeRepository.Obter(cpfHospede);
+
+            //if (hospede == null)
+            //    throw new Exception();
+
             await _hospedeRepository.Remover(cpfHospede);
 
             await _enderecoRepository.Remover(cpfHospede);
         }
+
     }
 }

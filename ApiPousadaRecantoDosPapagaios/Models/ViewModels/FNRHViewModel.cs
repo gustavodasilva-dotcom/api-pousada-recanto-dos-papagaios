@@ -1,6 +1,6 @@
-﻿namespace ApiPousadaRecantoDosPapagaios.Entities
+﻿namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
 {
-    public class FNRH
+    public class FNRHViewModel
     {
         public string CpfHospede { get; set; }
         public string Profissao { get; set; }
@@ -13,8 +13,5 @@
         public string MeioDeTransporte { get; set; }
         public string PlacaAutomovel { get; set; }
         public int NumAcompanhantes { get; set; }
-        public int HospedeId { get; set; }
-        public int Excluido { get; set; }
-        public virtual Hospede Hospede { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             {
                 hospedes.Add(new Hospede
                 {
+                    Id = (int)sqlDataReader["HSP_ID_INT"],
                     NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
                     Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
                     DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
@@ -66,7 +67,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"SELECT H.HSP_NOME_STR, H.HSP_CPF_CHAR, H.HSP_DTNASC_DATE, H.HSP_EMAIL_STR, H.HSP_LOGIN_CPF_CHAR, H.HSP_LOGIN_SENHA_STR, HSP_CELULAR_STR, E.END_CEP_CHAR, E.END_LOGRADOURO_STR, E.END_NUMERO_CHAR, E.END_COMPLEMENTO_STR, E.END_BAIRRO_STR, E.END_CIDADE_STR, E.END_ESTADO_CHAR, E.END_PAIS_STR FROM HOSPEDE AS H, ENDERECO E WHERE (H.HSP_CPF_CHAR = {cpfHospede}) AND (E.END_CPF_HOSPEDE_STR = {cpfHospede}) AND (H.HSP_EXCLUIDO_BIT = 0)";
+            var comando = $"SELECT H.HSP_ID_INT, H.HSP_NOME_STR, H.HSP_CPF_CHAR, H.HSP_DTNASC_DATE, H.HSP_EMAIL_STR, H.HSP_LOGIN_CPF_CHAR, H.HSP_LOGIN_SENHA_STR, HSP_CELULAR_STR, E.END_CEP_CHAR, E.END_LOGRADOURO_STR, E.END_NUMERO_CHAR, E.END_COMPLEMENTO_STR, E.END_BAIRRO_STR, E.END_CIDADE_STR, E.END_ESTADO_CHAR, E.END_PAIS_STR FROM HOSPEDE AS H, ENDERECO E WHERE (H.HSP_CPF_CHAR = {cpfHospede}) AND (E.END_CPF_HOSPEDE_STR = {cpfHospede}) AND (H.HSP_EXCLUIDO_BIT = 0)";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -76,6 +77,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             {
                 hospede = new Hospede
                 {
+                    Id = (int)sqlDataReader["HSP_ID_INT"],
                     NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
                     Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
                     DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
@@ -142,6 +144,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return hospede;
         }
 
+        public async Task Atualizar(string cpfHospede, Hospede hospede)
+        {
+            var comando = $"UPDATE dbo.HOSPEDE SET HSP_NOME_STR = '{hospede.NomeCompleto}', HSP_CPF_CHAR = '{hospede.Cpf}', HSP_DTNASC_DATE = '{hospede.DataDeNascimento}', HSP_EMAIL_STR = '{hospede.Email}', HSP_LOGIN_CPF_CHAR = '{hospede.Login}', HSP_LOGIN_SENHA_STR = '{hospede.Senha}', HSP_CELULAR_STR = '{hospede.Celular}' WHERE (dbo.HOSPEDE.HSP_CPF_CHAR = '{cpfHospede}') AND (dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 0)";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            await sqlCommand.ExecuteNonQueryAsync();
+
+            await sqlConnection.CloseAsync();
+        }
+
         public async Task Remover(string cpfHospede)
         {
             var comando = $"UPDATE dbo.HOSPEDE SET dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1 WHERE dbo.HOSPEDE.HSP_CPF_CHAR = '{cpfHospede}'";
@@ -153,5 +167,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
         }
+
     }
 }

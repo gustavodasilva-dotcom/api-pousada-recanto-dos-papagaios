@@ -2,6 +2,7 @@
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -32,9 +33,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         [HttpGet("{cpfHospede}")]
         public async Task<ActionResult<HospedeViewModel>> Obter([FromRoute] string cpfHospede)
         {
-            var hospede = await _hospedeService.Obter(cpfHospede);
+            try
+            {
+                var hospede = await _hospedeService.Obter(cpfHospede);
 
-            return Ok(hospede);
+                return Ok(hospede);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
         }
 
         [HttpPost]
@@ -45,12 +53,36 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
             return Ok(hospede);
         }
 
+        [HttpPut("{cpfHospede}")]
+        public async Task<ActionResult<HospedeViewModel>> Atualizar([FromRoute] string cpfHospede, [FromBody] HospedeInputModel hospedeInputModel)
+        {
+            // TODO: Verificar o funcionamento incorreto deste código comentado.
+            //try
+            //{
+            var hospede = await _hospedeService.Atualizar(cpfHospede, hospedeInputModel);
+
+                return Ok(hospede);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return NoContent();
+            //}
+        }
+
         [HttpDelete("{cpfHospede}")]
         public async Task<ActionResult> Remover([FromRoute] string cpfHospede)
         {
-            await _hospedeService.Remover(cpfHospede);
+            // TODO: Verificar o funcionamento incorreto deste código comentado.
+            //try
+            //{
+                await _hospedeService.Remover(cpfHospede);
 
-            return Ok();
+                return Ok();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return NoContent();
+            //}
         }
     }
 }
