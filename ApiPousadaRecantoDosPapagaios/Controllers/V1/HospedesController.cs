@@ -56,33 +56,19 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         [HttpPut("{cpfHospede}")]
         public async Task<ActionResult<HospedeViewModel>> Atualizar([FromRoute] string cpfHospede, [FromBody] HospedeInputModel hospedeInputModel)
         {
-            // TODO: Verificar o funcionamento incorreto deste código comentado.
-            //try
-            //{
             var hospede = await _hospedeService.Atualizar(cpfHospede, hospedeInputModel);
 
-                return Ok(hospede);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return NoContent();
-            //}
+            return Ok(hospede);
+            
         }
 
         [HttpDelete("{cpfHospede}")]
         public async Task<ActionResult> Remover([FromRoute] string cpfHospede)
         {
-            // TODO: Verificar o funcionamento incorreto deste código comentado.
-            //try
-            //{
-                await _hospedeService.Remover(cpfHospede);
+            await _hospedeService.Remover(cpfHospede);
 
-                return Ok();
-            //}
-            //catch (Exception ex)
-            //{
-            //    return NoContent();
-            //}
+            return Ok();
         }
+
     }
 }

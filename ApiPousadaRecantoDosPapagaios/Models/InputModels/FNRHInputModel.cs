@@ -30,7 +30,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         [StringLength(maximumLength: 7, ErrorMessage = "A placa do carro deve conter, no máximo, 7 caracteres.")]
         public string PlacaAutomovel { get; set; }
 
-        [StringLength(maximumLength: 3, ErrorMessage = "A quantidade de acompanhantes deve ser de, no máximo, 3 hóspedes.")]
+        [Range(0, 3, ErrorMessage = "A quantidade de acompanhantes deve ser de, no máximo, 3 hóspedes.")]
         public int NumAcompanhantes { get; set; }
     }
 }

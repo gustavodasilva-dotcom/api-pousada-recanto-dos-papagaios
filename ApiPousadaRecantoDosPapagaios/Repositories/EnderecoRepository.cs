@@ -67,11 +67,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         public async Task Atualizar(string cpfHospede, Endereco endereco)
         {
             var comando = $"UPDATE dbo.ENDERECO SET END_CEP_CHAR = '{endereco.Cep}', END_LOGRADOURO_STR = '{endereco.Logradouro}', END_NUMERO_CHAR = '{endereco.Numero}', END_COMPLEMENTO_STR = '{endereco.Complemento}', END_BAIRRO_STR = '{endereco.Bairro}', END_CIDADE_STR = '{endereco.Cidade}', END_ESTADO_CHAR = '{endereco.Estado}', END_PAIS_STR = '{endereco.Pais}' WHERE (dbo.ENDERECO.END_CPF_HOSPEDE_STR = '{cpfHospede}') AND (dbo.ENDERECO.END_EXCLUIDO_BIT = 0)";
-            
+
             await sqlConnection.OpenAsync();
 
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            await sqlCommand.ExecuteNonQueryAsync();
+            sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
         }

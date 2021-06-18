@@ -141,11 +141,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel)
         {
-            // TODO: Verificar o funcionamento incorreto deste código comentado.
-            //var hospede = await _hospedeRepository.Obter(cpfHospede);
-
-            //if (hospede == null)
-            //    throw new Exception();
+            // TODO: Implementar validações caso o cpf não esteja cadastrado no sistema.
 
             var hospedeInsert = new Hospede
             {
@@ -199,12 +195,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task Remover(string cpfHospede)
         {
-            // TODO: Verificar o funcionamento incorreto deste código comentado.
-            //var hospede = await _hospedeRepository.Obter(cpfHospede);
-
-            //if (hospede == null)
-            //    throw new Exception();
-
+            // TODO: Implementar validações caso o cpf não esteja cadastrado no sistema.
+            
             await _hospedeRepository.Remover(cpfHospede);
 
             await _enderecoRepository.Remover(cpfHospede);
