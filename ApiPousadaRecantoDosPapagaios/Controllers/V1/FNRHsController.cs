@@ -3,6 +3,7 @@ using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -19,18 +20,14 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{cpfHospede}")]
-        public async Task<ActionResult<FNRHViewModel>> Obter([FromRoute] string cpfHospede)
+        public async Task<ActionResult<IEnumerable<FNRHViewModel>>> Obter([FromRoute] string cpfHospede)
         {
-            try
-            {
-                var fnrh = await _FNRHService.Obter(cpfHospede);
+            var fnrh = await _FNRHService.Obter(cpfHospede);
 
-                return Ok(fnrh);
-            }
-            catch (Exception ex)
-            {
+            if (fnrh.Count == 0)
                 return NoContent();
-            }
+
+            return Ok(fnrh);
         }
 
         [HttpPost("{cpfHospede}")]

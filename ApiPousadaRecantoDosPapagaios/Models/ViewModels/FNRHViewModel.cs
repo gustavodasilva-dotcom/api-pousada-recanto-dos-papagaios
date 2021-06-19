@@ -2,6 +2,7 @@
 {
     public class FNRHViewModel
     {
+        public int Id { get; set; }
         public string CpfHospede { get; set; }
         public string Profissao { get; set; }
         public string Nacionalidade { get; set; }

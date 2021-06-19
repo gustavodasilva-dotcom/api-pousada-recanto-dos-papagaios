@@ -25,7 +25,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var enderecos = new List<Endereco>();
 
-            var comando = $"SELECT * FROM ENDERECO";
+            var comando = $"EXEC ObterEnderecos";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -54,7 +54,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Endereco endereco, string cpfHospede, int idHospede)
         {
-            var comando = $"INSERT INTO dbo.ENDERECO VALUES ('{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', {idHospede}, '{cpfHospede}', {endereco.Excluido})";
+            var comando = $"EXEC InserirEnderecos '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', {idHospede}, '{cpfHospede}', {endereco.Excluido}";
 
             await sqlConnection.OpenAsync();
 
@@ -66,7 +66,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfHospede, Endereco endereco)
         {
-            var comando = $"UPDATE dbo.ENDERECO SET END_CEP_CHAR = '{endereco.Cep}', END_LOGRADOURO_STR = '{endereco.Logradouro}', END_NUMERO_CHAR = '{endereco.Numero}', END_COMPLEMENTO_STR = '{endereco.Complemento}', END_BAIRRO_STR = '{endereco.Bairro}', END_CIDADE_STR = '{endereco.Cidade}', END_ESTADO_CHAR = '{endereco.Estado}', END_PAIS_STR = '{endereco.Pais}' WHERE (dbo.ENDERECO.END_CPF_HOSPEDE_STR = '{cpfHospede}') AND (dbo.ENDERECO.END_EXCLUIDO_BIT = 0)";
+            var comando = $"EXEC AtualizarEndereco '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
 
@@ -78,7 +78,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Remover(string cpfHospede)
         {
-            var comando = $"UPDATE dbo.ENDERECO SET dbo.ENDERECO.END_EXCLUIDO_BIT = 1 WHERE dbo.ENDERECO.END_CPF_HOSPEDE_STR = '{cpfHospede}'";
+            var comando = $"EXEC RemoverEndereco '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
 

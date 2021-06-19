@@ -3,6 +3,8 @@ using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Services
@@ -20,27 +22,25 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             _hospedeRepository = hospedeRepository;
         }
 
-        public async Task<FNRHViewModel> Obter(string cpfHospede)
+        public async Task<List<FNRHViewModel>> Obter(string cpfHospede)
         {
-            var fnrh = await _FNRHRepository.Obter(cpfHospede);
+            var fnrhs = await _FNRHRepository.ObterFNRHsPorHospede(cpfHospede);
 
-            if (fnrh == null)
-                throw new Exception();
-
-            return new FNRHViewModel
+            return fnrhs.Select(f => new FNRHViewModel
             {
-                CpfHospede = fnrh.CpfHospede,
-                Profissao = fnrh.Profissao,
-                Nacionalidade = fnrh.Nacionalidade,
-                Sexo = fnrh.Sexo,
-                Rg = fnrh.Rg,
-                ProximoDestino = fnrh.ProximoDestino,
-                UltimoDestino = fnrh.UltimoDestino,
-                MotivoViagem = fnrh.MotivoViagem,
-                MeioDeTransporte = fnrh.MeioDeTransporte,
-                PlacaAutomovel = fnrh.PlacaAutomovel,
-                NumAcompanhantes = fnrh.NumAcompanhantes
-            };
+                Id = f.Id,
+                CpfHospede = f.CpfHospede,
+                Profissao = f.Profissao,
+                Nacionalidade = f.Nacionalidade,
+                Sexo = f.Sexo,
+                Rg = f.Rg,
+                ProximoDestino = f.ProximoDestino,
+                UltimoDestino = f.UltimoDestino,
+                MotivoViagem = f.MotivoViagem,
+                MeioDeTransporte = f.MeioDeTransporte,
+                PlacaAutomovel = f.PlacaAutomovel,
+                NumAcompanhantes = f.NumAcompanhantes
+            }).ToList();
         }
 
         public async Task<FNRHViewModel> Inserir(string cpfHospede, FNRHInputModel fnrhInputModel)
@@ -69,19 +69,22 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             
             await _FNRHRepository.Inserir(cpfHospede, fnrhInsert);
 
+            var fnrh = await _FNRHRepository.ObterUltimoRegistroPorHospede(cpfHospede);
+
             return new FNRHViewModel
             {
-                CpfHospede = fnrhInsert.CpfHospede,
-                Profissao = fnrhInsert.Profissao,
-                Nacionalidade = fnrhInsert.Nacionalidade,
-                Sexo = fnrhInsert.Sexo,
-                Rg = fnrhInsert.Rg,
-                ProximoDestino = fnrhInsert.ProximoDestino,
-                UltimoDestino = fnrhInsert.UltimoDestino,
-                MotivoViagem = fnrhInsert.MotivoViagem,
-                MeioDeTransporte = fnrhInsert.MeioDeTransporte,
-                PlacaAutomovel = fnrhInsert.PlacaAutomovel,
-                NumAcompanhantes = fnrhInsert.NumAcompanhantes
+                Id = fnrh.Id,
+                CpfHospede = fnrh.CpfHospede,
+                Profissao = fnrh.Profissao,
+                Nacionalidade = fnrh.Nacionalidade,
+                Sexo = fnrh.Sexo,
+                Rg = fnrh.Rg,
+                ProximoDestino = fnrh.ProximoDestino,
+                UltimoDestino = fnrh.UltimoDestino,
+                MotivoViagem = fnrh.MotivoViagem,
+                MeioDeTransporte = fnrh.MeioDeTransporte,
+                PlacaAutomovel = fnrh.PlacaAutomovel,
+                NumAcompanhantes = fnrh.NumAcompanhantes
             };
         }
 

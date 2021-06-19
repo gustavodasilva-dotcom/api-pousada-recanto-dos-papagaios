@@ -26,7 +26,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var hospedes = new List<Hospede>();
 
-            var comando = $"SELECT * FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E WHERE H.HSP_ID_INT = E.END_ID_HOSPEDE_INT AND H.HSP_EXCLUIDO_BIT = 0";
+            var comando = $"EXEC ObterHospedes";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -67,7 +67,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"SELECT H.HSP_ID_INT, H.HSP_NOME_STR, H.HSP_CPF_CHAR, H.HSP_DTNASC_DATE, H.HSP_EMAIL_STR, H.HSP_LOGIN_CPF_CHAR, H.HSP_LOGIN_SENHA_STR, HSP_CELULAR_STR, E.END_CEP_CHAR, E.END_LOGRADOURO_STR, E.END_NUMERO_CHAR, E.END_COMPLEMENTO_STR, E.END_BAIRRO_STR, E.END_CIDADE_STR, E.END_ESTADO_CHAR, E.END_PAIS_STR FROM HOSPEDE AS H, ENDERECO E WHERE (H.HSP_CPF_CHAR = {cpfHospede}) AND (E.END_CPF_HOSPEDE_STR = {cpfHospede}) AND (H.HSP_EXCLUIDO_BIT = 0)";
+            var comando = $"EXEC ObterHospede '{cpfHospede}';";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -104,7 +104,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Hospede hospede)
         {
-            var comando = $"INSERT INTO dbo.HOSPEDE VALUES ('{hospede.NomeCompleto}', '{hospede.Cpf}', '{hospede.DataDeNascimento}', '{hospede.Email}', '{hospede.Login}', '{hospede.Senha}', '{hospede.Celular}', {hospede.Excluido})";
+            var comando = $"EXEC InserirHospede '{hospede.NomeCompleto}', '{hospede.Cpf}', '{hospede.DataDeNascimento}', '{hospede.Email}', '{hospede.Login}', '{hospede.Senha}', '{hospede.Celular}', {hospede.Excluido}";
 
             await sqlConnection.OpenAsync();
 
@@ -118,7 +118,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"SELECT TOP 1 * FROM dbo.HOSPEDE ORDER BY HSP_ID_INT DESC";
+            var comando = $"EXEC ObterUltimoHospede";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -146,7 +146,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfHospede, Hospede hospede)
         {
-            var comando = $"UPDATE dbo.HOSPEDE SET HSP_NOME_STR = '{hospede.NomeCompleto}', HSP_CPF_CHAR = '{hospede.Cpf}', HSP_DTNASC_DATE = '{hospede.DataDeNascimento}', HSP_EMAIL_STR = '{hospede.Email}', HSP_LOGIN_CPF_CHAR = '{hospede.Login}', HSP_LOGIN_SENHA_STR = '{hospede.Senha}', HSP_CELULAR_STR = '{hospede.Celular}' WHERE (dbo.HOSPEDE.HSP_CPF_CHAR = '{cpfHospede}') AND (dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 0)";
+            var comando = $"EXEC AtualizarHospede '{hospede.NomeCompleto}', '{hospede.Cpf}', '{hospede.DataDeNascimento}', '{hospede.Email}', '{hospede.Login}', '{hospede.Senha}', '{hospede.Celular}'";
 
             await sqlConnection.OpenAsync();
 
@@ -158,7 +158,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Remover(string cpfHospede)
         {
-            var comando = $"UPDATE dbo.HOSPEDE SET dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1 WHERE dbo.HOSPEDE.HSP_CPF_CHAR = '{cpfHospede}'";
+            var comando = $"EXEC RemoverHospede {cpfHospede}";
 
             await sqlConnection.OpenAsync();
 
