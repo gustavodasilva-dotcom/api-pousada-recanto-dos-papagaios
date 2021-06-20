@@ -1,3 +1,7 @@
+-----------------------------------
+----- QUERIES PARA PROCEDURES -----
+-----------------------------------
+
 USE RECPAPAGAIOS;
 
 -----------------------------------
@@ -18,7 +22,7 @@ AS
   END_ESTADO_CHAR = @Estado,  
   END_PAIS_STR = @Pais  
  WHERE (dbo.ENDERECO.END_CPF_HOSPEDE_STR = @CpfHospede) AND (dbo.ENDERECO.END_EXCLUIDO_BIT = 0)
-GO;
+GO
 
 CREATE PROCEDURE AtualizarHospede @NomeCompleto nvarchar(255), @Cpf nvarchar(11), @DataDeNascimento Date, @Email nvarchar(50),  
 @Login nvarchar(11), @Senha nvarchar(50), @Celular nvarchar(15)  
@@ -33,7 +37,27 @@ AS
   HSP_LOGIN_SENHA_STR = @Senha,  
   HSP_CELULAR_STR = @Celular  
  WHERE (dbo.HOSPEDE.HSP_CPF_CHAR = @Cpf) AND (dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 0)
-GO;
+GO
+
+CREATE PROCEDURE AtualizarFNRH @IdFNRH int, @Profissao nvarchar(255), @Nacionalidade nvarchar(255), @Sexo nchar(1),
+@Rg nchar(9), @ProximoDestino nvarchar(255), @UltimoDestino nvarchar(255), @MotivoViagem nvarchar(255),
+@MeioDeTransporte nvarchar(255), @PlacaAutomovel nvarchar(255), @NumAcompanhantes int, @CpfHospede nchar(11)
+AS
+ UPDATE dbo.FNRH
+ SET
+  FNRH_PROFISSAO_STR = @Profissao,
+  FNRH_NACIONALIDADE_STR = @Nacionalidade,
+  FNRH_SEXO_CHAR = @Sexo,
+  FNRH_RG_CHAR = @Rg,
+  FNRH_PROXIMO_DESTINO_STR = @ProximoDestino,
+  FNRH_ULTIMO_DESTINO_STR = @UltimoDestino,
+  FNRH_MOTIVO_VIAGEM_STR = @MotivoViagem,
+  FNRH_MEIO_DE_TRANSPORTE_STR = @MeioDeTransporte,
+  FNRH_PLACA_AUTOMOVEL_STR = @PlacaAutomovel,
+  FNRH_NUM_ACOMPANHANTES_INT = @NumAcompanhantes,
+  FNRH_CPF_HOSPEDE_STR = @CpfHospede
+ WHERE FNRH_ID_INT = @IdFNRH
+GO
 
 
 -----------------------------------
@@ -59,7 +83,7 @@ AS
   @CpfHospede,  
   @Excluido  
  )
-GO;
+GO
 
 CREATE PROCEDURE InserirFNRH @Profissao nvarchar(255), @Nacionalidade nvarchar(50), @Sexo nchar(1),  
 @Rg nchar(9), @ProximoDestino nvarchar(255), @UltimoDestino nvarchar(255), @MotivoViagem nvarchar(255),  
@@ -83,7 +107,7 @@ AS
   @CpfHospede,  
   @Excluido  
  )
-GO;
+GO
 
 CREATE PROCEDURE InserirHospede @NomeCompleto nvarchar(255), @Cpf nvarchar(11), @DataDeNascimento Date, @Email nvarchar(50),  
 @Login nvarchar(11), @Senha nvarchar(50), @Celular nvarchar(15), @Excluido bit  
@@ -100,7 +124,7 @@ AS
   @Celular,  
   @Excluido  
  )  
-GO;
+GO
 
 -----------------------------------
 ---- PROCEDURES PARA OBTENÇÃO -----
@@ -110,7 +134,7 @@ CREATE PROCEDURE ObterEnderecos
 AS  
  SELECT * FROM ENDERECO  
  WHERE ENDERECO.END_EXCLUIDO_BIT = 0
-GO;
+GO
 
 CREATE PROCEDURE ObterFNRHsPorHospede @cpfHospede nvarchar(11)    
 AS      
@@ -130,7 +154,7 @@ AS
   F.FNRH_CPF_HOSPEDE_STR      
  FROM dbo.HOSPEDE AS H, dbo.FNRH AS F      
  WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)
-GO;
+GO
 
 CREATE PROCEDURE ObterHospede @cpfHospede nvarchar(11)  
 AS  
@@ -157,12 +181,40 @@ AS
  FROM dbo.HOSPEDE AS H  
  INNER JOIN dbo.ENDERECO AS E  
  ON (H.HSP_CPF_CHAR = @cpfHospede) AND (E.END_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)
-GO;
+GO
 
 CREATE PROCEDURE ObterHospedes  
 AS  
- SELECT * FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E WHERE H.HSP_ID_INT = E.END_ID_HOSPEDE_INT AND H.HSP_EXCLUIDO_BIT = 0
-GO;
+ SELECT *
+ FROM dbo.HOSPEDE AS H
+ INNER JOIN dbo.ENDERECO AS E
+ ON H.HSP_CPF_CHAR = E.END_CPF_HOSPEDE_STR
+ WHERE H.HSP_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
+GO
+
+CREATE PROCEDURE ObterPorCpf @cpfHospede nvarchar(11)
+AS
+ SELECT
+  H.HSP_ID_INT,
+  H.HSP_NOME_STR,
+  H.HSP_CPF_CHAR,
+  H.HSP_DTNASC_DATE,
+  H.HSP_EMAIL_STR,
+  H.HSP_LOGIN_CPF_CHAR,
+  H.HSP_LOGIN_SENHA_STR,
+  H.HSP_CELULAR_STR,
+  
+  E.END_CEP_CHAR,
+  E.END_LOGRADOURO_STR,
+  E.END_NUMERO_CHAR,
+  E.END_COMPLEMENTO_STR,
+  E.END_BAIRRO_STR,
+  E.END_CIDADE_STR,
+  E.END_ESTADO_CHAR,
+  E.END_PAIS_STR
+ FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E
+ WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (E.END_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)
+GO
 
 CREATE PROCEDURE ObterUltimaFNRHRegistroPorHospede @cpfHospede nvarchar(11)    
 AS      
@@ -183,12 +235,18 @@ AS
  FROM dbo.HOSPEDE AS H, dbo.FNRH AS F      
  WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)  
  ORDER BY F.FNRH_ID_INT ASC
-GO;
+GO
 
 CREATE PROCEDURE ObterUltimoHospede  
 AS  
  SELECT TOP 1 * FROM dbo.HOSPEDE ORDER BY HSP_ID_INT DESC
-GO;
+GO
+
+CREATE PROCEDURE ObterFNRHPorId @IdHospede int
+AS
+ SELECT * FROM dbo.FNRH WHERE FNRH_ID_INT = @IdHospede
+GO
+
 
 -----------------------------------
 ----- PROCEDURES PARA REMOÇÃO -----
@@ -199,11 +257,11 @@ AS
  UPDATE dbo.ENDERECO  
  SET dbo.ENDERECO.END_EXCLUIDO_BIT = 1  
  WHERE dbo.ENDERECO.END_CPF_HOSPEDE_STR = '{cpfHospede}'  
-GO;
+GO
 
-CREATE PROCEDURE RemoverHospede @cpfHospede nvarchar(11)  
+CREATE PROCEDURE RemoverHospede @cpfHospede nvarchar(11)
 AS  
  UPDATE dbo.HOSPEDE  
  SET dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1  
  WHERE dbo.HOSPEDE.HSP_CPF_CHAR = @cpfHospede
-GO;
+GO

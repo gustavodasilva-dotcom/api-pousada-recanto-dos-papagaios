@@ -88,5 +88,45 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
+        public async Task<FNRHViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel)
+        {
+            var fnrh = await _FNRHRepository.ObterPorId(idFNRH);
+
+            if (fnrh == null)
+                throw new Exception();
+
+            var fnrhInsert = new FNRH
+            {
+                CpfHospede = fnrhInputModel.CpfHospede,
+                Profissao = fnrhInputModel.Profissao,
+                Nacionalidade = fnrhInputModel.Nacionalidade,
+                Sexo = fnrhInputModel.Sexo,
+                Rg = fnrhInputModel.Rg,
+                UltimoDestino = fnrhInputModel.UltimoDestino,
+                ProximoDestino = fnrhInputModel.ProximoDestino,
+                MotivoViagem = fnrhInputModel.MotivoViagem,
+                MeioDeTransporte = fnrhInputModel.MeioDeTransporte,
+                PlacaAutomovel = fnrhInputModel.PlacaAutomovel,
+                NumAcompanhantes = fnrhInputModel.NumAcompanhantes,
+            };
+
+            await _FNRHRepository.Atualizar(idFNRH, fnrhInsert);
+
+            return new FNRHViewModel
+            {
+                Id = fnrh.Id,
+                CpfHospede = fnrhInsert.CpfHospede,
+                Profissao = fnrhInsert.Profissao,
+                Nacionalidade = fnrhInsert.Nacionalidade,
+                Sexo = fnrhInsert.Sexo,
+                Rg = fnrhInsert.Rg,
+                ProximoDestino = fnrhInsert.ProximoDestino,
+                UltimoDestino = fnrhInsert.UltimoDestino,
+                MotivoViagem = fnrhInsert.MotivoViagem,
+                MeioDeTransporte = fnrhInsert.MeioDeTransporte,
+                PlacaAutomovel = fnrhInsert.PlacaAutomovel,
+                NumAcompanhantes = fnrhInsert.NumAcompanhantes
+            };
+        }
     }
 }

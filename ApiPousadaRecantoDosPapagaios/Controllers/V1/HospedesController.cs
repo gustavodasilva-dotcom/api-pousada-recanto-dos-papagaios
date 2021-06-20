@@ -48,26 +48,47 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         [HttpPost]
         public async Task<ActionResult<HospedeViewModel>> Inserir([FromBody] HospedeInputModel hospedeInputModel)
         {
-            var hospede = await _hospedeService.Inserir(hospedeInputModel);
+            try
+            {
+                var hospede = await _hospedeService.Inserir(hospedeInputModel);
 
-            return Ok(hospede);
+                return Ok(hospede);
+            }
+            catch(Exception ex)
+            {
+                return Conflict("Já existe um hóspede registrado com esse CPF!");
+            }
         }
 
         [HttpPut("{cpfHospede}")]
         public async Task<ActionResult<HospedeViewModel>> Atualizar([FromRoute] string cpfHospede, [FromBody] HospedeInputModel hospedeInputModel)
         {
-            var hospede = await _hospedeService.Atualizar(cpfHospede, hospedeInputModel);
+            try
+            {
+                var hospede = await _hospedeService.Atualizar(cpfHospede, hospedeInputModel);
 
-            return Ok(hospede);
-            
+                return Ok(hospede);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
         }
 
         [HttpDelete("{cpfHospede}")]
         public async Task<ActionResult> Remover([FromRoute] string cpfHospede)
         {
-            await _hospedeService.Remover(cpfHospede);
+            try
+            {
+                await _hospedeService.Remover(cpfHospede);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+            
         }
 
     }

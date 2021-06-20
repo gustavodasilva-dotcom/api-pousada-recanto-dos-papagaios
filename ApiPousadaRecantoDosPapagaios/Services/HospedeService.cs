@@ -81,9 +81,10 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
         {
-            // TODO: Implementar validações para verificar, por exemplo, se o CPF está cadastrado no banco de dados.
-            // Entretanto, discutir com o grupo o que fazer a respeito das chaves UNIQUE de CPF e outras no
-            // banco de dados, pois elas podem gerar conflitos com as validações.
+            var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
+
+            if (!(hospede == null))
+                throw new Exception();
 
             var hospedeInsert = new Hospede
             {
@@ -91,7 +92,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Cpf = hospedeInputModel.Cpf,
                 DataDeNascimento = hospedeInputModel.DataDeNascimento,
                 Email = hospedeInputModel.Email,
-                Login = hospedeInputModel.Login, // TODO: Verificar com o grupo como será o login, CPF ou nome de usuário.
+                Login = hospedeInputModel.Cpf,
                 Senha = hospedeInputModel.Senha,
                 Celular = hospedeInputModel.Celular,
                 Excluido = 0
@@ -141,7 +142,10 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel)
         {
-            // TODO: Implementar validações caso o cpf não esteja cadastrado no sistema.
+            var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
+
+            if (hospede == null)
+                throw new Exception();
 
             var hospedeInsert = new Hospede
             {
@@ -149,7 +153,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Cpf = hospedeInputModel.Cpf,
                 DataDeNascimento = hospedeInputModel.DataDeNascimento,
                 Email = hospedeInputModel.Email,
-                Login = hospedeInputModel.Login,
+                Login = hospedeInputModel.Cpf,
                 Senha = hospedeInputModel.Senha,
                 Celular = hospedeInputModel.Celular
             };
@@ -195,8 +199,11 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task Remover(string cpfHospede)
         {
-            // TODO: Implementar validações caso o cpf não esteja cadastrado no sistema.
-            
+            var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
+
+            if (hospede == null)
+                throw new Exception();
+
             await _hospedeRepository.Remover(cpfHospede);
 
             await _enderecoRepository.Remover(cpfHospede);

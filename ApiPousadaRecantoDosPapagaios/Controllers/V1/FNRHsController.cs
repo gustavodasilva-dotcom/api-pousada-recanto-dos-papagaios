@@ -44,5 +44,20 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                 return NoContent();
             }
         }
+
+        [HttpPut("{idFNRH:int}")]
+        public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
+        {
+            try
+            {
+                var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
+
+                return Ok(fnrh);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
     }
 }

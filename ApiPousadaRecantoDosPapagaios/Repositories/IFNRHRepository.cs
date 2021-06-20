@@ -9,6 +9,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<FNRH>> ObterFNRHsPorHospede(string cpfHospede);
         Task<FNRH> ObterUltimoRegistroPorHospede(string cpfHospede);
+        Task<FNRH> ObterPorId(int idFNRH);
         Task Inserir(string cpfHospede, FNRH fnrh);
+        Task Atualizar(int idFNRH, FNRH fnrh);
     }
 }

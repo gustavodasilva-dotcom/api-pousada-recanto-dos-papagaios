@@ -9,6 +9,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<Hospede>> Obter();
         Task<Hospede> Obter(string cpfHospede);
+        Task<Hospede> ObterPorCpf(string cpfHospede);
         Task Inserir(Hospede hospede);
         Task Atualizar(string cpfHospede, Hospede hospede);
         Task Remover(string cpfHospede);

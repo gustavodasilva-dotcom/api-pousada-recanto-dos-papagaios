@@ -10,6 +10,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
 
         public string Logradouro { get; set; }
 
+        [RegularExpression("^[0-9]*$", ErrorMessage = "O número da residência deve conter apenas números.")]
         public string Numero { get; set; }
 
         public string Complemento { get; set; }

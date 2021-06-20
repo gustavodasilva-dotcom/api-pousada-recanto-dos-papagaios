@@ -67,7 +67,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"EXEC ObterHospede '{cpfHospede}';";
+            var comando = $"EXEC ObterHospede '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -119,6 +119,36 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             Hospede hospede = null;
 
             var comando = $"EXEC ObterUltimoHospede";
+
+            await sqlConnection.OpenAsync();
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+            while (sqlDataReader.Read())
+            {
+                hospede = new Hospede
+                {
+                    Id = (int)sqlDataReader["HSP_ID_INT"],
+                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
+                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
+                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
+                    Email = (string)sqlDataReader["HSP_EMAIL_STR"],
+                    Login = (string)sqlDataReader["HSP_LOGIN_CPF_CHAR"],
+                    Senha = (string)sqlDataReader["HSP_LOGIN_SENHA_STR"],
+                    Celular = (string)sqlDataReader["HSP_CELULAR_STR"]
+                };
+            }
+
+            await sqlConnection.CloseAsync();
+
+            return hospede;
+        }
+
+        public async Task<Hospede> ObterPorCpf(string cpfHospede)
+        {
+            Hospede hospede = null;
+
+            var comando = $"EXEC ObterPorCpf '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);

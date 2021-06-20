@@ -83,7 +83,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.OpenAsync();
 
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
-            await sqlCommand.ExecuteNonQueryAsync();
+            sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
         }
