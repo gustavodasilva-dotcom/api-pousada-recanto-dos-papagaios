@@ -2,17 +2,10 @@ using ApiPousadaRecantoDosPapagaios.Repositories;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios
 {
@@ -29,16 +22,16 @@ namespace ApiPousadaRecantoDosPapagaios
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IHospedeService, HospedeService>();
-
             services.AddScoped<IHospedeRepository, HospedeRepository>();
 
             services.AddScoped<IEnderecoService, EnderecoService>();
-
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
             services.AddScoped<IFNRHService, FNRHService>();
-
             services.AddScoped<IFNRHRepository, FNRHRepository>();
+
+            services.AddScoped<IFuncionarioService, FuncionarioService>();
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 
             services.AddControllers();
 

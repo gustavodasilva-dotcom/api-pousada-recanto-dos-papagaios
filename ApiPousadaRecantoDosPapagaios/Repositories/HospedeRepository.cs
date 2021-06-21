@@ -99,6 +99,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                 };
             }
 
+            await sqlConnection.CloseAsync();
+
             return hospede;
         }
 

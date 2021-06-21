@@ -12,5 +12,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         Task<FNRH> ObterPorId(int idFNRH);
         Task Inserir(string cpfHospede, FNRH fnrh);
         Task Atualizar(int idFNRH, FNRH fnrh);
+        Task Deletar(int idFNRH);
     }
 }

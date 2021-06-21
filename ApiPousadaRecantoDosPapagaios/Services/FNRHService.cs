@@ -128,5 +128,15 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 NumAcompanhantes = fnrhInsert.NumAcompanhantes
             };
         }
+
+        public async Task Deletar(int idFNRH)
+        {
+            var fnrh = await _FNRHRepository.ObterPorId(idFNRH);
+
+            if (fnrh == null)
+                throw new Exception();
+
+            await _FNRHRepository.Deletar(idFNRH);
+        }
     }
 }

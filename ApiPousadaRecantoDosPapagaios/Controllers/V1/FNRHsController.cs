@@ -59,5 +59,20 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                 return NoContent();
             }
         }
+
+        [HttpDelete("{idFNRH:int}")]
+        public async Task<ActionResult> Deletar([FromRoute] int idFNRH)
+        {
+            try
+            {
+                await _FNRHService.Deletar(idFNRH);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
     }
 }

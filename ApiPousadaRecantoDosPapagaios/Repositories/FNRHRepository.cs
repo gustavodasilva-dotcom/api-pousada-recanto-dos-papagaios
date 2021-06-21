@@ -26,7 +26,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var fnrhs = new List<FNRH>();
 
-            var comando = $"EXEC ObterFNRHsPorHospede {cpfHospede}";
+            var comando = $"EXEC ObterFNRHsPorHospede '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -60,7 +60,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             FNRH fnrh = null;
 
-            var comando = $"EXEC ObterUltimaFNRHRegistroPorHospede {cpfHospede}";
+            var comando = $"EXEC ObterUltimaFNRHRegistroPorHospede '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
             SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
@@ -139,6 +139,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         public async Task Atualizar(int idFNRH, FNRH fnrh)
         {
             var comando = $"EXEC AtualizarFNRH {idFNRH}, '{fnrh.Profissao}', '{fnrh.Nacionalidade}', '{fnrh.Sexo}', '{fnrh.Rg}', '{fnrh.ProximoDestino}', '{fnrh.UltimoDestino}', '{fnrh.MotivoViagem}', '{fnrh.MeioDeTransporte}', '{fnrh.PlacaAutomovel}', {fnrh.NumAcompanhantes}, '{fnrh.CpfHospede}'";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
+        public async Task Deletar(int idFNRH)
+        {
+            var comando = $"EXEC RemoverFNRH {idFNRH}";
 
             await sqlConnection.OpenAsync();
 

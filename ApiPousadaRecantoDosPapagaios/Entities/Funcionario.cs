@@ -8,7 +8,7 @@
         public string Cargo { get; set; }
         public string Setor { get; set; }
         public double Salario { get; set; }
-        //public DadosBancarios DadosBancarios { get; set; }
-        //public CategoriaAcesso CategoriaAcesso { get; set; }
+        public DadosBancarios DadosBancarios { get; set; }
+        public CategoriaAcesso CategoriaAcesso { get; set; }
     }
 }
