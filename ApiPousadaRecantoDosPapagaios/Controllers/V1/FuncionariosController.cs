@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -41,6 +42,21 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             catch (Exception ex)
             {
                 return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<FuncionarioViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
+        {
+            try
+            {
+                var funcionario = await _funcionarioService.Inserir(funcionarioInputModel);
+
+                return Ok(funcionario);
+            }
+            catch (Exception ex)
+            {
+                return Conflict();
             }
         }
     }

@@ -9,6 +9,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<Endereco>> Obter();
         Task Inserir(Endereco endereco, string cpfHospede, int idHospede);
+        Task Inserir(Endereco endereco, string cpfHospede);
         Task Atualizar(string cpfHospede, Endereco endereco);
         Task Remover(string cpfHospede);
     }

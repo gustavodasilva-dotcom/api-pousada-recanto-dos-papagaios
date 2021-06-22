@@ -1,4 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,17 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IFuncionarioRepository _funcionarioRepository;
 
-        public FuncionarioService(IFuncionarioRepository funcionarioRepository)
+        private readonly IEnderecoRepository _enderecoRepository;
+
+        private readonly IDadosBancariosRepository _dadosBancariosRepository;
+
+        public FuncionarioService(IFuncionarioRepository funcionarioRepository, IEnderecoRepository enderecoRepository, IDadosBancariosRepository dadosBancariosRepository)
         {
             _funcionarioRepository = funcionarioRepository;
+
+            _enderecoRepository = enderecoRepository;
+
+            _dadosBancariosRepository = dadosBancariosRepository;
         }
 
         public async Task<List<FuncionarioViewModel>> Obter()
@@ -50,7 +60,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Banco = f.DadosBancarios.Banco,
                     Agencia = f.DadosBancarios.Agencia,
                     NumeroDaConta = f.DadosBancarios.NumeroDaConta,
-                    IdFuncionario = f.DadosBancarios.IdFuncionario,
                     CpfFuncionario = f.DadosBancarios.CpfFuncionario
                 },
                 CategoriaAcesso = new CategoriaAcessoViewModel
@@ -98,12 +107,109 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Banco = funcionario.DadosBancarios.Banco,
                     Agencia = funcionario.DadosBancarios.Agencia,
                     NumeroDaConta = funcionario.DadosBancarios.NumeroDaConta,
-                    IdFuncionario = funcionario.DadosBancarios.IdFuncionario,
                     CpfFuncionario = funcionario.DadosBancarios.CpfFuncionario
                 },
                 CategoriaAcesso = new CategoriaAcessoViewModel
                 {
                     Id = funcionario.CategoriaAcesso.Id
+                }
+            };
+        }
+
+        public async Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
+        {
+            var funcionario = await _funcionarioRepository.Obter(funcionarioInputModel.Cpf);
+
+            if (!(funcionario == null))
+                throw new Exception();
+
+            var funcionarioInsert = new Funcionario
+            {
+                NomeCompleto = funcionarioInputModel.NomeCompleto,
+                Cpf = funcionarioInputModel.Cpf,
+                DataDeNascimento = funcionarioInputModel.DataDeNascimento,
+                Email = funcionarioInputModel.Email,
+                Login = funcionarioInputModel.Login,
+                Senha = funcionarioInputModel.Senha,
+                Celular = funcionarioInputModel.Celular,
+                Nacionalidade = funcionarioInputModel.Nacionalidade,
+                Sexo = funcionarioInputModel.Sexo,
+                Rg = funcionarioInputModel.Rg,
+                Cargo = funcionarioInputModel.Cargo,
+                Setor = funcionarioInputModel.Setor,
+                Salario = funcionarioInputModel.Salario,
+                Excluido = 0,
+                CategoriaAcesso = new CategoriaAcesso
+                {
+                    Id = funcionarioInputModel.CategoriaAcesso.Id
+                }  
+            };
+
+            await _funcionarioRepository.Inserir(funcionarioInsert);
+
+            var enderecoInsert = new Endereco
+            {
+                Cep = funcionarioInputModel.Endereco.Cep,
+                Logradouro = funcionarioInputModel.Endereco.Logradouro,
+                Numero = funcionarioInputModel.Endereco.Numero,
+                Complemento = funcionarioInputModel.Endereco.Complemento,
+                Bairro = funcionarioInputModel.Endereco.Bairro,
+                Cidade = funcionarioInputModel.Endereco.Cidade,
+                Estado = funcionarioInputModel.Endereco.Estado,
+                Pais = funcionarioInputModel.Endereco.Pais,
+                CpfPessoa = funcionarioInputModel.Cpf,
+                Excluido = 0,
+            };
+
+            await _enderecoRepository.Inserir(enderecoInsert, funcionarioInsert.Cpf);
+
+            var dadosBancariosInsert = new DadosBancarios
+            {
+                Banco = funcionarioInputModel.DadosBancarios.Banco,
+                Agencia = funcionarioInputModel.DadosBancarios.Agencia,
+                NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta,
+                CpfFuncionario = funcionarioInputModel.Cpf,
+                Excluido = 0
+            };
+
+            await _dadosBancariosRepository.Inserir(dadosBancariosInsert, funcionarioInsert.Cpf);
+
+            return new FuncionarioViewModel
+            {
+                NomeCompleto = funcionarioInsert.NomeCompleto,
+                Cpf = funcionarioInsert.Cpf,
+                DataDeNascimento = funcionarioInsert.DataDeNascimento,
+                Email = funcionarioInsert.Email,
+                Login = funcionarioInsert.Login,
+                Senha = funcionarioInsert.Senha,
+                Celular = funcionarioInsert.Celular,
+                Nacionalidade = funcionarioInsert.Nacionalidade,
+                Sexo = funcionarioInsert.Sexo,
+                Rg = funcionarioInsert.Rg,
+                Cargo = funcionarioInsert.Cargo,
+                Setor = funcionarioInsert.Setor,
+                Salario = funcionarioInsert.Salario,
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = enderecoInsert.Cep,
+                    Logradouro = enderecoInsert.Logradouro,
+                    Numero = enderecoInsert.Numero,
+                    Complemento = enderecoInsert.Complemento,
+                    Bairro = enderecoInsert.Bairro,
+                    Cidade = enderecoInsert.Cidade,
+                    Estado = enderecoInsert.Estado,
+                    Pais = enderecoInsert.Pais
+                },
+                DadosBancarios = new DadosBancariosViewModel
+                {
+                    Banco = dadosBancariosInsert.Banco,
+                    Agencia = dadosBancariosInsert.Agencia,
+                    NumeroDaConta = dadosBancariosInsert.NumeroDaConta,
+                    CpfFuncionario = dadosBancariosInsert.CpfFuncionario
+                },
+                CategoriaAcesso = new CategoriaAcessoViewModel
+                {
+                    Id = funcionarioInsert.CategoriaAcesso.Id
                 }
             };
         }

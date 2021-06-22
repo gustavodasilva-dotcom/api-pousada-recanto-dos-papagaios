@@ -86,6 +86,27 @@ AS
  )
 GO
 
+CREATE PROCEDURE InserirEndereco @Cep nchar(8), @Logradouro nvarchar(255), @Numero nchar(8), @Complemento nvarchar(255),  
+@Bairro nvarchar(255), @Cidade nvarchar(255), @Estado nchar(2), @Pais nvarchar(255), @CpfHospede nchar(11),  
+@Excluido bit  
+AS  
+ INSERT INTO dbo.ENDERECO  
+ VALUES  
+ (  
+  @Cep,  
+  @Logradouro,  
+  @Numero,  
+  @Complemento,  
+  @Bairro,  
+  @Cidade,  
+  @Estado,  
+  @Pais,
+  null,
+  @CpfHospede,  
+  @Excluido  
+ )
+GO
+
 CREATE PROCEDURE InserirFNRH @Profissao nvarchar(255), @Nacionalidade nvarchar(50), @Sexo nchar(1),  
 @Rg nchar(9), @ProximoDestino nvarchar(255), @UltimoDestino nvarchar(255), @MotivoViagem nvarchar(255),  
 @MeioDeTransporte nvarchar(255), @PlacaAutomovel nvarchar(255), @NumAcompanhantes int, @HospedeId int,  
@@ -126,6 +147,50 @@ AS
   @Excluido  
  )  
 GO
+
+CREATE PROCEDURE InserirDadosBancarios
+@Banco nvarchar(50),		@Agencia nvarchar(50), @NumeroDaConta nvarchar(50),
+@CpfFuncionario nchar(11),	@Excluido bit
+AS
+ INSERT INTO dbo.DADOSBANCARIOS
+ VALUES
+ (
+	@Banco,
+	@Agencia,
+	@NumeroDaConta,
+	NULL,
+	@CpfFuncionario,
+	@Excluido
+ )
+GO
+
+CREATE PROCEDURE InserirFuncionario
+@NomeCompleto nvarchar(255),	@Cpf nchar(11),			@Nacionalidade nvarchar(50),	@DataDeNascimento date, 
+@Sexo nchar(1),					@Rg nchar(9),			@Celular nchar(15),				@Cargo nvarchar(50),
+@Setor nvarchar(50),			@Salario float(2),		@Email nvarchar(50),			@Login nvarchar(45),
+@Senha nvarchar(45),			@IdCategoriaAcesso int,	@Excluido bit
+AS
+ INSERT INTO dbo.FUNCIONARIO
+ VALUES
+ (
+	@NomeCompleto,
+	@Cpf,
+	@Nacionalidade,
+	@DataDeNascimento,
+	@Sexo,
+	@Rg,
+	@Celular,
+	@Cargo,
+	@Setor,
+	@Salario,
+	@Email,
+	@Login,
+	@Senha,
+	@IdCategoriaAcesso,
+	@Excluido
+ )
+GO
+
 
 -----------------------------------
 ---- PROCEDURES PARA OBTENÇÃO -----
@@ -257,7 +322,7 @@ AS
  SELECT *
  FROM ENDERECO AS E, FUNCIONARIO AS F
  INNER JOIN DADOSBANCARIOS AS DB
- ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
+ ON F.FUNC_CPF_CHAR = DB.DADOSBC_FUNCIONARIO_CPF_CHAR
  WHERE F.FUNC_CPF_CHAR = E.END_CPF_HOSPEDE_STR
 	   AND F.FUNC_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
 	   AND DB.DADOSBC_EXCLUIDO_BIT = 0

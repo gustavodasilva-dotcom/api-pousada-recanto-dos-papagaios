@@ -64,6 +64,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
+        public async Task Inserir(Endereco endereco, string cpfHospede)
+        {
+            var comando = $"EXEC InserirEndereco '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', '{cpfHospede}', {endereco.Excluido}";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
         public async Task Atualizar(string cpfHospede, Endereco endereco)
         {
             var comando = $"EXEC AtualizarEndereco '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', '{cpfHospede}'";

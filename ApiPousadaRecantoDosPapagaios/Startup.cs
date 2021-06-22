@@ -33,6 +33,8 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IFuncionarioService, FuncionarioService>();
             services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 
+            services.AddScoped<IDadosBancariosRepository, DadosBancariosRepository>();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>

@@ -55,7 +55,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Cidade = (string)sqlDataReader["END_CIDADE_STR"],
                         Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
                         Pais = (string)sqlDataReader["END_PAIS_STR"],
-                        PessoaId = (int)sqlDataReader["END_ID_HOSPEDE_INT"],
                         CpfPessoa = (string)sqlDataReader["END_CPF_HOSPEDE_STR"]
                     },
                     Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
@@ -70,7 +69,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
                         Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
                         NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"],
-                        IdFuncionario = (int)sqlDataReader["DADOSBC_FUNCIONARIO_ID_INT"],
                         CpfFuncionario = (string)sqlDataReader["DADOSBC_FUNCIONARIO_CPF_CHAR"]
                     },
                     CategoriaAcesso = new CategoriaAcesso
@@ -118,7 +116,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Cidade = (string)sqlDataReader["END_CIDADE_STR"],
                         Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
                         Pais = (string)sqlDataReader["END_PAIS_STR"],
-                        PessoaId = (int)sqlDataReader["END_ID_HOSPEDE_INT"],
                         CpfPessoa = (string)sqlDataReader["END_CPF_HOSPEDE_STR"]
                     },
                     Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
@@ -133,7 +130,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
                         Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
                         NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"],
-                        IdFuncionario = (int)sqlDataReader["DADOSBC_FUNCIONARIO_ID_INT"],
                         CpfFuncionario = (string)sqlDataReader["DADOSBC_FUNCIONARIO_CPF_CHAR"]
                     },
                     CategoriaAcesso = new CategoriaAcesso
@@ -147,5 +143,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             return funcionario;
         }
+
+        public async Task Inserir(Funcionario funcionario)
+        {
+            var comando = $"EXEC InserirFuncionario '{funcionario.NomeCompleto}', '{funcionario.Cpf}', '{funcionario.Nacionalidade}', '{funcionario.DataDeNascimento}', '{funcionario.Sexo}', '{funcionario.Rg}', '{funcionario.Celular}', '{funcionario.Cargo}', '{funcionario.Setor}', {funcionario.Salario}, '{funcionario.Email}', '{funcionario.Login}', '{funcionario.Senha}', {funcionario.CategoriaAcesso.Id}, {funcionario.Excluido}";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
     }
 }
