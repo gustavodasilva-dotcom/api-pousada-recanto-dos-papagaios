@@ -10,5 +10,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         Task<List<Funcionario>> Obter();
         Task<Funcionario> Obter(string cpfFuncionario);
         Task Inserir(Funcionario funcionario);
+        Task Atualizar(string cpfFuncionario, Funcionario funcionario);
     }
 }

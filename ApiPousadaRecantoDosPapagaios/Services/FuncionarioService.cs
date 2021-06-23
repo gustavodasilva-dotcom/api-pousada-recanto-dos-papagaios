@@ -59,8 +59,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 {
                     Banco = f.DadosBancarios.Banco,
                     Agencia = f.DadosBancarios.Agencia,
-                    NumeroDaConta = f.DadosBancarios.NumeroDaConta,
-                    CpfFuncionario = f.DadosBancarios.CpfFuncionario
+                    NumeroDaConta = f.DadosBancarios.NumeroDaConta
                 },
                 CategoriaAcesso = new CategoriaAcessoViewModel
                 {
@@ -106,8 +105,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 {
                     Banco = funcionario.DadosBancarios.Banco,
                     Agencia = funcionario.DadosBancarios.Agencia,
-                    NumeroDaConta = funcionario.DadosBancarios.NumeroDaConta,
-                    CpfFuncionario = funcionario.DadosBancarios.CpfFuncionario
+                    NumeroDaConta = funcionario.DadosBancarios.NumeroDaConta
                 },
                 CategoriaAcesso = new CategoriaAcessoViewModel
                 {
@@ -204,12 +202,105 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 {
                     Banco = dadosBancariosInsert.Banco,
                     Agencia = dadosBancariosInsert.Agencia,
-                    NumeroDaConta = dadosBancariosInsert.NumeroDaConta,
-                    CpfFuncionario = dadosBancariosInsert.CpfFuncionario
+                    NumeroDaConta = dadosBancariosInsert.NumeroDaConta
                 },
                 CategoriaAcesso = new CategoriaAcessoViewModel
                 {
                     Id = funcionarioInsert.CategoriaAcesso.Id
+                }
+            };
+        }
+
+        public async Task<FuncionarioViewModel> Atualizar(string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)
+        {
+            var funcionario = await _funcionarioRepository.Obter(cpfFuncionario);
+
+            if (funcionario == null)
+                throw new Exception();
+
+            var funcionarioUpdate = new Funcionario
+            {
+                NomeCompleto = funcionarioInputModel.NomeCompleto,
+                Cpf = funcionarioInputModel.Cpf,
+                DataDeNascimento = funcionarioInputModel.DataDeNascimento,
+                Email = funcionarioInputModel.Email,
+                Login = funcionarioInputModel.Login,
+                Senha = funcionarioInputModel.Senha,
+                Celular = funcionarioInputModel.Celular,
+                Nacionalidade = funcionarioInputModel.Nacionalidade,
+                Sexo = funcionarioInputModel.Sexo,
+                Rg = funcionarioInputModel.Rg,
+                Cargo = funcionarioInputModel.Cargo,
+                Setor = funcionarioInputModel.Setor,
+                Salario = funcionarioInputModel.Salario,
+                CategoriaAcesso = new CategoriaAcesso
+                {
+                    Id = funcionarioInputModel.CategoriaAcesso.Id
+                }
+            };
+
+            await _funcionarioRepository.Atualizar(cpfFuncionario, funcionarioUpdate);
+
+            var enderecoUpdate = new Endereco
+            {
+                Cep = funcionarioInputModel.Endereco.Cep,
+                Logradouro = funcionarioInputModel.Endereco.Logradouro,
+                Numero = funcionarioInputModel.Endereco.Numero,
+                Complemento = funcionarioInputModel.Endereco.Complemento,
+                Bairro = funcionarioInputModel.Endereco.Bairro,
+                Cidade = funcionarioInputModel.Endereco.Cidade,
+                Estado = funcionarioInputModel.Endereco.Estado,
+                Pais = funcionarioInputModel.Endereco.Pais,
+                CpfPessoa = funcionarioInputModel.Cpf,
+            };
+
+            await _enderecoRepository.Atualizar(cpfFuncionario, enderecoUpdate);
+
+            var dadosBancariosUpdate = new DadosBancarios
+            {
+                Banco = funcionarioInputModel.DadosBancarios.Banco,
+                Agencia = funcionarioInputModel.DadosBancarios.Agencia,
+                NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta,
+                CpfFuncionario = funcionarioInputModel.Cpf,
+            };
+
+            await _dadosBancariosRepository.Atualizar(cpfFuncionario, dadosBancariosUpdate);
+
+            return new FuncionarioViewModel
+            {
+                NomeCompleto = funcionarioUpdate.NomeCompleto,
+                Cpf = funcionarioUpdate.Cpf,
+                DataDeNascimento = funcionarioUpdate.DataDeNascimento,
+                Email = funcionarioUpdate.Email,
+                Login = funcionarioUpdate.Login,
+                Senha = funcionarioUpdate.Senha,
+                Celular = funcionarioUpdate.Celular,
+                Nacionalidade = funcionarioUpdate.Nacionalidade,
+                Sexo = funcionarioUpdate.Sexo,
+                Rg = funcionarioUpdate.Rg,
+                Cargo = funcionarioUpdate.Cargo,
+                Setor = funcionarioUpdate.Setor,
+                Salario = funcionarioUpdate.Salario,
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = enderecoUpdate.Cep,
+                    Logradouro = enderecoUpdate.Logradouro,
+                    Numero = enderecoUpdate.Numero,
+                    Complemento = enderecoUpdate.Complemento,
+                    Bairro = enderecoUpdate.Bairro,
+                    Cidade = enderecoUpdate.Cidade,
+                    Estado = enderecoUpdate.Estado,
+                    Pais = enderecoUpdate.Pais
+                },
+                DadosBancarios = new DadosBancariosViewModel
+                {
+                    Banco = dadosBancariosUpdate.Banco,
+                    Agencia = dadosBancariosUpdate.Agencia,
+                    NumeroDaConta = dadosBancariosUpdate.NumeroDaConta
+                },
+                CategoriaAcesso = new CategoriaAcessoViewModel
+                {
+                    Id = funcionarioUpdate.CategoriaAcesso.Id
                 }
             };
         }

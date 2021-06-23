@@ -60,6 +60,45 @@ AS
  WHERE FNRH_ID_INT = @IdFNRH
 GO
 
+CREATE PROCEDURE AtualizarDadosBancarios
+@Banco nvarchar(50), @Agencia nvarchar(50), @NumeroDaConta nvarchar(50), @CpfFuncionario nchar(11)
+AS
+ UPDATE
+ dbo.DADOSBANCARIOS
+ SET
+  DADOSBC_BANCO_STR = @Banco,
+  DADOSBC_AGENCIA_STR = @Agencia,
+  DADOSBC_NUMERO_CONTA_STR = @NumeroDaConta,
+  DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
+ WHERE DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
+  AND dbo.DADOSBANCARIOS.DADOSBC_EXCLUIDO_BIT = 0
+GO
+
+CREATE PROCEDURE AtualizarFuncionario
+@NomeCompleto nvarchar(255),	@Cpf nchar(11),		 @DataDeNascimento date,		@Email nvarchar(50),
+@Login nvarchar(45),			@Senha nvarchar(45), @Celular nchar(15),			@Nacionalidade nvarchar(50),
+@Sexo nchar(1),					@Rg nchar(9),		 @Cargo nvarchar(50),			@Setor nvarchar(50),
+@Salario float(2),				@Catacesso int
+AS
+ UPDATE dbo.FUNCIONARIO
+ SET
+  FUNC_NOME_STR = @NomeCompleto,
+  FUNC_CPF_CHAR = @Cpf,
+  FUNC_DTNASC_DATE = @DataDeNascimento,
+  FUNC_EMAIL_STR = @Email,
+  FUNC_NOME_USUARIO_STR = @Login,
+  FUNC_SENHA_USUARIO_STR = @Senha,
+  FUNC_CELULAR_CHAR = @Celular,
+  FUNC_NACIONALIDADE_STR = @Nacionalidade,
+  FUNC_SEXO_CHAR = @Sexo,
+  FUNC_RG_CHAR = @Rg,
+  FUNC_CARGO_STR = @Cargo,
+  FUNC_SETOR_STR = @Setor,
+  FUNC_SALARIO_FLOAT = @Salario,
+  FUNC_CATACESSO_ID_INT = @Catacesso
+ WHERE FUNC_CPF_CHAR = @Cpf AND dbo.FUNCIONARIO.FUNC_EXCLUIDO_BIT = 0
+GO
+
 
 -----------------------------------
 ---- PROCEDURES PARA INSERÇÃO -----

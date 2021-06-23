@@ -31,5 +31,17 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
         }
+
+        public async Task Atualizar(string cpfFuncionario, DadosBancarios dadosBancarios)
+        {
+            var comando = $"EXEC AtualizarDadosBancarios '{dadosBancarios.Banco}', '{dadosBancarios.Agencia}', '{dadosBancarios.NumeroDaConta}', '{cpfFuncionario}'";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
     }
 }

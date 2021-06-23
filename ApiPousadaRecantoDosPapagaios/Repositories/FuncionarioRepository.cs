@@ -156,5 +156,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
+        public async Task Atualizar(string cpfFuncionario, Funcionario funcionario)
+        {
+            var comando = $"EXEC AtualizarFuncionario '{funcionario.NomeCompleto}', '{funcionario.Cpf}', '{funcionario.DataDeNascimento}', '{funcionario.Email}', '{funcionario.Login}', '{funcionario.Senha}', '{funcionario.Celular}', '{funcionario.Nacionalidade}', '{funcionario.Sexo}', '{funcionario.Rg}', '{funcionario.Cargo}', '{funcionario.Setor}', {funcionario.Salario}, {funcionario.CategoriaAcesso.Id}";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
     }
 }

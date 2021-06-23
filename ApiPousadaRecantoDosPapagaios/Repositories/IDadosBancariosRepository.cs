@@ -7,5 +7,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     public interface IDadosBancariosRepository : IDisposable
     {
         Task Inserir(DadosBancarios dadosBancarios, string cpfFuncionario);
+        Task Atualizar(string cpfFuncionario, DadosBancarios dadosBancarios);
     }
 }

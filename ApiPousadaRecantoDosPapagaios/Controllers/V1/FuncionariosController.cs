@@ -59,5 +59,20 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                 return Conflict();
             }
         }
+
+        [HttpPut("{cpfFuncionario}")]
+        public async Task<ActionResult<FuncionarioViewModel>> Atualizar([FromRoute] string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)
+        {
+            try
+            {
+                var funcionario = await _funcionarioService.Atualizar(cpfFuncionario, funcionarioInputModel);
+
+                return Ok(funcionario);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
     }
 }
