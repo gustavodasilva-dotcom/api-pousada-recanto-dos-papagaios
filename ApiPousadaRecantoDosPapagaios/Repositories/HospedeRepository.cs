@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -106,11 +107,23 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Hospede hospede)
         {
-            var comando = $"EXEC InserirHospede '{hospede.NomeCompleto}', '{hospede.Cpf}', '{hospede.DataDeNascimento}', '{hospede.Email}', '{hospede.Login}', '{hospede.Senha}', '{hospede.Celular}', {hospede.Excluido}";
+            var procedure = @"dbo.[InserirHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Email;
+            sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = hospede.Login;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Senha;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Celular;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = hospede.Excluido;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -178,11 +191,22 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfHospede, Hospede hospede)
         {
-            var comando = $"EXEC AtualizarHospede '{hospede.NomeCompleto}', '{hospede.Cpf}', '{hospede.DataDeNascimento}', '{hospede.Email}', '{hospede.Login}', '{hospede.Senha}', '{hospede.Celular}'";
+            var procedure = @"dbo.[AtualizarHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Email;
+            sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = hospede.Login;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Senha;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Celular;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

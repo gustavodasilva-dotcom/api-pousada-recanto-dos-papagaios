@@ -1,6 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -54,11 +55,26 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Endereco endereco, string cpfHospede, int idHospede)
         {
-            var comando = $"EXEC InserirEnderecos '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', {idHospede}, '{cpfHospede}', {endereco.Excluido}";
+            var procedure = @"dbo.[InserirEnderecos]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -66,11 +82,25 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Endereco endereco, string cpfHospede)
         {
-            var comando = $"EXEC InserirEndereco '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', '{cpfHospede}', {endereco.Excluido}";
+            var procedure = @"dbo.[InserirEndereco]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -78,11 +108,24 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfHospede, Endereco endereco)
         {
-            var comando = $"EXEC AtualizarEndereco '{endereco.Cep}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Complemento}', '{endereco.Bairro}', '{endereco.Cidade}', '{endereco.Estado}', '{endereco.Pais}', '{cpfHospede}'";
+            var procedure = @"dbo.[AtualizarEndereco]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

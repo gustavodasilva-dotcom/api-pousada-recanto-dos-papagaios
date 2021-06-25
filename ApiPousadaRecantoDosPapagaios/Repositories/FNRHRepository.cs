@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -126,11 +127,28 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(string cpfHospede, FNRH fnrh)
         {
-            var comando = $"EXEC InserirFNRH '{fnrh.Profissao}', '{fnrh.Nacionalidade}', '{fnrh.Sexo}', '{fnrh.Rg}', '{fnrh.ProximoDestino}', '{fnrh.UltimoDestino}', '{fnrh.MotivoViagem}', '{fnrh.MeioDeTransporte}', '{fnrh.PlacaAutomovel}', {fnrh.NumAcompanhantes}, {fnrh.HospedeId}, '{fnrh.CpfHospede}', {fnrh.Excluido}";
+            var procedure = @"dbo.[InserirFNRH]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Profissao", SqlDbType.NVarChar).Value = fnrh.Profissao;
+            sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = fnrh.Nacionalidade;
+            sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = fnrh.Sexo;
+            sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = fnrh.Rg;
+            sqlCommand.Parameters.Add("@ProximoDestino", SqlDbType.NVarChar).Value = fnrh.ProximoDestino;
+            sqlCommand.Parameters.Add("@UltimoDestino", SqlDbType.NVarChar).Value = fnrh.UltimoDestino;
+            sqlCommand.Parameters.Add("@MotivoViagem", SqlDbType.NVarChar).Value = fnrh.MotivoViagem;
+            sqlCommand.Parameters.Add("@MeioDeTransporte", SqlDbType.NVarChar).Value = fnrh.MeioDeTransporte;
+            sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
+            sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
+            sqlCommand.Parameters.Add("@HospedeId", SqlDbType.Int).Value = fnrh.HospedeId;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = fnrh.Excluido;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -138,11 +156,27 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(int idFNRH, FNRH fnrh)
         {
-            var comando = $"EXEC AtualizarFNRH {idFNRH}, '{fnrh.Profissao}', '{fnrh.Nacionalidade}', '{fnrh.Sexo}', '{fnrh.Rg}', '{fnrh.ProximoDestino}', '{fnrh.UltimoDestino}', '{fnrh.MotivoViagem}', '{fnrh.MeioDeTransporte}', '{fnrh.PlacaAutomovel}', {fnrh.NumAcompanhantes}, '{fnrh.CpfHospede}'";
+            var procedure = @"dbo.[AtualizarFNRH]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@IdFNRH", SqlDbType.Int).Value = idFNRH;
+            sqlCommand.Parameters.Add("@Profissao", SqlDbType.NVarChar).Value = fnrh.Profissao;
+            sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = fnrh.Nacionalidade;
+            sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = fnrh.Sexo;
+            sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = fnrh.Rg;
+            sqlCommand.Parameters.Add("@ProximoDestino", SqlDbType.NVarChar).Value = fnrh.ProximoDestino;
+            sqlCommand.Parameters.Add("@UltimoDestino", SqlDbType.NVarChar).Value = fnrh.UltimoDestino;
+            sqlCommand.Parameters.Add("@MotivoViagem", SqlDbType.NVarChar).Value = fnrh.MotivoViagem;
+            sqlCommand.Parameters.Add("@MeioDeTransporte", SqlDbType.NVarChar).Value = fnrh.MeioDeTransporte;
+            sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
+            sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NVarChar).Value = fnrh.CpfHospede;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

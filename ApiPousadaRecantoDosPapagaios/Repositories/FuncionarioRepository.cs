@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -146,11 +147,30 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Funcionario funcionario)
         {
-            var comando = $"EXEC InserirFuncionario '{funcionario.NomeCompleto}', '{funcionario.Cpf}', '{funcionario.Nacionalidade}', '{funcionario.DataDeNascimento}', '{funcionario.Sexo}', '{funcionario.Rg}', '{funcionario.Celular}', '{funcionario.Cargo}', '{funcionario.Setor}', {funcionario.Salario}, '{funcionario.Email}', '{funcionario.Login}', '{funcionario.Senha}', {funcionario.CategoriaAcesso.Id}, {funcionario.Excluido}";
+            var procedure = @"dbo.[InserirFuncionario]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = funcionario.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NChar).Value = funcionario.Cpf;
+            sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = funcionario.Nacionalidade;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = funcionario.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = funcionario.Sexo;
+            sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = funcionario.Rg;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NChar).Value = funcionario.Celular;
+            sqlCommand.Parameters.Add("@Cargo", SqlDbType.NVarChar).Value = funcionario.Cargo;
+            sqlCommand.Parameters.Add("@Setor", SqlDbType.NVarChar).Value = funcionario.Setor;
+            sqlCommand.Parameters.Add("@Salario", SqlDbType.Float).Value = funcionario.Salario;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = funcionario.Email;
+            sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = funcionario.Login;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = funcionario.Senha;
+            sqlCommand.Parameters.Add("@IdCategoriaAcesso", SqlDbType.Int).Value = funcionario.CategoriaAcesso.Id;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = funcionario.Excluido;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -158,11 +178,30 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfFuncionario, Funcionario funcionario)
         {
-            var comando = $"EXEC AtualizarFuncionario '{funcionario.NomeCompleto}', '{funcionario.Cpf}', '{funcionario.DataDeNascimento}', '{funcionario.Email}', '{funcionario.Login}', '{funcionario.Senha}', '{funcionario.Celular}', '{funcionario.Nacionalidade}', '{funcionario.Sexo}', '{funcionario.Rg}', '{funcionario.Cargo}', '{funcionario.Setor}', {funcionario.Salario}, {funcionario.CategoriaAcesso.Id}";
+            var procedure = @"dbo.[AtualizarFuncionario]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            // TODO: Verificar ordem.
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = funcionario.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NChar).Value = funcionario.Cpf;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = funcionario.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = funcionario.Email;
+            sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = funcionario.Login;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = funcionario.Senha;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NChar).Value = funcionario.Celular;
+            sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = funcionario.Nacionalidade;
+            sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = funcionario.Sexo;
+            sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = funcionario.Rg;
+            sqlCommand.Parameters.Add("@Cargo", SqlDbType.NVarChar).Value = funcionario.Cargo;
+            sqlCommand.Parameters.Add("@Setor", SqlDbType.NVarChar).Value = funcionario.Setor;
+            sqlCommand.Parameters.Add("@Salario", SqlDbType.Float).Value = funcionario.Salario;
+            sqlCommand.Parameters.Add("@Catacesso", SqlDbType.Int).Value = funcionario.CategoriaAcesso.Id;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
