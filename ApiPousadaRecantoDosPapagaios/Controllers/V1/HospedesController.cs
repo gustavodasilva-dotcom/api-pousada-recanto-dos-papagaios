@@ -48,16 +48,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         [HttpPost]
         public async Task<ActionResult<HospedeViewModel>> Inserir([FromBody] HospedeInputModel hospedeInputModel)
         {
-            try
-            {
+            //try
+            //{
                 var hospede = await _hospedeService.Inserir(hospedeInputModel);
 
                 return Ok(hospede);
-            }
-            catch(Exception ex)
-            {
-                return Conflict("Já existe um hóspede registrado com esse CPF!");
-            }
+            //}
+            //catch(Exception ex)
+            //{
+            //    return Conflict("Já existe um hóspede registrado com esse CPF!");
+            //}
         }
 
         [HttpPut("{cpfHospede}")]

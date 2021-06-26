@@ -9,10 +9,33 @@ GO
 --- PROCEDURES PARA ATUALIZA플O ---
 -----------------------------------
 
-CREATE PROCEDURE AtualizarEndereco @Cep nchar(8), @Logradouro nvarchar(255), @Numero nchar(8), @Complemento nvarchar(255),  
-@Bairro nvarchar(255), @Cidade nvarchar(255), @Estado nchar(2), @Pais nvarchar(255), @CpfHospede nchar(11)  
+--DROP PROCEDURE AtualizarEnderecoFuncionario;
+CREATE PROCEDURE AtualizarEnderecoFuncionario
+	@Cep nchar(8),				 @Logradouro nvarchar(255),		@Numero nchar(8),
+	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
+	@Estado nchar(2),			 @Pais nvarchar(255),			@CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO  
+ UPDATE dbo.ENDERECO_FUNCIONARIO
+ SET  
+  END_FUNC_CEP_CHAR = @Cep,  
+  END_FUNC_LOGRADOURO_STR = @Logradouro,  
+  END_FUNC_NUMERO_CHAR = @Numero,  
+  END_FUNC_COMPLEMENTO_STR = @Complemento,  
+  END_FUNC_BAIRRO_STR = @Bairro,  
+  END_FUNC_CIDADE_STR = @Cidade,  
+  END_FUNC_ESTADO_CHAR = @Estado,  
+  END_FUNC_PAIS_STR = @Pais  
+ WHERE (dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede)
+	   AND (dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 0)
+GO
+
+--DROP PROCEDURE AtualizarEnderecoHospede;
+CREATE PROCEDURE AtualizarEnderecoHospede
+	@Cep nchar(8),				 @Logradouro nvarchar(255),		@Numero nchar(8),
+	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
+	@Estado nchar(2),			 @Pais nvarchar(255),			@CpfHospede nchar(11)  
+AS  
+ UPDATE dbo.ENDERECO_HOSPEDE
  SET  
   END_CEP_CHAR = @Cep,  
   END_LOGRADOURO_STR = @Logradouro,  
@@ -22,11 +45,15 @@ AS
   END_CIDADE_STR = @Cidade,  
   END_ESTADO_CHAR = @Estado,  
   END_PAIS_STR = @Pais  
- WHERE (dbo.ENDERECO.END_CPF_HOSPEDE_STR = @CpfHospede) AND (dbo.ENDERECO.END_EXCLUIDO_BIT = 0)
+ WHERE (dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede)
+	   AND (dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 0)
 GO
 
-CREATE PROCEDURE AtualizarHospede @NomeCompleto nvarchar(255), @Cpf nvarchar(11), @DataDeNascimento Date, @Email nvarchar(50),  
-@Login nvarchar(11), @Senha nvarchar(50), @Celular nvarchar(15)  
+--DROP PROCEDURE AtualizarHospede;
+CREATE PROCEDURE AtualizarHospede
+	@NomeCompleto nvarchar(255),	@Cpf nvarchar(11),	 @DataDeNascimento Date,
+	@Email nvarchar(50),			@Login nvarchar(11), @Senha nvarchar(50),
+	@Celular nvarchar(15)  
 AS  
  UPDATE dbo.HOSPEDE  
  SET  
@@ -40,9 +67,12 @@ AS
  WHERE (dbo.HOSPEDE.HSP_CPF_CHAR = @Cpf) AND (dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 0)
 GO
 
-CREATE PROCEDURE AtualizarFNRH @IdFNRH int, @Profissao nvarchar(255), @Nacionalidade nvarchar(255), @Sexo nchar(1),
-@Rg nchar(9), @ProximoDestino nvarchar(255), @UltimoDestino nvarchar(255), @MotivoViagem nvarchar(255),
-@MeioDeTransporte nvarchar(255), @PlacaAutomovel nvarchar(255), @NumAcompanhantes int, @CpfHospede nchar(11)
+--DROP PROCEDURE AtualizarFNRH;
+CREATE PROCEDURE AtualizarFNRH
+	@IdFNRH int,				   @Profissao nvarchar(255),		@Nacionalidade nvarchar(255),
+	@Sexo nchar(1),				   @Rg nchar(9),					@ProximoDestino nvarchar(255),
+	@UltimoDestino nvarchar(255),  @MotivoViagem nvarchar(255),		@MeioDeTransporte nvarchar(255),
+	@PlacaAutomovel nvarchar(255), @NumAcompanhantes int,			@CpfHospede nchar(11)
 AS
  UPDATE dbo.FNRH
  SET
@@ -60,8 +90,10 @@ AS
  WHERE FNRH_ID_INT = @IdFNRH
 GO
 
+--DROP PROCEDURE AtualizarDadosBancarios;
 CREATE PROCEDURE AtualizarDadosBancarios
-@Banco nvarchar(50), @Agencia nvarchar(50), @NumeroDaConta nvarchar(50), @CpfFuncionario nchar(11)
+	@Banco nvarchar(50),	@Agencia nvarchar(50),		@NumeroDaConta nvarchar(50),
+	@CpfFuncionario nchar(11)
 AS
  UPDATE
  dbo.DADOSBANCARIOS
@@ -74,6 +106,7 @@ AS
   AND dbo.DADOSBANCARIOS.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE AtualizarFuncionario;
 CREATE PROCEDURE AtualizarFuncionario
 @NomeCompleto nvarchar(255),	@Cpf nchar(11),		 @DataDeNascimento date,		@Email nvarchar(50),
 @Login nvarchar(45),			@Senha nvarchar(45), @Celular nchar(15),			@Nacionalidade nvarchar(50),
@@ -104,11 +137,19 @@ GO
 ---- PROCEDURES PARA INSER플O -----
 -----------------------------------
 
-CREATE PROCEDURE InserirEnderecos @Cep nchar(8), @Logradouro nvarchar(255), @Numero nchar(8), @Complemento nvarchar(255),  
-@Bairro nvarchar(255), @Cidade nvarchar(255), @Estado nchar(2), @Pais nvarchar(255), @IdHospede int, @CpfHospede nchar(11),  
-@Excluido bit  
-AS  
- INSERT INTO dbo.ENDERECO  
+--DROP PROCEDURE InserirEnderecoHospede;
+CREATE PROCEDURE InserirEnderecoHospede
+	@Cep nchar(8),					@Logradouro nvarchar(255),		@Numero nchar(8),
+	@Complemento nvarchar(255),		@Bairro nvarchar(255),			@Cidade nvarchar(255),
+	@Estado nchar(2),				@Pais nvarchar(255),			@CpfFuncionario nchar(11),
+	@Excluido bit
+AS
+	DECLARE
+		@IdHospede INT
+
+	SELECT TOP 1 @IdHospede = HSP_ID_INT FROM dbo.[HOSPEDE] ORDER BY HSP_ID_INT DESC;
+
+ INSERT INTO dbo.ENDERECO_HOSPEDE
  VALUES  
  (  
   @Cep,  
@@ -120,14 +161,46 @@ AS
   @Estado,  
   @Pais,  
   @IdHospede,  
-  @CpfHospede,  
+  @CpfFuncionario,  
   @Excluido  
  )
 GO
 
-CREATE PROCEDURE InserirEndereco @Cep nchar(8), @Logradouro nvarchar(255), @Numero nchar(8), @Complemento nvarchar(255),  
-@Bairro nvarchar(255), @Cidade nvarchar(255), @Estado nchar(2), @Pais nvarchar(255), @CpfHospede nchar(11),  
-@Excluido bit  
+--DROP PROCEDURE InserirEnderecoFuncionario;
+CREATE PROCEDURE InserirEnderecoFuncionario
+	@Cep nchar(8),					@Logradouro nvarchar(255),		@Numero nchar(8),
+	@Complemento nvarchar(255),		@Bairro nvarchar(255),			@Cidade nvarchar(255),
+	@Estado nchar(2),				@Pais nvarchar(255),			@CpfFuncionario nchar(11),
+	@Excluido bit
+AS
+	DECLARE
+		@IdFuncionario INT
+
+	SELECT TOP 1 @IdFuncionario = FUNC_ID_INT FROM dbo.[FUNCIONARIO] ORDER BY FUNC_ID_INT DESC;
+
+ INSERT INTO dbo.ENDERECO_FUNCIONARIO  
+ VALUES  
+ (  
+  @Cep,  
+  @Logradouro,  
+  @Numero,  
+  @Complemento,  
+  @Bairro,  
+  @Cidade,  
+  @Estado,  
+  @Pais,  
+  @IdFuncionario,  
+  @CpfFuncionario,  
+  @Excluido  
+ )
+GO
+
+--DROP PROCEDURE InserirEndereco;
+CREATE PROCEDURE InserirEndereco
+	@Cep nchar(8),					@Logradouro nvarchar(255),		@Numero nchar(8),
+	@Complemento nvarchar(255),		@Bairro nvarchar(255),			@Cidade nvarchar(255),
+	@Estado nchar(2),				@Pais nvarchar(255),			@CpfHospede nchar(11),  
+	@Excluido bit  
 AS  
  INSERT INTO dbo.ENDERECO  
  VALUES  
@@ -146,32 +219,42 @@ AS
  )
 GO
 
-CREATE PROCEDURE InserirFNRH @Profissao nvarchar(255), @Nacionalidade nvarchar(50), @Sexo nchar(1),  
-@Rg nchar(9), @ProximoDestino nvarchar(255), @UltimoDestino nvarchar(255), @MotivoViagem nvarchar(255),  
-@MeioDeTransporte nvarchar(255), @PlacaAutomovel nvarchar(255), @NumAcompanhantes int, @HospedeId int,  
-@CpfHospede nvarchar(11), @Excluido bit  
+--DROP PROCEDURE InserirFNRH;
+CREATE PROCEDURE InserirFNRH
+	@Profissao nvarchar(255),		@Nacionalidade nvarchar(50),		@Sexo nchar(1),  
+	@Rg nchar(9),					@ProximoDestino nvarchar(255),		@UltimoDestino nvarchar(255),
+	@MotivoViagem nvarchar(255),	@MeioDeTransporte nvarchar(255),	@PlacaAutomovel nvarchar(255),
+	@NumAcompanhantes int,			@CpfHospede nvarchar(11),			@Excluido bit  
 AS  
- INSERT INTO dbo.FNRH  
- VALUES  
- (  
-  @Profissao,  
-  @Nacionalidade,  
-  @Sexo,  
-  @Rg,  
-  @ProximoDestino,  
-  @UltimoDestino,  
-  @MotivoViagem,  
-  @MeioDeTransporte,  
-  @PlacaAutomovel,  
-  @NumAcompanhantes,  
-  @HospedeId,  
-  @CpfHospede,  
-  @Excluido  
- )
+	DECLARE
+		@HospedeId INT
+
+		SELECT @HospedeId = HSP_ID_INT FROM [HOSPEDE] WHERE HSP_CPF_CHAR = @CpfHospede;
+
+	INSERT INTO dbo.FNRH
+	VALUES  
+	(  
+	 @Profissao,  
+	 @Nacionalidade,  
+	 @Sexo,  
+	 @Rg,  
+	 @ProximoDestino,  
+	 @UltimoDestino,  
+	 @MotivoViagem,  
+	 @MeioDeTransporte,  
+	 @PlacaAutomovel,  
+	 @NumAcompanhantes,  
+	 @HospedeId,  
+	 @CpfHospede,  
+	 @Excluido  
+	)
 GO
 
-CREATE PROCEDURE InserirHospede @NomeCompleto nvarchar(255), @Cpf nvarchar(11), @DataDeNascimento Date, @Email nvarchar(50),  
-@Login nvarchar(11), @Senha nvarchar(50), @Celular nvarchar(15), @Excluido bit  
+--DROP PROCEDURE InserirHospede;
+CREATE PROCEDURE InserirHospede
+	@NomeCompleto nvarchar(255),		@Cpf nvarchar(11),		@DataDeNascimento Date,
+	@Email nvarchar(50),				@Login nvarchar(11),	@Senha nvarchar(50),
+	@Celular nvarchar(15),				@Excluido bit  
 AS  
  INSERT INTO dbo.HOSPEDE  
  VALUES  
@@ -187,28 +270,44 @@ AS
  )  
 GO
 
+--DROP PROCEDURE InserirDadosBancarios;
 CREATE PROCEDURE InserirDadosBancarios
-@Banco nvarchar(50),		@Agencia nvarchar(50), @NumeroDaConta nvarchar(50),
-@CpfFuncionario nchar(11),	@Excluido bit
+	@Banco nvarchar(50),		@Agencia nvarchar(50), @NumeroDaConta nvarchar(50),
+	@CpfFuncionario nchar(11),	@Excluido bit
 AS
+	DECLARE
+		@IdFuncionario INT
+
+	SELECT TOP 1 @IdFuncionario = FUNC_ID_INT FROM dbo.[FUNCIONARIO] ORDER BY FUNC_ID_INT DESC;
+	
  INSERT INTO dbo.DADOSBANCARIOS
  VALUES
  (
 	@Banco,
 	@Agencia,
 	@NumeroDaConta,
-	NULL,
+	@IdFuncionario,
 	@CpfFuncionario,
 	@Excluido
  )
 GO
 
+--DROP PROCEDURE InserirFuncionario;
 CREATE PROCEDURE InserirFuncionario
-@NomeCompleto nvarchar(255),	@Cpf nchar(11),			@Nacionalidade nvarchar(50),	@DataDeNascimento date, 
-@Sexo nchar(1),					@Rg nchar(9),			@Celular nchar(15),				@Cargo nvarchar(50),
-@Setor nvarchar(50),			@Salario float(2),		@Email nvarchar(50),			@Login nvarchar(45),
-@Senha nvarchar(45),			@IdCategoriaAcesso int,	@Excluido bit
+	@NomeCompleto nvarchar(255),	@Cpf nchar(11),			@Nacionalidade nvarchar(50),	@DataDeNascimento date, 
+	@Sexo nchar(1),					@Rg nchar(9),			@Celular nchar(15),				@Cargo nvarchar(50),
+	@Setor nvarchar(50),			@Salario float(2),		@Email nvarchar(50),			@Login nvarchar(45),
+	@Senha nvarchar(45),			@IdCategoriaAcesso int,	@Excluido bit
 AS
+	DECLARE
+		@IdCatAcesso INT
+
+	IF @IdCategoriaAcesso = 1 -- Recepcao
+		SELECT @IdCatAcesso = CATACESSO_ID_INT FROM [CATEGORIA_ACESSO] WHERE CATACESSO_DESCRICAO_STR = 'Recepcao';
+
+	IF @IdCategoriaAcesso = 2 -- Administrativo
+		SELECT @IdCatAcesso = CATACESSO_ID_INT FROM [CATEGORIA_ACESSO] WHERE CATACESSO_ID_INT = 'Administrativo';
+
  INSERT INTO dbo.FUNCIONARIO
  VALUES
  (
@@ -225,7 +324,7 @@ AS
 	@Email,
 	@Login,
 	@Senha,
-	@IdCategoriaAcesso,
+	@IdCatAcesso,
 	@Excluido
  )
 GO
@@ -235,12 +334,14 @@ GO
 ---- PROCEDURES PARA OBTEN플O -----
 -----------------------------------
 
+--DROP PROCEDURE ObterEnderecos;
 CREATE PROCEDURE ObterEnderecos  
 AS  
  SELECT * FROM ENDERECO  
  WHERE ENDERECO.END_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE ObterFNRHsPorHospede;
 CREATE PROCEDURE ObterFNRHsPorHospede @cpfHospede nvarchar(11)    
 AS      
  SELECT
@@ -263,6 +364,7 @@ AS
  WHERE F.END_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE ObterHospede;
 CREATE PROCEDURE ObterHospede @cpfHospede nvarchar(11)  
 AS  
  SELECT  
@@ -290,15 +392,17 @@ AS
  ON (H.HSP_CPF_CHAR = @cpfHospede) AND (E.END_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)
 GO
 
+--DROP PROCEDURE ObterHospedes;
 CREATE PROCEDURE ObterHospedes  
 AS  
  SELECT *
  FROM dbo.HOSPEDE AS H
- INNER JOIN dbo.ENDERECO AS E
+ INNER JOIN dbo.ENDERECO_HOSPEDE AS E
  ON H.HSP_CPF_CHAR = E.END_CPF_HOSPEDE_STR
  WHERE H.HSP_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE ObterPorCpf;
 CREATE PROCEDURE ObterPorCpf @cpfHospede nvarchar(11)
 AS
  SELECT
@@ -319,10 +423,11 @@ AS
   E.END_CIDADE_STR,
   E.END_ESTADO_CHAR,
   E.END_PAIS_STR
- FROM dbo.HOSPEDE AS H, dbo.ENDERECO AS E
+ FROM dbo.HOSPEDE AS H, dbo.ENDERECO_HOSPEDE AS E
  WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (E.END_CPF_HOSPEDE_STR = @cpfHospede) AND (H.HSP_EXCLUIDO_BIT = 0)
 GO
 
+--DROP PROCEDURE ObterUltimaFNRHRegistroPorHospede;
 CREATE PROCEDURE ObterUltimaFNRHRegistroPorHospede @cpfHospede nvarchar(11)    
 AS      
  SELECT      
@@ -344,11 +449,13 @@ AS
  ORDER BY F.FNRH_ID_INT ASC
 GO
 
+--DROP PROCEDURE ObterUltimoHospede;
 CREATE PROCEDURE ObterUltimoHospede  
 AS  
  SELECT TOP 1 * FROM dbo.HOSPEDE ORDER BY HSP_ID_INT DESC
 GO
 
+--DROP PROCEDURE ObterFNRHPorId;
 CREATE PROCEDURE ObterFNRHPorId @IdHospede int
 AS
  SELECT * FROM dbo.FNRH
@@ -356,25 +463,27 @@ AS
  AND END_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE ObterFuncionarios;
 CREATE PROCEDURE ObterFuncionarios
 AS
  SELECT *
- FROM ENDERECO AS E, FUNCIONARIO AS F
+ FROM ENDERECO_HOSPEDE AS EH, FUNCIONARIO AS F
  INNER JOIN DADOSBANCARIOS AS DB
  ON F.FUNC_CPF_CHAR = DB.DADOSBC_FUNCIONARIO_CPF_CHAR
- WHERE F.FUNC_CPF_CHAR = E.END_CPF_HOSPEDE_STR
-	   AND F.FUNC_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
+ WHERE F.FUNC_CPF_CHAR = EH.END_CPF_HOSPEDE_STR
+	   AND F.FUNC_EXCLUIDO_BIT = 0 AND EH.END_EXCLUIDO_BIT = 0
 	   AND DB.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
+--DROP PROCEDURE ObterFuncionario;
 CREATE PROCEDURE ObterFuncionario @CpfFuncionario nchar(11)
 AS
  SELECT *
- FROM ENDERECO AS E, FUNCIONARIO AS F
+ FROM ENDERECO_HOSPEDE AS EH, FUNCIONARIO AS F
  INNER JOIN DADOSBANCARIOS AS DB 
  ON DB.DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario AND F.FUNC_CPF_CHAR = @CpfFuncionario
- WHERE F.FUNC_CPF_CHAR = @CpfFuncionario AND E.END_CPF_HOSPEDE_STR = @CpfFuncionario
- 	   AND F.FUNC_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0 AND DB.DADOSBC_EXCLUIDO_BIT = 0
+ WHERE F.FUNC_CPF_CHAR = @CpfFuncionario AND EH.END_CPF_HOSPEDE_STR = @CpfFuncionario
+ 	   AND F.FUNC_EXCLUIDO_BIT = 0 AND EH.END_EXCLUIDO_BIT = 0 AND DB.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
 
@@ -382,13 +491,23 @@ GO
 ----- PROCEDURES PARA REMO플O -----
 -----------------------------------
 
-CREATE PROCEDURE RemoverEndereco @CpfHospede nchar(11)  
+--DROP PROCEDURE RemoverEnderecoHospede;
+CREATE PROCEDURE RemoverEnderecoHospede @CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO  
- SET dbo.ENDERECO.END_EXCLUIDO_BIT = 1  
- WHERE dbo.ENDERECO.END_CPF_HOSPEDE_STR = @CpfHospede
+ UPDATE dbo.ENDERECO_HOSPEDE
+ SET dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 1  
+ WHERE dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede
 GO
 
+--DROP PROCEDURE RemoverEnderecoFuncionario;
+CREATE PROCEDURE RemoverEnderecoFuncionario @CpfHospede nchar(11)  
+AS  
+ UPDATE dbo.ENDERECO_FUNCIONARIO
+  SET dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 1  
+ WHERE dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede
+GO
+
+--DROP PROCEDURE RemoverHospede;
 CREATE PROCEDURE RemoverHospede @cpfHospede nvarchar(11)
 AS  
  UPDATE dbo.HOSPEDE  
@@ -396,6 +515,7 @@ AS
  WHERE dbo.HOSPEDE.HSP_CPF_CHAR = @cpfHospede
 GO
 
+--DROP PROCEDURE RemoverFNRH;
 CREATE PROCEDURE RemoverFNRH @IdFNRH int
 AS
  UPDATE dbo.FNRH

@@ -8,9 +8,12 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     public interface IEnderecoRepository : IDisposable
     {
         Task<List<Endereco>> Obter();
-        Task Inserir(Endereco endereco, string cpfHospede, int idHospede);
+        Task InserirEnderecoFuncionario(Endereco endereco, string cpfHospede);
+        Task InserirEnderecoHospede(Endereco endereco, string cpfHospede);
         Task Inserir(Endereco endereco, string cpfHospede);
-        Task Atualizar(string cpfHospede, Endereco endereco);
-        Task Remover(string cpfHospede);
+        Task AtualizarEnderecoFuncionario(string cpfHospede, Endereco endereco);
+        Task AtualizarEnderecoHospede(string cpfHospede, Endereco endereco);
+        Task RemoverEnderecoHospede(string cpfHospede);
+        Task RemoverEnderecoFuncionario(string cpfHospede);
     }
 }

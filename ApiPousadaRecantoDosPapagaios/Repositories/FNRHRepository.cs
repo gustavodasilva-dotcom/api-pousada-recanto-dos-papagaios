@@ -143,7 +143,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@MeioDeTransporte", SqlDbType.NVarChar).Value = fnrh.MeioDeTransporte;
             sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
             sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
-            sqlCommand.Parameters.Add("@HospedeId", SqlDbType.Int).Value = fnrh.HospedeId;
             sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
             sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = fnrh.Excluido;
 

@@ -81,10 +81,10 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
         {
-            var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
+            //var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
 
-            if (!(hospede == null))
-                throw new Exception();
+            //if (!(hospede == null))
+            //    throw new Exception();
 
             var hospedeInsert = new Hospede
             {
@@ -115,7 +115,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Excluido = 0
             };
 
-            await _enderecoRepository.Inserir(enderecoInsert, ultimoHospede.Cpf, ultimoHospede.Id);
+            await _enderecoRepository.InserirEnderecoHospede(enderecoInsert, ultimoHospede.Cpf);
 
             return new HospedeViewModel
             {
@@ -172,7 +172,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Pais = hospedeInputModel.Endereco.Pais
             };
 
-            await _enderecoRepository.Atualizar(cpfHospede, enderecoInsert);
+            await _enderecoRepository.AtualizarEnderecoHospede(cpfHospede, enderecoInsert);
 
             return new HospedeViewModel
             {
@@ -206,7 +206,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
             await _hospedeRepository.Remover(cpfHospede);
 
-            await _enderecoRepository.Remover(cpfHospede);
+            await _enderecoRepository.RemoverEnderecoHospede(cpfHospede);
         }
 
     }

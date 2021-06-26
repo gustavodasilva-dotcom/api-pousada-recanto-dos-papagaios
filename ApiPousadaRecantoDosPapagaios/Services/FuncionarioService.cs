@@ -159,7 +159,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Excluido = 0,
             };
 
-            await _enderecoRepository.Inserir(enderecoInsert, funcionarioInsert.Cpf);
+            await _enderecoRepository.InserirEnderecoFuncionario(enderecoInsert, funcionarioInsert.Cpf);
 
             var dadosBancariosInsert = new DadosBancarios
             {
@@ -254,7 +254,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 CpfPessoa = funcionarioInputModel.Cpf,
             };
 
-            await _enderecoRepository.Atualizar(cpfFuncionario, enderecoUpdate);
+            await _enderecoRepository.AtualizarEnderecoFuncionario(cpfFuncionario, enderecoUpdate);
 
             var dadosBancariosUpdate = new DadosBancarios
             {

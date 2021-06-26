@@ -53,9 +53,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return enderecos;
         }
 
-        public async Task Inserir(Endereco endereco, string cpfHospede, int idHospede)
+        public async Task InserirEnderecoFuncionario(Endereco endereco, string cpfHospede)
         {
-            var procedure = @"dbo.[InserirEnderecos]";
+            var procedure = @"dbo.[InserirEnderecoFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -69,9 +69,34 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido;
+            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido; // TODO: Fazer isso no banco.
+
+            await sqlConnection.OpenAsync();
+
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
+        public async Task InserirEnderecoHospede(Endereco endereco, string cpfHospede)
+        {
+            var procedure = @"dbo.[InserirEnderecoHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido; // TODO: Fazer isso no banco.
 
             await sqlConnection.OpenAsync();
 
@@ -106,9 +131,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
-        public async Task Atualizar(string cpfHospede, Endereco endereco)
+        public async Task AtualizarEnderecoFuncionario(string cpfHospede, Endereco endereco)
         {
-            var procedure = @"dbo.[AtualizarEndereco]";
+            var procedure = @"dbo.[AtualizarEnderecoFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -131,9 +156,34 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
-        public async Task Remover(string cpfHospede)
+        public async Task AtualizarEnderecoHospede(string cpfHospede, Endereco endereco)
         {
-            var comando = $"EXEC RemoverEndereco '{cpfHospede}'";
+            var procedure = @"dbo.[AtualizarEnderecoHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+
+            await sqlConnection.OpenAsync();
+
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
+        public async Task RemoverEnderecoFuncionario(string cpfHospede)
+        {
+            var comando = $"EXEC RemoverEnderecoFuncionario '{cpfHospede}'";
 
             await sqlConnection.OpenAsync();
 
@@ -143,5 +193,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
+        public async Task RemoverEnderecoHospede(string cpfHospede)
+        {
+            var comando = $"EXEC RemoverEnderecoHospede '{cpfHospede}'";
+
+            await sqlConnection.OpenAsync();
+
+            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
     }
 }
