@@ -27,10 +27,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var funcionarios = new List<Funcionario>();
 
-            var comando = $"EXEC ObterFuncionarios";
+            var procedure = @"dbo.[ObterFuncionarios]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -47,16 +51,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                     Celular = (string)sqlDataReader["FUNC_CELULAR_CHAR"],
                     Endereco = new Endereco
                     {
-                        Id = (int)sqlDataReader["END_ID_ENDERECO_INT"],
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"],
-                        CpfPessoa = (string)sqlDataReader["END_CPF_HOSPEDE_STR"]
+                        Id = (int)sqlDataReader["END_FUNC_ID_ENDERECO_INT"],
+                        Cep = (string)sqlDataReader["END_FUNC_CEP_CHAR"],
+                        Logradouro = (string)sqlDataReader["END_FUNC_LOGRADOURO_STR"],
+                        Numero = (string)sqlDataReader["END_FUNC_NUMERO_CHAR"],
+                        Complemento = (string)sqlDataReader["END_FUNC_COMPLEMENTO_STR"],
+                        Bairro = (string)sqlDataReader["END_FUNC_BAIRRO_STR"],
+                        Cidade = (string)sqlDataReader["END_FUNC_CIDADE_STR"],
+                        Estado = (string)sqlDataReader["END_FUNC_ESTADO_CHAR"],
+                        Pais = (string)sqlDataReader["END_FUNC_PAIS_STR"],
+                        CpfPessoa = (string)sqlDataReader["END_FUNC_CPF_HOSPEDE_STR"]
                     },
                     Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
                     Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
@@ -88,10 +92,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Funcionario funcionario = null;
 
-            var comando = $"EXEC ObterFuncionario '{cpfFuncionario}'";
+            var procedure = @"ObterFuncionario";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -108,16 +118,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                     Celular = (string)sqlDataReader["FUNC_CELULAR_CHAR"],
                     Endereco = new Endereco
                     {
-                        Id = (int)sqlDataReader["END_ID_ENDERECO_INT"],
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"],
-                        CpfPessoa = (string)sqlDataReader["END_CPF_HOSPEDE_STR"]
+                        Id = (int)sqlDataReader["END_FUNC_ID_ENDERECO_INT"],
+                        Cep = (string)sqlDataReader["END_FUNC_CEP_CHAR"],
+                        Logradouro = (string)sqlDataReader["END_FUNC_LOGRADOURO_STR"],
+                        Numero = (string)sqlDataReader["END_FUNC_NUMERO_CHAR"],
+                        Complemento = (string)sqlDataReader["END_FUNC_COMPLEMENTO_STR"],
+                        Bairro = (string)sqlDataReader["END_FUNC_BAIRRO_STR"],
+                        Cidade = (string)sqlDataReader["END_FUNC_CIDADE_STR"],
+                        Estado = (string)sqlDataReader["END_FUNC_ESTADO_CHAR"],
+                        Pais = (string)sqlDataReader["END_FUNC_PAIS_STR"],
+                        CpfPessoa = (string)sqlDataReader["END_FUNC_CPF_HOSPEDE_STR"]
                     },
                     Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
                     Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
@@ -167,7 +177,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = funcionario.Login;
             sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = funcionario.Senha;
             sqlCommand.Parameters.Add("@IdCategoriaAcesso", SqlDbType.Int).Value = funcionario.CategoriaAcesso.Id;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = funcionario.Excluido;
 
             await sqlConnection.OpenAsync();
 

@@ -136,7 +136,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Cargo = funcionarioInputModel.Cargo,
                 Setor = funcionarioInputModel.Setor,
                 Salario = funcionarioInputModel.Salario,
-                Excluido = 0,
                 CategoriaAcesso = new CategoriaAcesso
                 {
                     Id = funcionarioInputModel.CategoriaAcesso.Id
@@ -155,8 +154,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Cidade = funcionarioInputModel.Endereco.Cidade,
                 Estado = funcionarioInputModel.Endereco.Estado,
                 Pais = funcionarioInputModel.Endereco.Pais,
-                CpfPessoa = funcionarioInputModel.Cpf,
-                Excluido = 0,
+                CpfPessoa = funcionarioInputModel.Cpf
             };
 
             await _enderecoRepository.InserirEnderecoFuncionario(enderecoInsert, funcionarioInsert.Cpf);
@@ -166,8 +164,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Banco = funcionarioInputModel.DadosBancarios.Banco,
                 Agencia = funcionarioInputModel.DadosBancarios.Agencia,
                 NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta,
-                CpfFuncionario = funcionarioInputModel.Cpf,
-                Excluido = 0
+                CpfFuncionario = funcionarioInputModel.Cpf
             };
 
             await _dadosBancariosRepository.Inserir(dadosBancariosInsert, funcionarioInsert.Cpf);

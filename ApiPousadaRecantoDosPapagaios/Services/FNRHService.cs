@@ -64,7 +64,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 PlacaAutomovel = fnrhInputModel.PlacaAutomovel,
                 NumAcompanhantes = fnrhInputModel.NumAcompanhantes,
                 HospedeId = hospede.Id,
-                Excluido = 0
             };
             
             await _FNRHRepository.Inserir(cpfHospede, fnrhInsert);

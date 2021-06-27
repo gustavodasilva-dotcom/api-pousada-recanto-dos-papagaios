@@ -81,10 +81,10 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
         {
-            //var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
+            var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
 
-            //if (!(hospede == null))
-            //    throw new Exception();
+            if (!(hospede == null))
+                throw new Exception();
 
             var hospedeInsert = new Hospede
             {
@@ -94,8 +94,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Email = hospedeInputModel.Email,
                 Login = hospedeInputModel.Cpf,
                 Senha = hospedeInputModel.Senha,
-                Celular = hospedeInputModel.Celular,
-                Excluido = 0
+                Celular = hospedeInputModel.Celular
             };
 
             await _hospedeRepository.Inserir(hospedeInsert);
@@ -111,8 +110,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Bairro = hospedeInputModel.Endereco.Bairro,
                 Cidade = hospedeInputModel.Endereco.Cidade,
                 Estado = hospedeInputModel.Endereco.Estado,
-                Pais = hospedeInputModel.Endereco.Pais,
-                Excluido = 0
+                Pais = hospedeInputModel.Endereco.Pais
             };
 
             await _enderecoRepository.InserirEnderecoHospede(enderecoInsert, ultimoHospede.Cpf);

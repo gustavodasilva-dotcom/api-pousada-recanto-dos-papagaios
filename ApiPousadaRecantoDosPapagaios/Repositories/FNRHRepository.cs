@@ -27,10 +27,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var fnrhs = new List<FNRH>();
 
-            var comando = $"EXEC ObterFNRHsPorHospede '{cpfHospede}'";
+            var procedure = @"ObterFNRHsPorHospede";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
             
             while (sqlDataReader.Read())
@@ -61,10 +67,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             FNRH fnrh = null;
 
-            var comando = $"EXEC ObterUltimaFNRHRegistroPorHospede '{cpfHospede}'";
+            var procedure = @"ObterUltimaFNRHRegistroPorHospede";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -95,10 +107,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             FNRH fnrh = null;
 
-            var comando = $"EXEC ObterFNRHPorId {idFNRH}";
+            var procedure = @"dbo.[ObterFNRHPorId]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@IdFNRH", SqlDbType.Int).Value = idFNRH;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+            
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -144,7 +162,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
             sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
             sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = fnrh.Excluido;
 
             await sqlConnection.OpenAsync();
 
@@ -183,11 +200,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Deletar(int idFNRH)
         {
-            var comando = $"EXEC RemoverFNRH {idFNRH}";
+            var procedure = @"dbo.[RemoverFNRH]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@IdFNRH", SqlDbType.Int).Value = idFNRH;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

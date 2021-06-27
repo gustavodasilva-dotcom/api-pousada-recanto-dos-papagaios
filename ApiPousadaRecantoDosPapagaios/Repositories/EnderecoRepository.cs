@@ -26,10 +26,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var enderecos = new List<Endereco>();
 
-            var comando = $"EXEC ObterEnderecos";
+            var procedure = @"dbo.[ObterEnderecos]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -47,6 +51,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                     PessoaId = (int)sqlDataReader["END_ID_HOSPEDE_INT"]
                 });
             }
+
+            sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
 
@@ -70,7 +76,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
             sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido; // TODO: Fazer isso no banco.
 
             await sqlConnection.OpenAsync();
 
@@ -96,33 +101,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
             sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido; // TODO: Fazer isso no banco.
-
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-        }
-
-        public async Task Inserir(Endereco endereco, string cpfHospede)
-        {
-            var procedure = @"dbo.[InserirEndereco]";
-
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
-            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
-            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
-            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
-            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
-            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
-            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
-            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = endereco.Excluido;
 
             await sqlConnection.OpenAsync();
 
@@ -183,11 +161,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task RemoverEnderecoFuncionario(string cpfHospede)
         {
-            var comando = $"EXEC RemoverEnderecoFuncionario '{cpfHospede}'";
+            var procedure = @"RemoverEnderecoFuncionario";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
@@ -195,11 +178,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task RemoverEnderecoHospede(string cpfHospede)
         {
-            var comando = $"EXEC RemoverEnderecoHospede '{cpfHospede}'";
+            var procedure = @"RemoverEnderecoHospede";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

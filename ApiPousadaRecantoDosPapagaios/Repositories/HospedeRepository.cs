@@ -27,10 +27,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var hospedes = new List<Hospede>();
 
-            var comando = $"EXEC ObterHospedes";
+            var procedure = @"dbo.[ObterHospedes]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -68,10 +72,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"EXEC ObterHospede '{cpfHospede}'";
+            var procedure = @"dbo.[ObterHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -120,7 +130,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = hospede.Login;
             sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Senha;
             sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Celular;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = hospede.Excluido;
 
             await sqlConnection.OpenAsync();
 
@@ -133,10 +142,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"EXEC ObterUltimoHospede";
+            var procedure = $"dbo.[ObterUltimoHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -163,10 +176,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var comando = $"EXEC ObterPorCpf '{cpfHospede}'";
+            var procedure = @"dbo.[ObterPorCpf]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
+
             SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
             while (sqlDataReader.Read())
@@ -214,11 +233,16 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Remover(string cpfHospede)
         {
-            var comando = $"EXEC RemoverHospede {cpfHospede}";
+            var procedure = @"dbo.[RemoverHospede]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
             await sqlConnection.OpenAsync();
 
-            SqlCommand sqlCommand = new SqlCommand(comando, sqlConnection);
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();

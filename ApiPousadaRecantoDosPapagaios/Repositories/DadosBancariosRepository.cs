@@ -33,7 +33,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = dadosBancarios.Agencia;
             sqlCommand.Parameters.Add("@NumeroDaConta", SqlDbType.NVarChar).Value = dadosBancarios.NumeroDaConta;
             sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
-            sqlCommand.Parameters.Add("@Excluido", SqlDbType.Bit).Value = dadosBancarios.Excluido;
 
             await sqlConnection.OpenAsync();
 
