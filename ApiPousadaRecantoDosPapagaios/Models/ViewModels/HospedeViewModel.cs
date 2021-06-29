@@ -1,5 +1,4 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
@@ -17,9 +16,11 @@ namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
         public string Email { get; set; }
 
         public string Login { get; set; }
-        
+
+        [DataType(DataType.Password)]
         public string Senha { get; set; }
-        
+
+        [DataType(DataType.PhoneNumber)]
         public string Celular { get; set; }
         
         public EnderecoViewModel Endereco { get; set; }

@@ -24,7 +24,6 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IHospedeService, HospedeService>();
             services.AddScoped<IHospedeRepository, HospedeRepository>();
 
-            services.AddScoped<IEnderecoService, EnderecoService>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
             services.AddScoped<IFNRHService, FNRHService>();
@@ -34,6 +33,9 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 
             services.AddScoped<IDadosBancariosRepository, DadosBancariosRepository>();
+
+            services.AddScoped<IAcomodacaoService, AcomodacaoService>();
+            services.AddScoped<IAcomodacaoRepository, AcomodacaoRepository>();
 
             services.AddControllers();
 

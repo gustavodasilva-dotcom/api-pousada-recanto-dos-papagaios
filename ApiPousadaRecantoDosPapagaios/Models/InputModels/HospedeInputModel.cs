@@ -17,13 +17,9 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         [DataType(DataType.EmailAddress, ErrorMessage = "O dado inserido não corresponde a um e-mail.")]
         public string Email { get; set; }
         
-        // TODO: Verificar com o grupo como serão trabalhados os logins.
-        //public string Login { get; set; }
-        
         [DataType(DataType.Password, ErrorMessage = "O dado inserido não corresponde a uma senha.")]
         public string Senha { get; set; }
 
-        //[StringLength(maximumLength: 15, MinimumLength = 13)]
         [StringLength(maximumLength: 13, MinimumLength = 13, ErrorMessage = "O número de telefone deve seguir ao seguinte padrão: 5511900001111 (sem espaços).")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "O dado inserido não corresponde a um número de celular.")]
         public string Celular { get; set; }

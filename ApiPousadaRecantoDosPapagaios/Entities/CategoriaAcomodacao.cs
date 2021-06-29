@@ -1,4 +1,4 @@
 ﻿namespace ApiPousadaRecantoDosPapagaios.Entities
 {
-    public class CategoriaAcesso : Categoria { }
+    public class CategoriaAcomodacao : Categoria { }
 }

@@ -295,6 +295,19 @@ AS
  )
 GO
 
+--DROP PROCEDURE InserirAcomodacao;
+CREATE PROCEDURE InserirAcomodacao
+	@NomeAcomodacao nvarchar(255),		@StatusAcomodacao int,		@InformacoesAcomodacao int
+AS
+	INSERT INTO [ACOMODACAO]
+	VALUES
+	(
+		@NomeAcomodacao,
+		@StatusAcomodacao,
+		@InformacoesAcomodacao
+	)
+GO
+
 
 ---------------------------------------------------------------------------------------------------------
 --------------------------------------- PROCEDURES PARA OBTENÇÃO ----------------------------------------
@@ -433,6 +446,19 @@ AS
 		  AND F.FUNC_EXCLUIDO_BIT = 0
 		  AND EF.END_FUNC_EXCLUIDO_BIT = 0
 		  AND DB.DADOSBC_EXCLUIDO_BIT = 0
+GO
+
+--DROP PROCEDURE ObterAcomodacao;
+CREATE PROCEDURE ObterAcomodacao
+AS
+	SELECT *
+	FROM [ACOMODACAO] AS A
+	INNER JOIN [STATUS_ACOMODACAO] AS S
+		ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
+	INNER JOIN [INFORMACOES_ACOMODACAO] AS I
+		ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [CATEGORIA_ACOMODACAO] AS C
+		ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 GO
 
 

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Services
 {
-    public interface IEnderecoService
+    public interface IAcomodacaoService
     {
-        Task<List<EnderecoViewModel>> Obter();
+        public Task<List<AcomodacaoViewModel>> Obter();
     }
 }
