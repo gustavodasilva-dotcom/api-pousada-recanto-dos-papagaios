@@ -149,21 +149,21 @@ AS
 
 	SELECT TOP 1 @IdHospede = HSP_ID_INT FROM dbo.[HOSPEDE] ORDER BY HSP_ID_INT DESC;
 
- INSERT INTO dbo.ENDERECO_HOSPEDE
- VALUES  
- (  
-  @Cep,  
-  @Logradouro,  
-  @Numero,  
-  @Complemento,  
-  @Bairro,  
-  @Cidade,  
-  @Estado,  
-  @Pais,  
-  @IdHospede,  
-  @CpfFuncionario,  
-  0 -- Configurando excluído como 0 (falso)
- )
+	INSERT INTO dbo.ENDERECO_HOSPEDE
+	VALUES  
+	(  
+		@Cep,  
+		@Logradouro,
+		@Numero,  
+		@Complemento,  
+		@Bairro,  
+		@Cidade,  
+		@Estado,  
+		@Pais,  
+		@IdHospede,  
+		@CpfFuncionario,  
+		0 -- Configurando excluído como 0 (falso)
+	)
 GO
 
 --DROP PROCEDURE InserirEnderecoFuncionario;
@@ -177,21 +177,21 @@ AS
 
 	SELECT TOP 1 @IdFuncionario = FUNC_ID_INT FROM dbo.[FUNCIONARIO] ORDER BY FUNC_ID_INT DESC;
 
- INSERT INTO dbo.ENDERECO_FUNCIONARIO  
- VALUES  
- (  
-  @Cep,  
-  @Logradouro,  
-  @Numero,  
-  @Complemento,  
-  @Bairro,  
-  @Cidade,  
-  @Estado,  
-  @Pais,  
-  @IdFuncionario,  
-  @CpfFuncionario,  
-  0 -- Configurando excluído como 0 (falso)
- )
+	INSERT INTO dbo.ENDERECO_FUNCIONARIO  
+	VALUES  
+	(
+		@Cep,  
+		@Logradouro,
+		@Numero,  
+		@Complemento,  
+		@Bairro,  
+		@Cidade,  
+		@Estado,  
+		@Pais,  
+		@IdFuncionario,  
+		@CpfFuncionario,  
+		0 -- Configurando excluído como 0 (falso)
+	)
 GO
 
 --DROP PROCEDURE InserirFNRH;
@@ -209,19 +209,19 @@ AS
 	INSERT INTO dbo.FNRH
 	VALUES  
 	(  
-	 @Profissao,  
-	 @Nacionalidade,  
-	 @Sexo,  
-	 @Rg,  
-	 @ProximoDestino,  
-	 @UltimoDestino,  
-	 @MotivoViagem,  
-	 @MeioDeTransporte,  
-	 @PlacaAutomovel,  
-	 @NumAcompanhantes,  
-	 @HospedeId,  
-	 @CpfHospede,  
-	 0 -- Configurando excluído como 0 (falso)
+		@Profissao,  
+		@Nacionalidade,  
+		@Sexo,  
+		@Rg,  
+		@ProximoDestino,  
+		@UltimoDestino,  
+		@MotivoViagem,  
+		@MeioDeTransporte,  
+		@PlacaAutomovel,  
+		@NumAcompanhantes,  
+		@HospedeId,  
+		@CpfHospede,  
+		0 -- Configurando excluído como 0 (falso)
 	)
 GO
 
@@ -231,18 +231,18 @@ CREATE PROCEDURE InserirHospede
 	@Email nvarchar(50),				@Login nvarchar(11),	@Senha nvarchar(50),
 	@Celular nvarchar(13)
 AS  
- INSERT INTO dbo.HOSPEDE  
- VALUES  
- (  
-  @NomeCompleto,  
-  @Cpf,  
-  @DataDeNascimento,  
-  @Email,  
-  @Login,  
-  @Senha,  
-  @Celular,  
-  0 -- Configurando excluído como 0 (falso)
- )  
+	INSERT INTO dbo.HOSPEDE  
+	VALUES  
+	(  
+		@NomeCompleto,  
+		@Cpf,  
+		@DataDeNascimento,  
+		@Email,  
+		@Login,  
+		@Senha,  
+		@Celular,  
+		0 -- Configurando excluído como 0 (falso)
+	)  
 GO
 
 --DROP PROCEDURE InserirDadosBancarios;
@@ -255,16 +255,16 @@ AS
 
 	SELECT TOP 1 @IdFuncionario = FUNC_ID_INT FROM dbo.[FUNCIONARIO] ORDER BY FUNC_ID_INT DESC;
 	
- INSERT INTO dbo.DADOSBANCARIOS
- VALUES
- (
-	@Banco,
-	@Agencia,
-	@NumeroDaConta,
-	@IdFuncionario,
-	@CpfFuncionario,
-	0 -- Configurando excluído como 0 (falso)
- )
+	INSERT INTO dbo.DADOSBANCARIOS
+	VALUES
+	(
+		@Banco,
+		@Agencia,
+		@NumeroDaConta,
+		@IdFuncionario,
+		@CpfFuncionario,
+		0 -- Configurando excluído como 0 (falso)
+	)
 GO
 
 --DROP PROCEDURE InserirFuncionario;
@@ -274,25 +274,25 @@ CREATE PROCEDURE InserirFuncionario
 	@Setor nvarchar(50),			@Salario float(2),		@Email nvarchar(50),			@Login nvarchar(45),
 	@Senha nvarchar(45),			@IdCategoriaAcesso int
 AS
- INSERT INTO dbo.FUNCIONARIO
- VALUES
- (
-	@NomeCompleto,
-	@Cpf,
-	@Nacionalidade,
-	@DataDeNascimento,
-	@Sexo,
-	@Rg,
-	@Celular,
-	@Cargo,
-	@Setor,
-	@Salario,
-	@Email,
-	@Login,
-	@Senha,
-	@IdCategoriaAcesso,
-	0 -- Configurando excluído como 0 (falso)
- )
+	INSERT INTO dbo.FUNCIONARIO
+	VALUES
+	(
+		@NomeCompleto,
+		@Cpf,
+		@Nacionalidade,
+		@DataDeNascimento,
+		@Sexo,
+		@Rg,
+		@Celular,
+		@Cargo,
+		@Setor,
+		@Salario,
+		@Email,
+		@Login,
+		@Senha,
+		@IdCategoriaAcesso,
+		0 -- Configurando excluído como 0 (falso)
+	)
 GO
 
 --DROP PROCEDURE InserirAcomodacao;
@@ -317,20 +317,18 @@ GO
 --DROP PROCEDURE ObterEnderecos;
 CREATE PROCEDURE ObterEnderecos  
 AS  
- SELECT * FROM ENDERECO  
- WHERE ENDERECO.END_EXCLUIDO_BIT = 0
+	SELECT * FROM ENDERECO  
+	WHERE ENDERECO.END_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE ObterFNRHsPorHospede;
 CREATE PROCEDURE ObterFNRHsPorHospede
 	@cpfHospede nvarchar(11)    
 AS      
- SELECT *
- FROM [HOSPEDE] AS H, [FNRH] AS F
- WHERE (H.HSP_CPF_CHAR = @cpfHospede)
-   AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede)
-   AND (F.FNRH_EXCLUIDO_BIT = 0)
-   AND (H.HSP_EXCLUIDO_BIT = 0)
+	SELECT *
+	FROM [HOSPEDE] AS H, [FNRH] AS F
+	WHERE (H.HSP_CPF_CHAR = @cpfHospede)
+	AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede) AND (F.FNRH_EXCLUIDO_BIT = 0) AND (H.HSP_EXCLUIDO_BIT = 0)
 GO
 
 --DROP PROCEDURE ObterHospede;
@@ -339,8 +337,7 @@ CREATE PROCEDURE ObterHospede
 AS  
 	SELECT *
 	FROM dbo.[HOSPEDE] AS H WITH (NOLOCK)
-	INNER JOIN dbo.[ENDERECO_HOSPEDE] AS E
-	ON H.HSP_ID_INT = E.END_ID_HOSPEDE_INT
+	INNER JOIN dbo.[ENDERECO_HOSPEDE] AS E ON H.HSP_ID_INT = E.END_ID_HOSPEDE_INT
 	WHERE H.HSP_CPF_CHAR = @cpfHospede AND E.END_CPF_HOSPEDE_STR = @cpfHospede
 	AND H.HSP_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
 GO
@@ -350,8 +347,7 @@ CREATE PROCEDURE ObterHospedes
 AS  
 	SELECT *
 	FROM dbo.HOSPEDE AS H WITH (NOLOCK)
-	INNER JOIN dbo.ENDERECO_HOSPEDE AS E
-	ON H.HSP_ID_INT = E.END_ID_HOSPEDE_INT
+	INNER JOIN dbo.ENDERECO_HOSPEDE AS E ON H.HSP_ID_INT = E.END_ID_HOSPEDE_INT
 	WHERE H.HSP_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
 GO
 
@@ -386,40 +382,31 @@ GO
 CREATE PROCEDURE ObterFNRHPorId
 	@IdFNRH int
 AS
- SELECT * FROM dbo.[FNRH]
- WHERE FNRH_ID_INT = @IdFNRH
- AND FNRH_EXCLUIDO_BIT = 0
+	SELECT * FROM dbo.[FNRH]
+	WHERE FNRH_ID_INT = @IdFNRH AND FNRH_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE ObterFuncionarios;
 CREATE PROCEDURE ObterFuncionarios
 AS
- SELECT *
- FROM FUNCIONARIO AS F
- INNER JOIN ENDERECO_FUNCIONARIO AS EF
-	ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
- INNER JOIN DADOSBANCARIOS AS DB
-	ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
- WHERE F.FUNC_EXCLUIDO_BIT = 0 AND EF.END_FUNC_EXCLUIDO_BIT = 0
-	   AND DB.DADOSBC_EXCLUIDO_BIT = 0
+	SELECT *
+	FROM FUNCIONARIO AS F
+	INNER JOIN ENDERECO_FUNCIONARIO AS EF ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
+	INNER JOIN DADOSBANCARIOS AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
+	WHERE F.FUNC_EXCLUIDO_BIT = 0 AND EF.END_FUNC_EXCLUIDO_BIT = 0 AND DB.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE ObterFuncionario;
 CREATE PROCEDURE ObterFuncionario
 	@CpfFuncionario nchar(11)
 AS
- SELECT *
+	SELECT *
 	FROM [FUNCIONARIO] AS F
-	INNER JOIN [ENDERECO_FUNCIONARIO] AS EF
-		ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
-	INNER JOIN [DADOSBANCARIOS] AS DB
-		ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
+	INNER JOIN [ENDERECO_FUNCIONARIO] AS EF ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
+	INNER JOIN [DADOSBANCARIOS] AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
 	WHERE F.FUNC_CPF_CHAR = @CpfFuncionario
-		  AND EF.END_FUNC_CPF_HOSPEDE_STR = @CpfFuncionario
-		  AND DB.DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
-		  AND F.FUNC_EXCLUIDO_BIT = 0
-		  AND EF.END_FUNC_EXCLUIDO_BIT = 0
-		  AND DB.DADOSBC_EXCLUIDO_BIT = 0
+	AND EF.END_FUNC_CPF_HOSPEDE_STR = @CpfFuncionario AND DB.DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
+	AND F.FUNC_EXCLUIDO_BIT = 0 AND EF.END_FUNC_EXCLUIDO_BIT = 0 AND DB.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE ObterAcomodacoes;
@@ -427,12 +414,9 @@ CREATE PROCEDURE ObterAcomodacoes
 AS
 	SELECT *
 	FROM [ACOMODACAO] AS A
-	INNER JOIN [STATUS_ACOMODACAO] AS S
-		ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [INFORMACOES_ACOMODACAO] AS I
-		ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [CATEGORIA_ACOMODACAO] AS C
-		ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
+	INNER JOIN [INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_EXCLUIDO_BIT = 0
 GO
 
@@ -442,12 +426,9 @@ CREATE PROCEDURE ObterAcomodacao
 AS
 	SELECT *
 	FROM [ACOMODACAO] AS A
-	INNER JOIN [STATUS_ACOMODACAO] AS S
-		ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [INFORMACOES_ACOMODACAO] AS I
-		ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [CATEGORIA_ACOMODACAO] AS C
-		ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
+	INNER JOIN [INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_ID_INT = @idAcomodacao AND A.ACO_EXCLUIDO_BIT = 0
 GO
 
@@ -456,12 +437,9 @@ CREATE PROCEDURE ObterUltimaAcomodacao
 AS
 	SELECT TOP 1 *
 	FROM [ACOMODACAO] AS A
-	INNER JOIN [STATUS_ACOMODACAO] AS S
-		ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [INFORMACOES_ACOMODACAO] AS I
-		ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [CATEGORIA_ACOMODACAO] AS C
-		ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
+	INNER JOIN [INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_EXCLUIDO_BIT = 0
 	ORDER BY A.ACO_ID_INT DESC
 GO
@@ -475,37 +453,40 @@ GO
 CREATE PROCEDURE RemoverEnderecoHospede
 	@CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO_HOSPEDE
- SET dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 1  
- WHERE dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede
+	UPDATE dbo.ENDERECO_HOSPEDE
+	SET
+		dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 1  
+	WHERE dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede
 GO
 
 --DROP PROCEDURE RemoverEnderecoFuncionario;
 CREATE PROCEDURE RemoverEnderecoFuncionario
 	@CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO_FUNCIONARIO
-  SET dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 1  
- WHERE dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede
+	UPDATE dbo.ENDERECO_FUNCIONARIO
+	SET
+		dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 1  
+	WHERE dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede
 GO
 
 --DROP PROCEDURE RemoverHospede;
 CREATE PROCEDURE RemoverHospede
 	@cpfHospede nvarchar(11)
 AS  
- UPDATE dbo.HOSPEDE  
- SET dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1  
- WHERE dbo.HOSPEDE.HSP_CPF_CHAR = @cpfHospede
+	UPDATE dbo.HOSPEDE  
+	SET
+		dbo.HOSPEDE.HSP_EXCLUIDO_BIT = 1  
+	WHERE dbo.HOSPEDE.HSP_CPF_CHAR = @cpfHospede
 GO
 
 --DROP PROCEDURE RemoverFNRH;
 CREATE PROCEDURE RemoverFNRH
 	@IdFNRH int
 AS
- UPDATE dbo.[FNRH]
-	SET FNRH_EXCLUIDO_BIT = 1
-  WHERE FNRH_ID_INT = @IdFNRH
-    AND FNRH_EXCLUIDO_BIT = 0
+	UPDATE dbo.[FNRH]
+	SET
+		FNRH_EXCLUIDO_BIT = 1
+	WHERE FNRH_ID_INT = @IdFNRH AND FNRH_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE RemoverAcomodacao;
@@ -513,7 +494,7 @@ CREATE PROCEDURE RemoverAcomodacao
 	@idAcomodacao int
 AS
 	UPDATE dbo.[ACOMODACAO]
-	   SET ACO_EXCLUIDO_BIT = 1
-	 WHERE ACO_ID_INT = @idAcomodacao
-	   AND ACO_EXCLUIDO_BIT = 0
+	SET
+		ACO_EXCLUIDO_BIT = 1
+	WHERE ACO_ID_INT = @idAcomodacao AND ACO_EXCLUIDO_BIT = 0
 GO
