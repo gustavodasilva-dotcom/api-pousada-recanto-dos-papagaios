@@ -1,6 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -21,14 +22,42 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservaViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
         {
-            // TODO: aplicar, no JSON de saída, os dados do titular da reserva, seguindo as regras estabelecidas
-            // da pousada, e remover tabela e classe HOSPEDE_RESERVA.
             var reservas = await _reservaService.Obter(pagina, quantidade);
 
             if (reservas.Count == 0)
                 return NoContent();
 
             return Ok(reservas);
+        }
+
+        [HttpGet("{idReserva:int}")]
+        public async Task<ActionResult<ReservaViewModel>> Obter([FromRoute] int idReserva)
+        {
+            try
+            {
+                var reserva = await _reservaService.Obter(idReserva);
+
+                return Ok(reserva);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpDelete("{idReserva:int}")]
+        public async Task<ActionResult> Deletar([FromRoute] int idReserva)
+        {
+            try
+            {
+                await _reservaService.Deletar(idReserva);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
         }
     }
 }

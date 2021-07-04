@@ -12,8 +12,10 @@ namespace ApiPousadaRecantoDosPapagaios.Entities
         public double PrecoUnitario { get; set; }
         public double PrecoTotal { get; set; }
         public StatusReserva StatusReserva { get; set; }
+        public Hospede Hospede { get; set; }
         public Acomodacao Acomodacao { get; set; }
         public Pagamento Pagamento { get; set; }
+        public int Acompanhantes { get; set; }
         public bool Excluido { get; set; }
     }
 }

@@ -7,5 +7,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     public interface IReservaService
     {
         Task<List<ReservaViewModel>> Obter(int pagina, int quantidade);
+        Task<ReservaViewModel> Obter(int idReserva);
+        Task Deletar(int idReserva);
     }
 }

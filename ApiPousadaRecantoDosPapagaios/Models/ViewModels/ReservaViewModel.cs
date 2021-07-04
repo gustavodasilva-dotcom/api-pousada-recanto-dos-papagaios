@@ -11,8 +11,10 @@ namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
         public double PrecoUnitario { get; set; }
         public double PrecoTotal { get; set; }
         public StatusReservaViewModel StatusReserva { get; set; }
+        public HospedeViewModel Hospede { get; set; }
         public AcomodacaoViewModel Acomodacao { get; set; }
-        public PagamentoViewModel Pagamento { get; set; }
+        public PagamentoViewModel Pagamento { get; set; }   
+        public int Acompanhantes { get; set; }
         public bool Excluido { get; set; }
     }
 }
