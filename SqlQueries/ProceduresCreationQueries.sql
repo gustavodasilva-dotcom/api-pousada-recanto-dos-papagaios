@@ -15,18 +15,17 @@ CREATE PROCEDURE AtualizarEnderecoFuncionario
 	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
 	@Estado nchar(2),			 @Pais nvarchar(255),			@CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO_FUNCIONARIO
- SET  
-  END_FUNC_CEP_CHAR = @Cep,  
-  END_FUNC_LOGRADOURO_STR = @Logradouro,  
-  END_FUNC_NUMERO_CHAR = @Numero,  
-  END_FUNC_COMPLEMENTO_STR = @Complemento,  
-  END_FUNC_BAIRRO_STR = @Bairro,  
-  END_FUNC_CIDADE_STR = @Cidade,  
-  END_FUNC_ESTADO_CHAR = @Estado,  
-  END_FUNC_PAIS_STR = @Pais  
- WHERE (dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede)
-	   AND (dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 0)
+	UPDATE dbo.ENDERECO_FUNCIONARIO
+	SET  
+		END_FUNC_CEP_CHAR = @Cep,  
+		END_FUNC_LOGRADOURO_STR = @Logradouro,  
+		END_FUNC_NUMERO_CHAR = @Numero,  
+		END_FUNC_COMPLEMENTO_STR = @Complemento,  
+		END_FUNC_BAIRRO_STR = @Bairro,  
+		END_FUNC_CIDADE_STR = @Cidade,  
+		END_FUNC_ESTADO_CHAR = @Estado,  
+		END_FUNC_PAIS_STR = @Pais  
+	WHERE (dbo.ENDERECO_FUNCIONARIO.END_FUNC_CPF_HOSPEDE_STR = @CpfHospede) AND (dbo.ENDERECO_FUNCIONARIO.END_FUNC_EXCLUIDO_BIT = 0)
 GO
 
 --DROP PROCEDURE AtualizarEnderecoHospede;
@@ -35,18 +34,17 @@ CREATE PROCEDURE AtualizarEnderecoHospede
 	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
 	@Estado nchar(2),			 @Pais nvarchar(255),			@CpfHospede nchar(11)  
 AS  
- UPDATE dbo.ENDERECO_HOSPEDE
- SET  
-  END_CEP_CHAR = @Cep,  
-  END_LOGRADOURO_STR = @Logradouro,  
-  END_NUMERO_CHAR = @Numero,  
-  END_COMPLEMENTO_STR = @Complemento,  
-  END_BAIRRO_STR = @Bairro,  
-  END_CIDADE_STR = @Cidade,  
-  END_ESTADO_CHAR = @Estado,  
-  END_PAIS_STR = @Pais  
- WHERE (dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede)
-	   AND (dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 0)
+	UPDATE dbo.ENDERECO_HOSPEDE
+	SET  
+		END_CEP_CHAR = @Cep,  
+		END_LOGRADOURO_STR = @Logradouro,  
+		END_NUMERO_CHAR = @Numero,  
+		END_COMPLEMENTO_STR = @Complemento,  
+		END_BAIRRO_STR = @Bairro,  
+		END_CIDADE_STR = @Cidade,  
+		END_ESTADO_CHAR = @Estado,  
+		END_PAIS_STR = @Pais  
+	WHERE (dbo.ENDERECO_HOSPEDE.END_CPF_HOSPEDE_STR = @CpfHospede) AND (dbo.ENDERECO_HOSPEDE.END_EXCLUIDO_BIT = 0)
 GO
 
 --DROP PROCEDURE AtualizarHospede;
@@ -74,21 +72,20 @@ CREATE PROCEDURE AtualizarFNRH
 	@UltimoDestino nvarchar(255),  @MotivoViagem nvarchar(255),		@MeioDeTransporte nvarchar(255),
 	@PlacaAutomovel nvarchar(255), @NumAcompanhantes int,			@CpfHospede nchar(11)
 AS
- UPDATE dbo.FNRH
- SET
-  FNRH_PROFISSAO_STR = @Profissao,
-  FNRH_NACIONALIDADE_STR = @Nacionalidade,
-  FNRH_SEXO_CHAR = @Sexo,
-  FNRH_RG_CHAR = @Rg,
-  FNRH_PROXIMO_DESTINO_STR = @ProximoDestino,
-  FNRH_ULTIMO_DESTINO_STR = @UltimoDestino,
-  FNRH_MOTIVO_VIAGEM_STR = @MotivoViagem,
-  FNRH_MEIO_DE_TRANSPORTE_STR = @MeioDeTransporte,
-  FNRH_PLACA_AUTOMOVEL_STR = @PlacaAutomovel,
-  FNRH_NUM_ACOMPANHANTES_INT = @NumAcompanhantes,
-  FNRH_CPF_HOSPEDE_STR = @CpfHospede
- WHERE FNRH_ID_INT = @IdFNRH
-   AND FNRH_EXCLUIDO_BIT = 0
+	UPDATE dbo.FNRH
+	SET
+		FNRH_PROFISSAO_STR = @Profissao,
+		FNRH_NACIONALIDADE_STR = @Nacionalidade,
+		FNRH_SEXO_CHAR = @Sexo,
+		FNRH_RG_CHAR = @Rg,
+		FNRH_PROXIMO_DESTINO_STR = @ProximoDestino,
+		FNRH_ULTIMO_DESTINO_STR = @UltimoDestino,
+		FNRH_MOTIVO_VIAGEM_STR = @MotivoViagem,
+		FNRH_MEIO_DE_TRANSPORTE_STR = @MeioDeTransporte,
+		FNRH_PLACA_AUTOMOVEL_STR = @PlacaAutomovel,
+		FNRH_NUM_ACOMPANHANTES_INT = @NumAcompanhantes,
+		FNRH_CPF_HOSPEDE_STR = @CpfHospede
+	WHERE FNRH_ID_INT = @IdFNRH AND FNRH_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE AtualizarDadosBancarios;
@@ -96,15 +93,13 @@ CREATE PROCEDURE AtualizarDadosBancarios
 	@Banco nvarchar(50),	@Agencia nvarchar(50),		@NumeroDaConta nvarchar(50),
 	@CpfFuncionario nchar(11)
 AS
- UPDATE
- dbo.DADOSBANCARIOS
- SET
-  DADOSBC_BANCO_STR = @Banco,
-  DADOSBC_AGENCIA_STR = @Agencia,
-  DADOSBC_NUMERO_CONTA_STR = @NumeroDaConta,
-  DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
- WHERE DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
-  AND dbo.DADOSBANCARIOS.DADOSBC_EXCLUIDO_BIT = 0
+	UPDATE dbo.DADOSBANCARIOS
+	SET
+		DADOSBC_BANCO_STR = @Banco,
+		DADOSBC_AGENCIA_STR = @Agencia,
+		DADOSBC_NUMERO_CONTA_STR = @NumeroDaConta,
+		DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
+	WHERE DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario AND dbo.DADOSBANCARIOS.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
 --DROP PROCEDURE AtualizarFuncionario;
@@ -114,23 +109,23 @@ CREATE PROCEDURE AtualizarFuncionario
 @Sexo nchar(1),					@Rg nchar(9),		 @Cargo nvarchar(50),			@Setor nvarchar(50),
 @Salario float(2),				@Catacesso int
 AS
- UPDATE dbo.FUNCIONARIO
- SET
-  FUNC_NOME_STR = @NomeCompleto,
-  FUNC_CPF_CHAR = @Cpf,
-  FUNC_DTNASC_DATE = @DataDeNascimento,
-  FUNC_EMAIL_STR = @Email,
-  FUNC_NOME_USUARIO_STR = @Login,
-  FUNC_SENHA_USUARIO_STR = @Senha,
-  FUNC_CELULAR_CHAR = @Celular,
-  FUNC_NACIONALIDADE_STR = @Nacionalidade,
-  FUNC_SEXO_CHAR = @Sexo,
-  FUNC_RG_CHAR = @Rg,
-  FUNC_CARGO_STR = @Cargo,
-  FUNC_SETOR_STR = @Setor,
-  FUNC_SALARIO_FLOAT = @Salario,
-  FUNC_CATACESSO_ID_INT = @Catacesso
- WHERE FUNC_CPF_CHAR = @Cpf AND dbo.FUNCIONARIO.FUNC_EXCLUIDO_BIT = 0
+	UPDATE dbo.FUNCIONARIO
+	SET
+		FUNC_NOME_STR = @NomeCompleto,
+		FUNC_CPF_CHAR = @Cpf,
+		FUNC_DTNASC_DATE = @DataDeNascimento,
+		FUNC_EMAIL_STR = @Email,
+		FUNC_NOME_USUARIO_STR = @Login,
+		FUNC_SENHA_USUARIO_STR = @Senha,
+		FUNC_CELULAR_CHAR = @Celular,
+		FUNC_NACIONALIDADE_STR = @Nacionalidade,
+		FUNC_SEXO_CHAR = @Sexo,
+		FUNC_RG_CHAR = @Rg,
+		FUNC_CARGO_STR = @Cargo,
+		FUNC_SETOR_STR = @Setor,
+		FUNC_SALARIO_FLOAT = @Salario,
+		FUNC_CATACESSO_ID_INT = @Catacesso
+	WHERE FUNC_CPF_CHAR = @Cpf AND dbo.FUNCIONARIO.FUNC_EXCLUIDO_BIT = 0
 GO
 
 
@@ -309,6 +304,57 @@ AS
 	)
 GO
 
+--DROP PROCEDURE IF EXISTS InserirReserva;
+CREATE PROCEDURE InserirReserva
+	@DataCheckIn date,		@DataCheckOut date,		@Acomodacao int
+AS
+	BEGIN
+		DECLARE
+		@InfoAcomodacao int,
+		@PrecoAcomodacao float(2)
+
+		-- Selecionando o ID -- a chave estrangeira -- que liga uma acomodação às suas informações.
+		SELECT @InfoAcomodacao = ACO_INFO_ACOMOD_ID_INT FROM ACOMODACAO WHERE ACO_ID_INT = @Acomodacao;
+
+		-- Selecionando o preço da acomodação escolhida na tabela de INFORMACOES_ACOMODACAO, baseado no ID coletado anteriormente.
+		SELECT @PrecoAcomodacao = INFO_ACOMOD_PRECO_FLOAT FROM INFORMACOES_ACOMODACAO WHERE INFO_ACOMOD_ID_INT = @InfoAcomodacao;
+
+		INSERT INTO RECPAPAGAIOS.dbo.[RESERVA]
+		VALUES
+		(
+			GETDATE(),
+			@DataCheckIn,
+			@DataCheckOut,
+			@PrecoAcomodacao * DATEDIFF(DAY, @DataCheckIn, @DataCheckOut), -- Calculando a quantidade de dias.
+			1,
+			@Acomodacao,
+			1,
+			0
+		);
+	END
+GO
+
+--DROP IF EXISTS PROCEDURE InserirHospedeReserva
+CREATE PROCEDURE InserirHospedeReserva
+	@CpfHospede nchar(11),		@IdReserva int
+AS 
+	BEGIN
+		DECLARE
+		@IdHospede int
+
+		SELECT @IdHospede = HSP_ID_INT FROM RECPAPAGAIOS.dbo.[HOSPEDE] WHERE HSP_CPF_CHAR = @CpfHospede
+
+		INSERT INTO RECPAPAGAIOS.dbo.[HOSPEDE_RESERVA]
+		VALUES
+		(
+			@CpfHospede,
+			@IdReserva,
+			@IdHospede,
+			0
+		);
+	END
+GO
+
 
 ---------------------------------------------------------------------------------------------------------
 --------------------------------------- PROCEDURES PARA OBTENÇÃO ----------------------------------------
@@ -442,6 +488,24 @@ AS
 	INNER JOIN [CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_EXCLUIDO_BIT = 0
 	ORDER BY A.ACO_ID_INT DESC
+GO
+
+--DROP PROCEDURE IF EXISTIS ObterReservas
+CREATE PROCEDURE ObterReservas
+	@Pagina int,	@Quantidade int
+AS
+	SELECT *
+	-- Todas as informações da reserva
+	FROM RECPAPAGAIOS.dbo.[RESERVA] AS R
+	INNER JOIN RECPAPAGAIOS.dbo.[ACOMODACAO] AS A ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[INFORMACOES_ACOMODACAO] AS I ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[PAGAMENTO] AS P ON P.PGTO_ID_INT = R.RES_PGTO_ID_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[TIPO_PAGAMENTO] AS TP ON TP.TPPGTO_ID_INT = P.PGTO_TPPGTO_ID_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[STATUS_RESERVA] AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[STATUS_ACOMODACAO] AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[CATEGORIA_ACOMODACAO] AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN RECPAPAGAIOS.dbo.[STATUS_PAGAMENTO] AS SP ON SP.ST_PGTO_ID_INT = P.PGTO_ST_PGTO_ID_INT
+	ORDER BY R.RES_ID_INT OFFSET ((@Pagina - 1) * @Quantidade) ROWS FETCH NEXT @Quantidade ROWS ONLY
 GO
 
 

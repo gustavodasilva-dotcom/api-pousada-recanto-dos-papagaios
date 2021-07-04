@@ -37,6 +37,9 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IAcomodacaoService, AcomodacaoService>();
             services.AddScoped<IAcomodacaoRepository, AcomodacaoRepository>();
 
+            services.AddScoped<IReservaRepository, ReservaRepository>();
+            services.AddScoped<IReservaService, ReservaService>();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
