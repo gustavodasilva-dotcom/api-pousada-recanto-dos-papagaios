@@ -1,4 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
 using System;
 using System.Collections.Generic;
@@ -176,6 +178,107 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 },
                 Acompanhantes = reserva.Acompanhantes,
                 Excluido = reserva.Excluido
+            };
+        }
+
+        public async Task<ReservaViewModel> Inserir(ReservaInputModel reservaInputModel)
+        {
+            var reserva = new Reserva
+            {
+                DataCheckIn = reservaInputModel.DataCheckIn,
+                DataCheckOut = reservaInputModel.DataCheckOut,
+                Hospede = new Hospede
+                {
+                    Cpf = reservaInputModel.CpfHospede
+                },
+                Acomodacao = new Acomodacao
+                {
+                    Id = reservaInputModel.AcomodacaoId
+                },
+                Pagamento = new Pagamento
+                {
+                    Id = reservaInputModel.PagamentoId
+                },
+                Acompanhantes = reservaInputModel.Acompanhantes
+            };
+
+            await _reservaRepository.Inserir(reserva);
+
+            var ultimaReserva = await _reservaRepository.ObterUltimaReserva();
+
+            return new ReservaViewModel
+            {
+                Id = ultimaReserva.Id,
+                DataReserva = ultimaReserva.DataReserva,
+                DataCheckIn = ultimaReserva.DataCheckIn,
+                DataCheckOut = ultimaReserva.DataCheckOut,
+                PrecoUnitario = ultimaReserva.PrecoUnitario,
+                PrecoTotal = ultimaReserva.PrecoTotal,
+                StatusReserva = new StatusReservaViewModel
+                {
+                    Id = ultimaReserva.StatusReserva.Id,
+                    Descricao = ultimaReserva.StatusReserva.Descricao
+                },
+                Hospede = new HospedeViewModel
+                {
+                    NomeCompleto = ultimaReserva.Hospede.NomeCompleto,
+                    Cpf = ultimaReserva.Hospede.Cpf,
+                    DataDeNascimento = ultimaReserva.Hospede.DataDeNascimento,
+                    Email = ultimaReserva.Hospede.Email,
+                    Login = ultimaReserva.Hospede.Login,
+                    Senha = ultimaReserva.Hospede.Senha,
+                    Celular = ultimaReserva.Hospede.Celular,
+                    Endereco = new EnderecoViewModel
+                    {
+                        Cep = ultimaReserva.Hospede.Endereco.Cep,
+                        Logradouro = ultimaReserva.Hospede.Endereco.Logradouro,
+                        Numero = ultimaReserva.Hospede.Endereco.Numero,
+                        Complemento = ultimaReserva.Hospede.Endereco.Complemento,
+                        Bairro = ultimaReserva.Hospede.Endereco.Bairro,
+                        Cidade = ultimaReserva.Hospede.Endereco.Cidade,
+                        Estado = ultimaReserva.Hospede.Endereco.Estado,
+                        Pais = ultimaReserva.Hospede.Endereco.Pais
+                    }
+                },
+                Acomodacao = new AcomodacaoViewModel
+                {
+                    Id = ultimaReserva.Acomodacao.Id,
+                    Nome = ultimaReserva.Acomodacao.Nome,
+                    StatusAcomodacao = new StatusAcomodacaoViewModel
+                    {
+                        Id = ultimaReserva.Acomodacao.StatusAcomodacao.Id,
+                        Descricao = ultimaReserva.Acomodacao.StatusAcomodacao.Descricao
+                    },
+                    InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
+                    {
+                        Id = ultimaReserva.Acomodacao.InformacoesAcomodacao.Id,
+                        MetrosQuadrados = ultimaReserva.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
+                        Capacidade = ultimaReserva.Acomodacao.InformacoesAcomodacao.Capacidade,
+                        TipoDeCama = ultimaReserva.Acomodacao.InformacoesAcomodacao.TipoDeCama,
+                        Preco = ultimaReserva.Acomodacao.InformacoesAcomodacao.Preco
+                    },
+                    CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
+                    {
+                        Id = ultimaReserva.Acomodacao.CategoriaAcomodacao.Id,
+                        Descricao = ultimaReserva.Acomodacao.CategoriaAcomodacao.Descricao
+                    }
+                },
+                Pagamento = new PagamentoViewModel
+                {
+                    Id = ultimaReserva.Pagamento.Id,
+                    TipoPagamento = new TipoPagamentoViewModel
+                    {
+                        Id = ultimaReserva.Pagamento.TipoPagamento.Id,
+                        Descricao = ultimaReserva.Pagamento.TipoPagamento.Descricao
+                    },
+                    StatusPagamento = new StatusPagamentoViewModel
+                    {
+                        Id = ultimaReserva.Pagamento.StatusPagamento.Id,
+                        Descricao = ultimaReserva.Pagamento.StatusPagamento.Descricao
+                    }
+                },
+                Acompanhantes = ultimaReserva.Acompanhantes,
+                Excluido = ultimaReserva.Excluido
             };
         }
 

@@ -9,6 +9,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<Reserva>> Obter(int pagina, int quantidade);
         Task<Reserva> Obter(int idReserva);
+        Task<Reserva> ObterUltimaReserva();
+        Task Inserir(Reserva reserva);
         Task Deletar(int idReserva);
     }
 }

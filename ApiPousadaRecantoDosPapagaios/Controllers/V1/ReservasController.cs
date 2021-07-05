@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -43,6 +44,14 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             {
                 return NoContent();
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ReservaViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
+        {
+            var reserva = await _reservaService.Inserir(reservaInputModel);
+
+            return Ok(reserva);
         }
 
         [HttpDelete("{idReserva:int}")]
