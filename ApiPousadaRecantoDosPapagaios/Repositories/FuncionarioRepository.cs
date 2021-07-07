@@ -27,7 +27,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var funcionarios = new List<Funcionario>();
 
-            var procedure = @"dbo.[ObterFuncionarios]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFuncionarios]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -92,7 +92,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Funcionario funcionario = null;
 
-            var procedure = @"ObterFuncionario";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -157,7 +157,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Funcionario funcionario)
         {
-            var procedure = @"dbo.[InserirFuncionario]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -187,7 +187,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfFuncionario, Funcionario funcionario)
         {
-            var procedure = @"dbo.[AtualizarFuncionario]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

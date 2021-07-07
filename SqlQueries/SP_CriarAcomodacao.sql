@@ -13,6 +13,8 @@ Data.....: 04/07/2021
 			@ValidacaoNome nvarchar(50),
 			@Msg nvarchar(255),
 			@MsgResul nvarchar(255)
+
+
 --***********************************************************************************************
 --Validação dos dados de entrada.
 --***********************************************************************************************
@@ -33,6 +35,8 @@ Data.....: 04/07/2021
 			END
 		
 		PRINT @MsgResul;
+
+
 --***********************************************************************************************
 --Validação dos dados de entrada.
 --***********************************************************************************************
@@ -46,10 +50,14 @@ Data.....: 04/07/2021
 				0 -- Toda acomodação, ao ser criada, terá, sempre, o excluído igual 0, ou seja, falso.
 			);
 		COMMIT TRANSACTION
+
+
 --***********************************************************************************************
 --Apresentando os dados de criação da acomodação.
 --***********************************************************************************************
 		IF OBJECT_ID('TEMPDB..#RESULTADO') IS NOT NULL TRUNCATE TABLE #RESULTADO;
+
+		-- Criar a tabela temporária, caso não exista.
 
 		--CREATE TABLE #RESULTADO
 		--(

@@ -26,7 +26,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var acomodacoes = new List<Acomodacao>();
 
-            var procedure = @"dbo.[ObterAcomodacoes]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterAcomodacoes]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -72,7 +72,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Acomodacao acomodacao = null;
 
-            var procedure = @"dbo.[ObterAcomodacao]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterAcomodacao]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -120,7 +120,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Acomodacao acomodacao = null;
 
-            var procedure = @"dbo.[ObterUltimaAcomodacao]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterUltimaAcomodacao]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -164,7 +164,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Acomodacao acomodacao)
         {
-            var procedure = @"dbo.[InserirAcomodacao]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirAcomodacao]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -183,7 +183,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Deletar(int idAcomodacao)
         {
-            var procedure = @"dbo.[RemoverAcomodacao]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverAcomodacao]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

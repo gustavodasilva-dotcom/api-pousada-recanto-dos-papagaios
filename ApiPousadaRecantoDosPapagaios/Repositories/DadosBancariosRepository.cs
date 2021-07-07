@@ -23,7 +23,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(DadosBancarios dadosBancarios, string cpfFuncionario)
         {
-            var procedure = @"dbo.[InserirDadosBancarios]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirDadosBancarios]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -43,7 +43,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfFuncionario, DadosBancarios dadosBancarios)
         {
-            var procedure = @"dbo.[AtualizarDadosBancarios]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarDadosBancarios]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

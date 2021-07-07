@@ -27,7 +27,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var fnrhs = new List<FNRH>();
 
-            var procedure = @"ObterFNRHsPorHospede";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFNRHsPorHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -67,7 +67,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             FNRH fnrh = null;
 
-            var procedure = @"ObterUltimaFNRHRegistroPorHospede";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterUltimaFNRHRegistroPorHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -107,7 +107,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             FNRH fnrh = null;
 
-            var procedure = @"dbo.[ObterFNRHPorId]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFNRHPorId]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -145,7 +145,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(string cpfHospede, FNRH fnrh)
         {
-            var procedure = @"dbo.[InserirFNRH]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirFNRH]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -172,7 +172,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(int idFNRH, FNRH fnrh)
         {
-            var procedure = @"dbo.[AtualizarFNRH]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarFNRH]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -200,7 +200,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Deletar(int idFNRH)
         {
-            var procedure = @"dbo.[RemoverFNRH]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverFNRH]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

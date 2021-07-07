@@ -27,7 +27,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var hospedes = new List<Hospede>();
 
-            var procedure = @"dbo.[ObterHospedes]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterHospedes]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -72,7 +72,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var procedure = @"dbo.[ObterHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -117,7 +117,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Inserir(Hospede hospede)
         {
-            var procedure = @"dbo.[InserirHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -142,7 +142,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var procedure = $"dbo.[ObterUltimoHospede]";
+            var procedure = $"[RECPAPAGAIOS].[dbo].[ObterUltimoHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -176,7 +176,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             Hospede hospede = null;
 
-            var procedure = @"dbo.[ObterPorCpf]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterPorCpf]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -210,7 +210,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Atualizar(string cpfHospede, Hospede hospede)
         {
-            var procedure = @"dbo.[AtualizarHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -233,7 +233,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task Remover(string cpfHospede)
         {
-            var procedure = @"dbo.[RemoverHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

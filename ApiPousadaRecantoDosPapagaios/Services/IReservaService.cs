@@ -10,6 +10,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         Task<List<ReservaViewModel>> Obter(int pagina, int quantidade);
         Task<ReservaViewModel> Obter(int idReserva);
         Task<ReservaViewModel> Inserir(ReservaInputModel reservaInputModel);
+        Task<ReservaViewModel> Atualizar(int idReserva, ReservaInputModel reservaInputModel);
         Task Deletar(int idReserva);
     }
 }

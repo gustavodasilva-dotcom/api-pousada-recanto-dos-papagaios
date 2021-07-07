@@ -344,6 +344,29 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
+        public async Task Atualizar(int idReserva, Reserva reserva)
+        {
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarReserva]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
+            sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
+            sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
+            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = reserva.Hospede.Cpf;
+            sqlCommand.Parameters.Add("@AcomodacaoId", SqlDbType.Int).Value = reserva.Acomodacao.Id;
+            sqlCommand.Parameters.Add("@PagamentoId", SqlDbType.Int).Value = reserva.Pagamento.Id;
+            sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
+
+            await sqlConnection.OpenAsync();
+
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
+
         public async Task Deletar(int idReserva)
         {
             var procedure = @"dbo.[RemoverReserva]";

@@ -279,6 +279,17 @@ CREATE TABLE ACOMODACAO
 	REFERENCES STATUS_ACOMODACAO(ST_ACOMOD_ID_INT)
 );
 
+EXEC SP_CriarAcomodacao 'Chale 1', 1;
+EXEC SP_CriarAcomodacao 'Chale 2', 1;
+EXEC SP_CriarAcomodacao 'Chale 3', 1;
+EXEC SP_CriarAcomodacao 'Chale 4', 1;
+EXEC SP_CriarAcomodacao 'Chale 5', 1;
+EXEC SP_CriarAcomodacao 'Chale 6', 1;
+EXEC SP_CriarAcomodacao 'Chale 7', 2;
+EXEC SP_CriarAcomodacao 'Chale 8', 2;
+EXEC SP_CriarAcomodacao 'Chale 9', 3;
+EXEC SP_CriarAcomodacao 'Chale 10', 3;
+
 
 DROP TABLE IF EXISTS TIPO_PAGAMENTO;
 CREATE TABLE TIPO_PAGAMENTO

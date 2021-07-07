@@ -26,7 +26,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var enderecos = new List<Endereco>();
 
-            var procedure = @"dbo.[ObterEnderecos]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterEnderecos]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -61,7 +61,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task InserirEnderecoFuncionario(Endereco endereco, string cpfHospede)
         {
-            var procedure = @"dbo.[InserirEnderecoFuncionario]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -86,7 +86,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task InserirEnderecoHospede(Endereco endereco, string cpfHospede)
         {
-            var procedure = @"dbo.[InserirEnderecoHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -111,7 +111,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task AtualizarEnderecoFuncionario(string cpfHospede, Endereco endereco)
         {
-            var procedure = @"dbo.[AtualizarEnderecoFuncionario]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -136,7 +136,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task AtualizarEnderecoHospede(string cpfHospede, Endereco endereco)
         {
-            var procedure = @"dbo.[AtualizarEnderecoHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -161,7 +161,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task RemoverEnderecoFuncionario(string cpfHospede)
         {
-            var procedure = @"RemoverEnderecoFuncionario";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -178,7 +178,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task RemoverEnderecoHospede(string cpfHospede)
         {
-            var procedure = @"RemoverEnderecoHospede";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 

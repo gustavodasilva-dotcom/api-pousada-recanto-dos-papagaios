@@ -54,6 +54,21 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             return Ok(reserva);
         }
 
+        [HttpPut("{idReserva:int}")]
+        public async Task<ActionResult<ReservaViewModel>> Atualizar([FromRoute] int idReserva, [FromBody] ReservaInputModel reservaInputModel)
+        {
+            try
+            {
+                var reserva = await _reservaService.Atualizar(idReserva, reservaInputModel);
+
+                return Ok(reserva);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
+
         [HttpDelete("{idReserva:int}")]
         public async Task<ActionResult> Deletar([FromRoute] int idReserva)
         {
