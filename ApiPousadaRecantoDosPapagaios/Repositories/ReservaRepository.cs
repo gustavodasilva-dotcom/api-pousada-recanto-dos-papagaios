@@ -83,8 +83,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Nome = (string)sqlDataReader["ACO_NOME_STR"],
                         StatusAcomodacao = new StatusAcomodacao
                         {
-                            Id = (int)sqlDataReader["ST_RES_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
+                            Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
+                            Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
                         },
                         InformacoesAcomodacao = new InformacoesAcomodacao
                         {
@@ -183,8 +183,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Nome = (string)sqlDataReader["ACO_NOME_STR"],
                         StatusAcomodacao = new StatusAcomodacao
                         {
-                            Id = (int)sqlDataReader["ST_RES_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
+                            Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
+                            Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
                         },
                         InformacoesAcomodacao = new InformacoesAcomodacao
                         {
@@ -281,8 +281,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                         Nome = (string)sqlDataReader["ACO_NOME_STR"],
                         StatusAcomodacao = new StatusAcomodacao
                         {
-                            Id = (int)sqlDataReader["ST_RES_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
+                            Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
+                            Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
                         },
                         InformacoesAcomodacao = new InformacoesAcomodacao
                         {
