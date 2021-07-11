@@ -49,9 +49,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<ReservaViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
         {
-            var reserva = await _reservaService.Inserir(reservaInputModel);
+            try
+            {
+                var reserva = await _reservaService.Inserir(reservaInputModel);
 
-            return Ok(reserva);
+                return Ok(reserva);
+            }
+            catch (Exception ex)
+            {
+                return Conflict();
+            }
         }
 
         [HttpPut("{idReserva:int}")]

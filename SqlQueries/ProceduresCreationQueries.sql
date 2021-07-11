@@ -1,15 +1,15 @@
-----------------------------------------------------------------------------------------------------
-------------------------------------- QUERIES PARA PROCEDURES --------------------------------------
-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------- QUERIES PARA PROCEDURES ---------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 USE RECPAPAGAIOS
 GO
 
-----------------------------------------------------------------------------------------------------
------------------------------------ PROCEDURES PARA ATUALIZAÇÃO ------------------------------------
-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------- PROCEDURES PARA ATUALIZAÇÃO -------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
---DROP PROCEDURE AtualizarEnderecoFuncionario;
+
 CREATE PROCEDURE AtualizarEnderecoFuncionario
 	@Cep nchar(8),				 @Logradouro nvarchar(255),		@Numero nchar(8),
 	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
@@ -29,7 +29,7 @@ AS
 GO
 
 
---DROP PROCEDURE AtualizarEnderecoHospede;
+
 CREATE PROCEDURE AtualizarEnderecoHospede
 	@Cep nchar(8),				 @Logradouro nvarchar(255),		@Numero nchar(8),
 	@Complemento nvarchar(255),  @Bairro nvarchar(255),			@Cidade nvarchar(255),
@@ -49,7 +49,7 @@ AS
 GO
 
 
---DROP PROCEDURE AtualizarHospede;
+
 CREATE PROCEDURE AtualizarHospede
 	@NomeCompleto nvarchar(255),	@Cpf nvarchar(11),	 @DataDeNascimento Date,
 	@Email nvarchar(50),			@Login nvarchar(11), @Senha nvarchar(50),
@@ -68,7 +68,7 @@ AS
 GO
 
 
---DROP PROCEDURE AtualizarFNRH;
+
 CREATE PROCEDURE AtualizarFNRH
 	@IdFNRH int,				   @Profissao nvarchar(255),		@Nacionalidade nvarchar(255),
 	@Sexo nchar(1),				   @Rg nchar(9),					@ProximoDestino nvarchar(255),
@@ -92,7 +92,7 @@ AS
 GO
 
 
---DROP PROCEDURE AtualizarDadosBancarios;
+
 CREATE PROCEDURE AtualizarDadosBancarios
 	@Banco nvarchar(50),	@Agencia nvarchar(50),		@NumeroDaConta nvarchar(50),
 	@CpfFuncionario nchar(11)
@@ -107,7 +107,7 @@ AS
 GO
 
 
---DROP PROCEDURE AtualizarFuncionario;
+
 CREATE PROCEDURE AtualizarFuncionario
 	@NomeCompleto nvarchar(255),	@Cpf nchar(11),		 @DataDeNascimento date,		@Email nvarchar(50),
 	@Login nvarchar(45),			@Senha nvarchar(45), @Celular nchar(15),			@Nacionalidade nvarchar(50),
@@ -134,7 +134,7 @@ AS
 GO
 
 
---DROP PROCEDURE IF EXITS AtualizarReserva;
+
 CREATE PROCEDURE AtualizarReserva
 	@IdReserva int,			@DataCheckIn date,		@DataCheckOut date,
 	@CpfHospede nchar(11),	@AcomodacaoId int,		@PagamentoId int,
@@ -169,11 +169,11 @@ AS
 GO
 
 
----------------------------------------------------------------------------------------------------------
---------------------------------------- PROCEDURES PARA INSERÇÃO ----------------------------------------
----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------- PROCEDURES PARA INSERÇÃO ----------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
 
---DROP PROCEDURE InserirEnderecoHospede;
+
 CREATE PROCEDURE InserirEnderecoHospede
 	@Cep nchar(8),					@Logradouro nvarchar(255),		@Numero nvarchar(8),
 	@Complemento nvarchar(255),		@Bairro nvarchar(255),			@Cidade nvarchar(255),
@@ -202,7 +202,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirEnderecoFuncionario;
+
 CREATE PROCEDURE InserirEnderecoFuncionario
 	@Cep nchar(8),					@Logradouro nvarchar(255),		@Numero nvarchar(8),
 	@Complemento nvarchar(255),		@Bairro nvarchar(255),			@Cidade nvarchar(255),
@@ -231,7 +231,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirFNRH;
+
 CREATE PROCEDURE InserirFNRH
 	@Profissao nvarchar(255),		@Nacionalidade nvarchar(50),		@Sexo nchar(1),  
 	@Rg nchar(9),					@ProximoDestino nvarchar(255),		@UltimoDestino nvarchar(255),
@@ -263,7 +263,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirHospede;
+
 CREATE PROCEDURE InserirHospede
 	@NomeCompleto nvarchar(255),		@Cpf nvarchar(11),		@DataDeNascimento Date,
 	@Email nvarchar(50),				@Login nvarchar(11),	@Senha nvarchar(50),
@@ -284,7 +284,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirDadosBancarios;
+
 CREATE PROCEDURE InserirDadosBancarios
 	@Banco nvarchar(50),		@Agencia nvarchar(50), @NumeroDaConta nvarchar(50),
 	@CpfFuncionario nchar(11)
@@ -307,7 +307,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirFuncionario;
+
 CREATE PROCEDURE InserirFuncionario
 	@NomeCompleto nvarchar(255),	@Cpf nchar(11),			@Nacionalidade nvarchar(50),	@DataDeNascimento date, 
 	@Sexo nchar(1),					@Rg nchar(9),			@Celular nchar(13),				@Cargo nvarchar(50),
@@ -336,7 +336,7 @@ AS
 GO
 
 
---DROP PROCEDURE InserirAcomodacao;
+
 CREATE PROCEDURE InserirAcomodacao
 	@NomeAcomodacao nvarchar(255),		@StatusAcomodacao int,		@InformacoesAcomodacao int
 AS
@@ -351,57 +351,68 @@ AS
 GO
 
 
---DROP PROCEDURE IF EXISTS InserirReserva;
+
 CREATE PROCEDURE InserirReserva
 	@DataCheckIn date,		@DataCheckOut date,		@CpfHospede nchar(11),
 	@Acomodacao int,		@Pagamento int,			@Acompanhantes int
 AS
 	BEGIN
 		DECLARE
-		@InfoAcomodacao int,
-		@PrecoAcomodacao float(2),
-		@IdHospede int
+			@InfoAcomodacao int,
+			@PrecoAcomodacao float(2),
+			@IdHospede int,
+			@IdReserva int
 
-		-- Selecionando o ID -- a chave estrangeira -- que liga uma acomodação às suas informações.
-		SELECT @InfoAcomodacao = ACO_INFO_ACOMOD_ID_INT FROM ACOMODACAO WHERE ACO_ID_INT = @Acomodacao;
+		SELECT @InfoAcomodacao  = ACO_INFO_ACOMOD_ID_INT  FROM ACOMODACAO			  WHERE ACO_ID_INT = @Acomodacao;
 
-		-- Selecionando o preço da acomodação escolhida na tabela de INFORMACOES_ACOMODACAO, baseado no ID coletado anteriormente.
 		SELECT @PrecoAcomodacao = INFO_ACOMOD_PRECO_FLOAT FROM INFORMACOES_ACOMODACAO WHERE INFO_ACOMOD_ID_INT = @InfoAcomodacao;
 
-		-- Selecionando o hóspede (titular) da reserva na tabela de HOSPEDE.
-		SELECT @IdHospede = HSP_ID_INT FROM HOSPEDE WHERE HSP_CPF_CHAR = @CpfHospede;
+		SELECT @IdHospede		= HSP_ID_INT			  FROM HOSPEDE				  WHERE HSP_CPF_CHAR = @CpfHospede;
 
-		-- Atualizando a acomodação reservada como "Ocupada".
 		UPDATE [RECPAPAGAIOS].[dbo].[ACOMODACAO]
 		SET
 			ACO_ST_ACOMOD_INT = 1
 		WHERE ACO_ID_INT = @Acomodacao;
 
-		-- Criando a reserva.
 		INSERT INTO [RECPAPAGAIOS].[dbo].[RESERVA]
 		VALUES
 		(
-			GETDATE(), -- RES_DATA_RESERVA_DATE
-			@DataCheckIn, -- RES_DATA_CHECKIN_DATE
-			@DataCheckOut, -- RES_DATA_CHECKOUT_DATE
+			GETDATE(),		-- RES_DATA_RESERVA_DATE
+			@DataCheckIn,	-- RES_DATA_CHECKIN_DATE
+			@DataCheckOut,	-- RES_DATA_CHECKOUT_DATE
 			(@PrecoAcomodacao * DATEDIFF(DAY, @DataCheckIn, @DataCheckOut)) * (@Acompanhantes + (10/100)), -- Calculando a quantidade de dias.
-			1, -- RES_STATUS_RESERVA_INT
-			@IdHospede, -- RES_HSP_ID_INT
-			@Acomodacao, -- RES_ACO_ID_INT
-			@Pagamento, -- RES_PGTO_ID_INT
+			1,				-- RES_STATUS_RESERVA_INT
+			@IdHospede,		-- RES_HSP_ID_INT
+			@Acomodacao,	-- RES_ACO_ID_INT
 			@Acompanhantes, -- RES_ACOMPANHANTES_ID_INT
-			0 -- RES_EXCLUIDO_BIT
+			0				-- RES_EXCLUIDO_BIT
+		);
+
+		SELECT TOP 1 @IdReserva = RES_ID_INT FROM [RECPAPAGAIOS].[dbo].[RESERVA] ORDER BY RES_ID_INT DESC;
+
+		INSERT INTO [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]
+		VALUES
+		(
+			@Pagamento,
+			@IdReserva,
+			4,
+			0
 		);
 	END
 GO
 
 
---DROP PROCEDURE IF EXISTS InserirCheckIn
+
 CREATE PROCEDURE InserirCheckIn
-	@IdReserva int,		@IdFuncionario int
+	@IdReserva int,		@LoginFuncionario nvarchar(50)
 AS
 	BEGIN
+		DECLARE
+			@IdFuncionario int
+
 		--TODO: CRIAR REGRAS PARA A MUDANÇA DE STATUS DE ACORDO COM CADA FORMA DE PAGAMENTO.
+
+		SELECT @IdFuncionario = FUNC_ID_INT FROM [RECPAPAGAIOS].[dbo].[FUNCIONARIO] WHERE FUNC_NOME_USUARIO_STR = @LoginFuncionario
 
 		--Configurando o status da reserva para "Confirmada"
 		UPDATE [RECPAPAGAIOS].[dbo].[RESERVA]
@@ -420,11 +431,67 @@ AS
 GO
 
 
----------------------------------------------------------------------------------------------------------
---------------------------------------- PROCEDURES PARA OBTENÇÃO ----------------------------------------
----------------------------------------------------------------------------------------------------------
 
---DROP PROCEDURE ObterEnderecos;
+ALTER PROCEDURE InserirCheckOut
+	@IdReserva int,		@ValoresAdicionais float(2),	@LoginFuncionario nvarchar(50),
+	@Pagamento int
+AS
+	BEGIN TRANSACTION
+		DECLARE
+			@ValorReserva  float(2),		@IdCheckIn  int,
+			@IdFuncionario int,			    @IdCheckOut	int,
+			@IdAcomodacao  int
+		
+
+		SELECT @ValorReserva  = RES_VALOR_RESERVA_FLOAT FROM [RECPAPAGAIOS].[dbo].[RESERVA]		WHERE RES_ID_INT			= @IdReserva;
+
+		SELECT @IdCheckIn	  = CHECKIN_ID_INT		    FROM [RECPAPAGAIOS].[dbo].[CHECKIN]		WHERE CHECKIN_RES_ID_INT	= @IdReserva;
+
+		SELECT @IdFuncionario = FUNC_ID_INT			    FROM [RECPAPAGAIOS].[dbo].[FUNCIONARIO]	WHERE FUNC_NOME_USUARIO_STR = @LoginFuncionario
+
+		INSERT INTO [RECPAPAGAIOS].[dbo].[CHECKOUT]
+		VALUES
+		(
+			@ValoresAdicionais,
+			@ValoresAdicionais + @ValorReserva,
+			@IdCheckIn,
+			@IdFuncionario,
+			@Pagamento,
+			0
+		);
+		
+		SELECT @IdCheckOut = CHECKOUT_ID_INT FROM CHECKOUT ORDER BY CHECKOUT_ID_INT;
+
+		INSERT INTO [RECPAPAGAIOS].[dbo].[PAGAMENTO_CHECK_OUT]
+		VALUES
+		(
+			@Pagamento,
+			@IdReserva,
+			4,
+			@IdCheckOut,
+			0
+		);
+
+		UPDATE [RECPAPAGAIOS].[dbo].[RESERVA]
+		SET
+			   RES_STATUS_RESERVA_INT = 3
+		WHERE  RES_ID_INT = @IdReserva
+
+		SELECT @IdAcomodacao = RES_ACO_ID_INT FROM [RECPAPAGAIOS].[dbo].[RESERVA] WHERE RES_ID_INT = @IdReserva
+
+		UPDATE [RECPAPAGAIOS].[dbo].[ACOMODACAO]
+		SET
+			   ACO_ST_ACOMOD_INT = 3
+		WHERE  ACO_ID_INT = @IdAcomodacao
+	COMMIT TRANSACTION
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------- PROCEDURES PARA OBTENÇÃO --------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
 CREATE PROCEDURE ObterEnderecos  
 AS  
 	SELECT * FROM [RECPAPAGAIOS].[dbo].[ENDERECO]  
@@ -432,30 +499,34 @@ AS
 GO
 
 
---DROP PROCEDURE ObterFNRHsPorHospede;
+
 CREATE PROCEDURE ObterFNRHsPorHospede
 	@cpfHospede nvarchar(11)    
 AS      
 	SELECT *
 	FROM  [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H, [RECPAPAGAIOS].[dbo].[FNRH] AS F
 	WHERE (H.HSP_CPF_CHAR = @cpfHospede)
-	  AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede) AND (F.FNRH_EXCLUIDO_BIT = 0) AND (H.HSP_EXCLUIDO_BIT = 0)
+	  AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede)
+	  AND (F.FNRH_EXCLUIDO_BIT = 0)
+	  AND (H.HSP_EXCLUIDO_BIT = 0)
 GO
 
 
---DROP PROCEDURE ObterHospede;
+
 CREATE PROCEDURE ObterHospede
 	@cpfHospede nvarchar(11)  
 AS  
 	SELECT *
 	FROM [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H WITH (NOLOCK)
 	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE] AS E ON H.HSP_ID_INT = E.END_ID_HOSPEDE_INT
-	WHERE H.HSP_CPF_CHAR = @cpfHospede AND E.END_CPF_HOSPEDE_STR = @cpfHospede
-	  AND H.HSP_EXCLUIDO_BIT = 0 AND E.END_EXCLUIDO_BIT = 0
+	WHERE H.HSP_CPF_CHAR = @cpfHospede
+	  AND E.END_CPF_HOSPEDE_STR = @cpfHospede
+	  AND H.HSP_EXCLUIDO_BIT = 0
+	  AND E.END_EXCLUIDO_BIT = 0
 GO
 
 
---DROP PROCEDURE ObterHospedes;
+
 CREATE PROCEDURE ObterHospedes  
 AS  
 	SELECT *
@@ -465,30 +536,34 @@ AS
 GO
 
 
---DROP PROCEDURE ObterPorCpf;
+
 CREATE PROCEDURE ObterPorCpf
 	@cpfHospede nvarchar(11)
 AS
 	SELECT *
 	FROM [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H, [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE] AS E
-	WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (E.END_CPF_HOSPEDE_STR = @cpfHospede)
-	  AND (H.HSP_EXCLUIDO_BIT = 0) AND (E.END_EXCLUIDO_BIT = 0)
+	WHERE (H.HSP_CPF_CHAR = @cpfHospede)
+	  AND (E.END_CPF_HOSPEDE_STR = @cpfHospede)
+	  AND (H.HSP_EXCLUIDO_BIT = 0)
+	  AND (E.END_EXCLUIDO_BIT = 0)
 GO
 
 
---DROP PROCEDURE ObterUltimaFNRHRegistroPorHospede;
+
 CREATE PROCEDURE ObterUltimaFNRHRegistroPorHospede
 	@cpfHospede nvarchar(11)    
 AS      
 	SELECT *    
-	FROM [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H, [RECPAPAGAIOS].[dbo].[FNRH] AS F      
-	WHERE (H.HSP_CPF_CHAR = @cpfHospede) AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede)
-	  AND (H.HSP_EXCLUIDO_BIT = 0) AND (F.FNRH_EXCLUIDO_BIT = 0)
+	FROM  [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H, [RECPAPAGAIOS].[dbo].[FNRH] AS F      
+	WHERE (H.HSP_CPF_CHAR = @cpfHospede)
+	  AND (F.FNRH_CPF_HOSPEDE_STR = @cpfHospede)
+	  AND (H.HSP_EXCLUIDO_BIT = 0)
+	  AND (F.FNRH_EXCLUIDO_BIT = 0)
 	ORDER BY F.FNRH_ID_INT ASC
 GO
 
 
---DROP PROCEDURE ObterUltimoHospede;
+
 CREATE PROCEDURE ObterUltimoHospede  
 AS  
 	SELECT TOP 1 * FROM [RECPAPAGAIOS].[dbo].[HOSPEDE]
@@ -496,7 +571,7 @@ AS
 GO
 
 
---DROP PROCEDURE ObterFNRHPorId;
+
 CREATE PROCEDURE ObterFNRHPorId
 	@IdFNRH int
 AS
@@ -505,27 +580,27 @@ AS
 GO
 
 
---DROP PROCEDURE ObterFuncionarios;
+
 CREATE PROCEDURE ObterFuncionarios
 AS
 	SELECT *
-	FROM FUNCIONARIO AS F
+	FROM FUNCIONARIO				AS F
 	INNER JOIN ENDERECO_FUNCIONARIO AS EF ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
-	INNER JOIN DADOSBANCARIOS AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
+	INNER JOIN DADOSBANCARIOS		AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
 	WHERE F.FUNC_EXCLUIDO_BIT = 0
 	  AND EF.END_FUNC_EXCLUIDO_BIT = 0
 	  AND DB.DADOSBC_EXCLUIDO_BIT = 0
 GO
 
 
---DROP PROCEDURE ObterFuncionario;
+
 CREATE PROCEDURE ObterFuncionario
 	@CpfFuncionario nchar(11)
 AS
 	SELECT *
-	FROM [RECPAPAGAIOS].[dbo].[FUNCIONARIO] AS F
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_FUNCIONARIO] AS EF ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[DADOSBANCARIOS] AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
+	FROM [RECPAPAGAIOS].[dbo].[FUNCIONARIO]					AS F
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_FUNCIONARIO]  AS EF ON F.FUNC_ID_INT = EF.END_FUNC_ID_FUNCIONARIO_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[DADOSBANCARIOS]		AS DB ON F.FUNC_ID_INT = DB.DADOSBC_FUNCIONARIO_ID_INT
 	WHERE F.FUNC_CPF_CHAR = @CpfFuncionario
 	  AND EF.END_FUNC_CPF_HOSPEDE_STR = @CpfFuncionario
 	  AND DB.DADOSBC_FUNCIONARIO_CPF_CHAR = @CpfFuncionario
@@ -535,145 +610,208 @@ AS
 GO
 
 
---DROP PROCEDURE ObterAcomodacoes;
+
 CREATE PROCEDURE ObterAcomodacoes
 AS
 	SELECT *
-	FROM [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	FROM [RECPAPAGAIOS].[dbo].[ACOMODACAO]						AS A
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS S ON A.ACO_ST_ACOMOD_INT			= S.ST_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I ON A.ACO_INFO_ACOMOD_ID_INT	= I.INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS C ON C.CAT_ACOMOD_ID_INT			= I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_EXCLUIDO_BIT = 0
 GO
 
 
---DROP PROCEDURE ObterAcomodacao
+
 CREATE PROCEDURE ObterAcomodacao
 	@idAcomodacao int
 AS
 	SELECT *
-	FROM [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	FROM	   [RECPAPAGAIOS].[dbo].[ACOMODACAO]			 AS A
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]		 AS S ON A.ACO_ST_ACOMOD_INT		= S.ST_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT   = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]	 AS C ON C.CAT_ACOMOD_ID_INT		= I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_ID_INT = @idAcomodacao AND A.ACO_EXCLUIDO_BIT = 0
 GO
 
 
---DROP PROCEDURE ObterUltimaAcomodacao
+
 CREATE PROCEDURE ObterUltimaAcomodacao
 AS
 	SELECT TOP 1 *
-	FROM [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	FROM	   [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS S ON A.ACO_ST_ACOMOD_INT = S.ST_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I ON A.ACO_INFO_ACOMOD_ID_INT = I.INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS C ON C.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
 	WHERE A.ACO_EXCLUIDO_BIT = 0
 	ORDER BY A.ACO_ID_INT DESC
 GO
 
 
---DROP PROCEDURE IF EXISTIS ObterReservas
+
 CREATE PROCEDURE ObterReservas
 	@Pagina int,	@Quantidade int
 AS
 	SELECT *
-	-- Todas as informações da reserva
-	FROM [RECPAPAGAIOS].[dbo].[RESERVA] AS R
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A ON A.ACO_ID_INT = R.RES_ACO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO] AS P ON P.PGTO_ID_INT = R.RES_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO] AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO] AS SP ON SP.ST_PGTO_ID_INT = P.PGTO_ST_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA] AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
-
-	-- Obtendo informações do hóspede
-	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H ON H.HSP_ID_INT = R.RES_HSP_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE] AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
+	FROM	   [RECPAPAGAIOS].[dbo].[RESERVA]					AS R
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT = PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT = PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT = R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
 	WHERE RES_EXCLUIDO_BIT = 0
 	ORDER BY R.RES_ID_INT OFFSET ((@Pagina - 1) * @Quantidade) ROWS FETCH NEXT @Quantidade ROWS ONLY
 GO
 
 
---DROP PROCEDURE IF EXISTS ObterReserva;
+
 CREATE PROCEDURE ObterReserva
 	@IdReserva int
 AS
 	SELECT *
-	-- Todas as informações da reserva
-	FROM [RECPAPAGAIOS].[dbo].[RESERVA] AS R
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A ON A.ACO_ID_INT = R.RES_ACO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO] AS P ON P.PGTO_ID_INT = R.RES_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO] AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO] AS SP ON SP.ST_PGTO_ID_INT = P.PGTO_ST_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA] AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
-
-	-- Obtendo informações do hóspede
-	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H ON H.HSP_ID_INT = R.RES_HSP_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE] AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
+	FROM	   [RECPAPAGAIOS].[dbo].[RESERVA]					AS R
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT = PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT = PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT = R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
 	WHERE RES_ID_INT = @IdReserva AND RES_EXCLUIDO_BIT = 0
 GO
 
 
---DROP PROCEDURE IF EXISTS ObterUltimaReserva
+
 CREATE PROCEDURE ObterUltimaReserva
 AS
 	SELECT TOP 1 *
-	-- Todas as informações da reserva
-	FROM [RECPAPAGAIOS].[dbo].[RESERVA] AS R
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO] AS A ON A.ACO_ID_INT = R.RES_ACO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO] AS P ON P.PGTO_ID_INT = R.RES_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO] AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO] AS SP ON SP.ST_PGTO_ID_INT = P.PGTO_ST_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA] AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO] AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO] AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
-
-	-- Obtendo informações do hóspede
-	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE] AS H ON H.HSP_ID_INT = R.RES_HSP_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE] AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
+	FROM	   [RECPAPAGAIOS].[dbo].[RESERVA]					AS R
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT = PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT = PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT = R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
 	WHERE RES_EXCLUIDO_BIT = 0
-	ORDER BY R.RES_ACO_ID_INT DESC
+	ORDER BY R.RES_ID_INT DESC
 GO
 
 
---DROP PROCEDURE IF EXISTS ObterCheckIns
+
 CREATE PROCEDURE ObterCheckIns
 	@Pagina int,	@Quantidade int
 AS
 	SELECT *
-	FROM	   [RECPAPAGAIOS].[dbo].[CHECKIN]				 AS C
-	INNER JOIN [RECPAPAGAIOS].[dbo].[FUNCIONARIO]			 AS F ON F.FUNC_ID_INT		    = C.CHECKIN_FUNC_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[RESERVA]				 AS R ON R.RES_ID_INT		    = C.CHECKIN_RES_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]			 AS A ON A.ACO_ID_INT		    = R.RES_ACO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO] AS I ON I.INFO_ACOMOD_ID_INT   = A.ACO_INFO_ACOMOD_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]				 AS P ON P.PGTO_ID_INT          = R.RES_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]		 AS TP ON TP.TPPGTO_ID_INT      = P.PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]		 AS SP ON SP.ST_PGTO_ID_INT     = P.PGTO_ST_PGTO_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]		 AS SR ON SR.ST_RES_ID_INT	    = R.RES_STATUS_RESERVA_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]		 AS SA ON SA.ST_ACOMOD_ID_INT   = A.ACO_ST_ACOMOD_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]	 AS CA ON CA.CAT_ACOMOD_ID_INT  = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
-	
-	-- Obtendo informações do hóspede
-	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]				 AS H ON H.HSP_ID_INT		    = R.RES_HSP_ID_INT
-	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]		 AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
-	WHERE C.CHECKIN_EXCLUIDO_BIT = 0
-	  AND R.RES_EXCLUIDO_BIT = 0
+	FROM	   [RECPAPAGAIOS].[dbo].[CHECKIN]					AS C
+	INNER JOIN [RECPAPAGAIOS].[dbo].[FUNCIONARIO]				AS F  ON F.FUNC_ID_INT		    = C.CHECKIN_FUNC_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[RESERVA]					AS R  ON R.RES_ID_INT		    = C.CHECKIN_RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT = PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT = PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT = R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
+	WHERE C.CHECKIN_EXCLUIDO_BIT	= 0
+	  AND R.RES_EXCLUIDO_BIT		= 0
+	  AND SR.ST_RES_DESCRICAO_STR   <> 'Concluída'
 	ORDER BY R.RES_ID_INT OFFSET ((@Pagina - 1) * @Quantidade) ROWS FETCH NEXT @Quantidade ROWS ONLY
 GO
 
 
----------------------------------------------------------------------------------------------------------
----------------------------------------- PROCEDURES PARA REMOÇÃO ----------------------------------------
----------------------------------------------------------------------------------------------------------
 
---DROP PROCEDURE RemoverEnderecoHospede;
+CREATE PROCEDURE ObterCheckInPorReserva
+	@IdReserva int
+AS
+	SELECT *
+	FROM	   [RECPAPAGAIOS].[dbo].[CHECKIN]					AS C
+	INNER JOIN [RECPAPAGAIOS].[dbo].[FUNCIONARIO]				AS F  ON F.FUNC_ID_INT		    = C.CHECKIN_FUNC_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[RESERVA]					AS R  ON R.RES_ID_INT		    = C.CHECKIN_RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT			= R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT	= A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT			= PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT		= P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT		= PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT		= R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT	= A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT	= I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT			= R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT	= H.HSP_ID_INT
+	WHERE R.RES_ID_INT				= @IdReserva
+	  AND C.CHECKIN_EXCLUIDO_BIT	= 0
+GO
+
+
+
+CREATE PROCEDURE ObterCheckIn
+	@IdCheckIn int
+AS
+	SELECT *
+	FROM	   [RECPAPAGAIOS].[dbo].[CHECKIN]					AS C
+	INNER JOIN [RECPAPAGAIOS].[dbo].[FUNCIONARIO]				AS F  ON F.FUNC_ID_INT		    = C.CHECKIN_FUNC_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[RESERVA]					AS R  ON R.RES_ID_INT		    = C.CHECKIN_RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT			= R.RES_ACO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT	= A.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT			= PR.PGTO_RES_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT		= P.PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT		= PR.PGTO_RES_ST_PGTO_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT		= R.RES_STATUS_RESERVA_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT	= A.ACO_ST_ACOMOD_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT	= I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT			= R.RES_HSP_ID_INT
+	INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT	= H.HSP_ID_INT
+	WHERE R.RES_ID_INT			   = @IdCheckIn
+	  AND C.CHECKIN_EXCLUIDO_BIT   = 0
+	  AND SR.ST_RES_DESCRICAO_STR  <> 'Concluída'
+GO
+
+
+
+ALTER PROCEDURE ObterUltimoCheckOut
+AS
+	SELECT TOP 1 *
+	FROM		 [RECPAPAGAIOS].[dbo].[PAGAMENTO_CHECK_OUT]		AS PC
+	INNER JOIN   [RECPAPAGAIOS].[dbo].[CHECKOUT]				AS CO	ON CO.CHECKOUT_ID_INT			 = PC.PGTO_COUT_CHECK_OUT_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[CHECKIN]					AS CI	ON CI.CHECKIN_ID_INT			 = CO.CHECKOUT_CHECKIN_ID_INT
+	INNER JOIN   [RECPAPAGAIOS].[dbo].[RESERVA]					AS RS	ON RS.RES_ID_INT				 = CI.CHECKIN_RES_ID_INT
+	INNER JOIN   [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS HP	ON HP.HSP_ID_INT				 = RS.RES_HSP_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS AC	ON AC.ACO_ID_INT				 = RS.RES_ACO_ID_INT
+	INNER JOIN   [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]  AS IA	ON IA.INFO_ACOMOD_ID_INT		 = AC.ACO_INFO_ACOMOD_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]	AS CA	ON CA.CAT_ACOMOD_ID_INT			 = IA.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[FUNCIONARIO]				AS FC	ON FC.FUNC_ID_INT				 = CO.CHECKOUT_FUNC_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[PAGAMENTO]				AS PG	ON PG.PGTO_ID_INT				 = PC.PGTO_COUT_PGTO_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP	ON TP.TPPGTO_ID_INT				 = PG.PGTO_TPPGTO_ID_INT
+	INNER JOIN	 [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]		AS SP	ON SP.ST_PGTO_ID_INT			 = PC.PGTO_COUT_ST_PGTO_ID_INT
+	ORDER BY PC.PGTO_COUT_ID_INT DESC;
+GO
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------- PROCEDURES PARA REMOÇÃO --------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
 CREATE PROCEDURE RemoverEnderecoHospede
 	@CpfHospede nchar(11)  
 AS  
@@ -684,7 +822,7 @@ AS
 GO
 
 
---DROP PROCEDURE RemoverEnderecoFuncionario;
+
 CREATE PROCEDURE RemoverEnderecoFuncionario
 	@CpfHospede nchar(11)  
 AS  
@@ -695,7 +833,7 @@ AS
 GO
 
 
---DROP PROCEDURE RemoverHospede;
+
 CREATE PROCEDURE RemoverHospede
 	@cpfHospede nvarchar(11)
 AS  
@@ -706,7 +844,7 @@ AS
 GO
 
 
---DROP PROCEDURE RemoverFNRH;
+
 CREATE PROCEDURE RemoverFNRH
 	@IdFNRH int
 AS
@@ -717,7 +855,7 @@ AS
 GO
 
 
---DROP PROCEDURE RemoverAcomodacao;
+
 CREATE PROCEDURE RemoverAcomodacao
 	@idAcomodacao int
 AS
@@ -728,7 +866,7 @@ AS
 GO
 
 
---DROP PROCEDURE IF EXISTS RemoverReserva;
+
 CREATE PROCEDURE RemoverReserva
 	@IdReserva int
 AS

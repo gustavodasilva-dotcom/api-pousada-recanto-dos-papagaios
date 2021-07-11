@@ -1,5 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +13,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly ICheckInRepository _checkInRepository;
 
-        public CheckInService(ICheckInRepository checkInRepository)
+        private readonly IReservaRepository _reservaRepository;
+
+        public CheckInService(ICheckInRepository checkInRepository, IReservaRepository reservaRepository)
         {
             _checkInRepository = checkInRepository;
+
+            _reservaRepository = reservaRepository;
         }
 
         public async Task<List<CheckInViewModel>> Obter(int pagina, int quantidade)
@@ -100,5 +107,205 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Excluido = c.Excluido
             }).ToList();
         }
+
+        public async Task<CheckInViewModel> Obter(int idCheckIn)
+        {
+            var checkIn = await _checkInRepository.Obter(idCheckIn);
+
+            if (checkIn == null)
+                throw new Exception();
+
+            return new CheckInViewModel
+            {
+                Id = checkIn.Id,
+                Reserva = new ReservaViewModel
+                {
+                    Id = checkIn.Reserva.Id,
+                    DataReserva = checkIn.Reserva.DataReserva,
+                    DataCheckIn = checkIn.Reserva.DataCheckIn,
+                    DataCheckOut = checkIn.Reserva.DataCheckOut,
+                    PrecoUnitario = checkIn.Reserva.PrecoUnitario,
+                    PrecoTotal = checkIn.Reserva.PrecoTotal,
+                    StatusReserva = new StatusReservaViewModel
+                    {
+                        Id = checkIn.Reserva.StatusReserva.Id,
+                        Descricao = checkIn.Reserva.StatusReserva.Descricao
+                    },
+                    Hospede = new HospedeViewModel
+                    {
+                        NomeCompleto = checkIn.Reserva.Hospede.NomeCompleto,
+                        Cpf = checkIn.Reserva.Hospede.Cpf,
+                        DataDeNascimento = checkIn.Reserva.Hospede.DataDeNascimento,
+                        Email = checkIn.Reserva.Hospede.Email,
+                        Login = checkIn.Reserva.Hospede.Login,
+                        Senha = checkIn.Reserva.Hospede.Senha,
+                        Celular = checkIn.Reserva.Hospede.Celular,
+                        Endereco = new EnderecoViewModel
+                        {
+                            Cep = checkIn.Reserva.Hospede.Endereco.Cep,
+                            Logradouro = checkIn.Reserva.Hospede.Endereco.Logradouro,
+                            Numero = checkIn.Reserva.Hospede.Endereco.Numero,
+                            Complemento = checkIn.Reserva.Hospede.Endereco.Complemento,
+                            Bairro = checkIn.Reserva.Hospede.Endereco.Bairro,
+                            Cidade = checkIn.Reserva.Hospede.Endereco.Cidade,
+                            Estado = checkIn.Reserva.Hospede.Endereco.Estado,
+                            Pais = checkIn.Reserva.Hospede.Endereco.Pais
+                        }
+                    },
+                    Acomodacao = new AcomodacaoViewModel
+                    {
+                        Id = checkIn.Reserva.Acomodacao.Id,
+                        Nome = checkIn.Reserva.Acomodacao.Nome,
+                        StatusAcomodacao = new StatusAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.StatusAcomodacao.Id,
+                            Descricao = checkIn.Reserva.Acomodacao.StatusAcomodacao.Descricao
+                        },
+                        InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Id,
+                            MetrosQuadrados = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
+                            Capacidade = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Capacidade,
+                            TipoDeCama = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.TipoDeCama,
+                            Preco = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Preco
+                        },
+                        CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Id,
+                            Descricao = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Descricao
+                        }
+                    },
+                    Pagamento = new PagamentoViewModel
+                    {
+                        Id = checkIn.Reserva.Pagamento.Id,
+                        TipoPagamento = new TipoPagamentoViewModel
+                        {
+                            Id = checkIn.Reserva.Pagamento.TipoPagamento.Id,
+                            Descricao = checkIn.Reserva.Pagamento.TipoPagamento.Descricao
+                        },
+                        StatusPagamento = new StatusPagamentoViewModel
+                        {
+                            Id = checkIn.Reserva.Pagamento.StatusPagamento.Id,
+                            Descricao = checkIn.Reserva.Pagamento.StatusPagamento.Descricao
+                        }
+                    },
+                    Acompanhantes = checkIn.Reserva.Acompanhantes,
+                    Excluido = checkIn.Reserva.Excluido
+                },
+                UsuarioFuncionario = checkIn.Funcionario.Login,
+                Excluido = checkIn.Excluido
+            };
+        }
+
+        public async Task<CheckInViewModel> Inserir(CheckInInputModel checkInInputModel)
+        {
+            var reserva = await _reservaRepository.Obter(checkInInputModel.IdReserva);
+
+            if (reserva == null)
+                throw new NullReferenceException();
+
+            var checkIn = await _checkInRepository.ObterCheckInPorReserva(reserva.Id);
+
+            if (!(checkIn == null))
+                throw new Exception();
+
+            var checkInInsert = new CheckIn
+            {
+                Reserva = new Reserva
+                {
+                    Id = checkInInputModel.IdReserva
+                },
+                Funcionario = new Funcionario
+                {
+                    Login = checkInInputModel.LoginFuncionario
+                }
+            };
+
+            await _checkInRepository.Inserir(checkInInsert);
+
+            checkIn = await _checkInRepository.ObterCheckInPorReserva(reserva.Id);
+
+            return new CheckInViewModel
+            {
+                Id = checkIn.Id,
+                Reserva = new ReservaViewModel
+                {
+                    Id = checkIn.Reserva.Id,
+                    DataReserva = checkIn.Reserva.DataReserva,
+                    DataCheckIn = checkIn.Reserva.DataCheckIn,
+                    DataCheckOut = checkIn.Reserva.DataCheckOut,
+                    PrecoUnitario = checkIn.Reserva.PrecoUnitario,
+                    PrecoTotal = checkIn.Reserva.PrecoTotal,
+                    StatusReserva = new StatusReservaViewModel
+                    {
+                        Id = checkIn.Reserva.StatusReserva.Id,
+                        Descricao = checkIn.Reserva.StatusReserva.Descricao
+                    },
+                    Hospede = new HospedeViewModel
+                    {
+                        NomeCompleto = checkIn.Reserva.Hospede.NomeCompleto,
+                        Cpf = checkIn.Reserva.Hospede.Cpf,
+                        DataDeNascimento = checkIn.Reserva.Hospede.DataDeNascimento,
+                        Email = checkIn.Reserva.Hospede.Email,
+                        Login = checkIn.Reserva.Hospede.Login,
+                        Senha = checkIn.Reserva.Hospede.Senha,
+                        Celular = checkIn.Reserva.Hospede.Celular,
+                        Endereco = new EnderecoViewModel
+                        {
+                            Cep = checkIn.Reserva.Hospede.Endereco.Cep,
+                            Logradouro = checkIn.Reserva.Hospede.Endereco.Logradouro,
+                            Numero = checkIn.Reserva.Hospede.Endereco.Numero,
+                            Complemento = checkIn.Reserva.Hospede.Endereco.Complemento,
+                            Bairro = checkIn.Reserva.Hospede.Endereco.Bairro,
+                            Cidade = checkIn.Reserva.Hospede.Endereco.Cidade,
+                            Estado = checkIn.Reserva.Hospede.Endereco.Estado,
+                            Pais = checkIn.Reserva.Hospede.Endereco.Pais
+                        }
+                    },
+                    Acomodacao = new AcomodacaoViewModel
+                    {
+                        Id = checkIn.Reserva.Acomodacao.Id,
+                        Nome = checkIn.Reserva.Acomodacao.Nome,
+                        StatusAcomodacao = new StatusAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.StatusAcomodacao.Id,
+                            Descricao = checkIn.Reserva.Acomodacao.StatusAcomodacao.Descricao
+                        },
+                        InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Id,
+                            MetrosQuadrados = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
+                            Capacidade = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Capacidade,
+                            TipoDeCama = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.TipoDeCama,
+                            Preco = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Preco
+                        },
+                        CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
+                        {
+                            Id = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Id,
+                            Descricao = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Descricao
+                        }
+                    },
+                    Pagamento = new PagamentoViewModel
+                    {
+                        Id = checkIn.Reserva.Pagamento.Id,
+                        TipoPagamento = new TipoPagamentoViewModel
+                        {
+                            Id = checkIn.Reserva.Pagamento.TipoPagamento.Id,
+                            Descricao = checkIn.Reserva.Pagamento.TipoPagamento.Descricao
+                        },
+                        StatusPagamento = new StatusPagamentoViewModel
+                        {
+                            Id = checkIn.Reserva.Pagamento.StatusPagamento.Id,
+                            Descricao = checkIn.Reserva.Pagamento.StatusPagamento.Descricao
+                        }
+                    },
+                    Acompanhantes = checkIn.Reserva.Acompanhantes,
+                    Excluido = checkIn.Reserva.Excluido
+                },
+                UsuarioFuncionario = checkIn.Funcionario.Login,
+                Excluido = checkIn.Excluido
+            };
+        }
+
     }
 }

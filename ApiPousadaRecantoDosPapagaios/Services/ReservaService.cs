@@ -13,9 +13,17 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IReservaRepository _reservaRepository;
 
-        public ReservaService(IReservaRepository reservaRepository)
+        private readonly IAcomodacaoRepository _acomodacaoRepository;
+
+        private readonly IHospedeRepository _hospedeRepository;
+
+        public ReservaService(IReservaRepository reservaRepository, IAcomodacaoRepository acomodacaoRepository, IHospedeRepository hospedeRepository)
         {
             _reservaRepository = reservaRepository;
+
+            _acomodacaoRepository = acomodacaoRepository;
+
+            _hospedeRepository = hospedeRepository;
         }
 
         public async Task<List<ReservaViewModel>> Obter(int pagina, int quantidade)
@@ -183,6 +191,16 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<ReservaViewModel> Inserir(ReservaInputModel reservaInputModel)
         {
+            var acomodacao = await _acomodacaoRepository.Obter(reservaInputModel.AcomodacaoId);
+
+            if (acomodacao.StatusAcomodacao.Descricao == "Ocupado")
+                throw new Exception();
+
+            var hospede = await _hospedeRepository.Obter(reservaInputModel.CpfHospede);
+            
+            if (hospede == null)
+                throw new Exception();
+
             var reserva = new Reserva
             {
                 DataCheckIn = reservaInputModel.DataCheckIn,

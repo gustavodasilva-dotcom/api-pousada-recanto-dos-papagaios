@@ -1,6 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -28,5 +30,40 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
 
             return Ok(checkIns);
         }
+
+        [HttpGet("{idReserva:int}")]
+        public async Task<ActionResult<CheckInViewModel>> Obter([FromRoute] int idReserva)
+        {
+            try
+            {
+                var checkIn = await _checkInService.Obter(idReserva);
+
+                return Ok(checkIn);
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
+        {
+            try
+            {
+                var checkIn = await _checkInService.Inserir(checkInInputModel);
+
+                return Ok(checkIn);
+            }
+            catch (NullReferenceException nf)
+            {
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Conflict();
+            }
+        }
+
     }
 }

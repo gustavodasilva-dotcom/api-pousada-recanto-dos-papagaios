@@ -1,3 +1,6 @@
+USE RECPAPAGAIOS
+GO
+
 CREATE PROCEDURE [dbo].[SP_CriarAcomodacao]
 	@NomeAcomodacao nvarchar(50),	@InfoAcomodacao int
 AS

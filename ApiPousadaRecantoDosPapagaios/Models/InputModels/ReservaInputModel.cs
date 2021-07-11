@@ -8,6 +8,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
     {
         [DataType(DataType.Date, ErrorMessage = "O dado inserido não corresponde a uma data.")]
         [DiaAnterior(ErrorMessage = "A data de check-in precisa ser depois ou igual ao dia de hoje.")]
+        [MaisDeTresDias(ErrorMessage = "A data de check-in não pode ser daqui a mais de três dias. Para contatar uma reserva que será daqui a mais de três dias, contate a pousada.")]
         public DateTime DataCheckIn { get; set; }
 
         [DataType(DataType.Date, ErrorMessage = "O dado inserido não corresponde a uma data.")]

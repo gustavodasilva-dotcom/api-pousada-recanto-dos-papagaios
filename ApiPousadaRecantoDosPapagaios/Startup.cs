@@ -43,6 +43,9 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<ICheckInRepository, CheckInRepository>();
             services.AddScoped<ICheckInService, CheckInService>();
 
+            services.AddScoped<ICheckOutRepository, CheckOutRepository>();
+            services.AddScoped<ICheckOutService, CheckOutService>();
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
