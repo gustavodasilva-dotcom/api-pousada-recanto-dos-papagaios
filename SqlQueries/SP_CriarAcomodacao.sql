@@ -1,21 +1,3 @@
-/*************************************************************************************************************************************
---Antes de rodar a procedure, caso não exista, criar a tabela temporária a seguir:
-
-		--CREATE TABLE #RESULTADO
-		--(
-		--	ID_CHALE INT NOT NULL,
-		--	NOME_CHALE VARCHAR(50) NOT NULL,
-		--	DESCRICAO_CHALE VARCHAR(50) NOT NULL,
-		--	STATUS_CHALE VARCHAR(50) NOT NULL,
-		--	METROS_QUADRADOS_CHALE FLOAT(2) NOT NULL,
-		--	CAPACIDADE_CALE INT NOT NULL,
-		--	TIPO_CAMA_CHALE VARCHAR(50) NOT NULL,
-		--	PRECO_DIARIA_CHALE FLOAT(2) NOT NULL
-		--);
-
-*************************************************************************************************************************************/
-
-
 USE RECPAPAGAIOS
 GO
 
@@ -76,7 +58,19 @@ Data.....: 04/07/2021
 --***********************************************************************************************
 --Apresentando os dados de criação da acomodação.
 --***********************************************************************************************
-		IF OBJECT_ID('TEMPDB..#RESULTADO') IS NOT NULL TRUNCATE TABLE #RESULTADO;
+		
+		DROP TABLE IF EXISTS RESULTADO;
+		CREATE TABLE #RESULTADO
+		(
+			ID_CHALE INT NOT NULL,
+			NOME_CHALE VARCHAR(50) NOT NULL,
+			DESCRICAO_CHALE VARCHAR(50) NOT NULL,
+			STATUS_CHALE VARCHAR(50) NOT NULL,
+			METROS_QUADRADOS_CHALE FLOAT(2) NOT NULL,
+			CAPACIDADE_CALE INT NOT NULL,
+			TIPO_CAMA_CHALE VARCHAR(50) NOT NULL,
+			PRECO_DIARIA_CHALE FLOAT(2) NOT NULL
+		);
 
 		SELECT TOP 1 A.ACO_ID_INT, A.ACO_NOME_STR,			C.CAT_ACOMOD_DESCRICAO_STR,		S.ST_ACOMOD_DESCRICAO_STR,
 					 I.INFO_ACOMOD_METROS_QUADRADOS_FLOAT,  I.INFO_ACOMOD_CAPACIDADE_INT,
