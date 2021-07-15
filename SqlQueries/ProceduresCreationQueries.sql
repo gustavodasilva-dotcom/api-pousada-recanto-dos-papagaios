@@ -135,14 +135,14 @@ GO
 
 
 
-CREATE PROCEDURE AtualizarReserva
+ALTER PROCEDURE AtualizarReserva
 	@IdReserva int,			@DataCheckIn date,		@DataCheckOut date,
 	@CpfHospede nchar(11),	@AcomodacaoId int,		@PagamentoId int,
 	@Acompanhantes int
 AS
 	DECLARE
-		@InfoAcomodacao int, @PrecoAcomodacao float(2),
-		@IdHospede		int
+		@InfoAcomodacao int, @PrecoAcomodacao	float(2),
+		@IdHospede		int, @IdPgtoAcomodacao	int
 
 	SELECT @InfoAcomodacao = ACO_INFO_ACOMOD_ID_INT
 	FROM   [RECPAPAGAIOS].[dbo].[ACOMODACAO]
@@ -156,16 +156,28 @@ AS
 	FROM   [RECPAPAGAIOS].[dbo].[HOSPEDE]
 	WHERE  HSP_CPF_CHAR = @CpfHospede;
 
-	UPDATE [RECPAPAGAIOS].[dbo].[RESERVA]
-	SET
-		RES_DATA_CHECKIN_DATE = @DataCheckIn,
-		RES_DATA_CHECKOUT_DATE = @DataCheckOut,
-		RES_VALOR_RESERVA_FLOAT = (@PrecoAcomodacao * DATEDIFF(DAY, @DataCheckIn, @DataCheckOut)) * (@Acompanhantes + (10/100)),
-		RES_HSP_ID_INT = @IdHospede,
-		RES_ACO_ID_INT = @AcomodacaoId,
-		RES_PGTO_ID_INT = @PagamentoId,
-		RES_ACOMPANHANTES_ID_INT = @Acompanhantes
-	WHERE RES_ID_INT = @IdReserva AND RES_EXCLUIDO_BIT = 0 AND RES_STATUS_RESERVA_INT = 1 -- Reserva pode ser atualiza APENAS quando "Iniciada".
+	SELECT	@IdPgtoAcomodacao = PGTO_RES_ID_INT
+	FROM	[RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]
+	WHERE	PGTO_RES_RES_ID_INT = @IdReserva;
+
+	BEGIN TRANSACTION
+
+		UPDATE [RECPAPAGAIOS].[dbo].[RESERVA]
+		SET
+			RES_DATA_CHECKIN_DATE = @DataCheckIn,
+			RES_DATA_CHECKOUT_DATE = @DataCheckOut,
+			RES_VALOR_RESERVA_FLOAT = (@PrecoAcomodacao * DATEDIFF(DAY, @DataCheckIn, @DataCheckOut)) * (@Acompanhantes + (10/100)),
+			RES_HSP_ID_INT = @IdHospede,
+			RES_ACO_ID_INT = @AcomodacaoId,
+			RES_ACOMPANHANTES_ID_INT = @Acompanhantes
+		WHERE RES_ID_INT = @IdReserva AND RES_EXCLUIDO_BIT = 0 AND RES_STATUS_RESERVA_INT = 1 -- Reserva pode ser atualiza APENAS quando "Iniciada".
+		
+		UPDATE [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]
+		SET
+			PGTO_RES_PGTO_ID_INT = @PagamentoId
+		WHERE PGTO_RES_ID_INT = @IdPgtoAcomodacao AND PGTO_RES_ST_PGTO_ID_INT = 4; -- Apenas pode ser alterada o pagamento que estiver "Em processamento".
+
+	COMMIT TRANSACTION
 GO
 
 

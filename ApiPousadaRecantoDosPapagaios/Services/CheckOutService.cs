@@ -25,7 +25,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             // TODO: Mesmo quando o check-in não existe, está retornando um objecto. Verificar.
             // Deve retornar um valor nulo para funcionar corretamente.
-            var checkIn = _checkInRepository.ObterCheckInPorReserva(checkOutInputModel.ReservaId);
+            var checkIn = await _checkInRepository.ObterCheckInPorReserva(checkOutInputModel.ReservaId);
 
             if (checkIn == null)
                 throw new Exception();
