@@ -800,7 +800,7 @@ GO
 
 
 
-ALTER PROCEDURE ObterUltimoCheckOut
+CREATE PROCEDURE ObterUltimoCheckOut
 AS
 	SELECT TOP 1 *
 	FROM		 [RECPAPAGAIOS].[dbo].[PAGAMENTO_CHECK_OUT]		AS PC
@@ -817,6 +817,22 @@ AS
 	INNER JOIN	 [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]		AS SP	ON SP.ST_PGTO_ID_INT			 = PC.PGTO_COUT_ST_PGTO_ID_INT
 	ORDER BY PC.PGTO_COUT_ID_INT DESC;
 GO
+
+
+
+CREATE PROCEDURE [dbo].[spu_FazerLoginFuncionarios]
+	@Login nvarchar(50),
+	@Senha nvarchar(50)
+AS
+	BEGIN
+		SELECT	FUNC_NOME_USUARIO_STR,
+				FUNC_SENHA_USUARIO_STR
+		FROM	[RECPAPAGAIOS].[dbo].[FUNCIONARIO]
+		WHERE	FUNC_NOME_USUARIO_STR	= @Login
+		  AND	FUNC_SENHA_USUARIO_STR	= @Senha	
+	END
+GO
+
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------
