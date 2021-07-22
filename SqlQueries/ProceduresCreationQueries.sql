@@ -835,6 +835,29 @@ GO
 
 
 
+CREATE PROCEDURE [dbo].[spu_ObterReservaPorAcomodacao]
+	@IdChale int
+AS
+	BEGIN
+		SELECT *
+		FROM	   [RECPAPAGAIOS].[dbo].[RESERVA]					AS R
+		INNER JOIN [RECPAPAGAIOS].[dbo].[ACOMODACAO]				AS A  ON A.ACO_ID_INT = R.RES_ACO_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[INFORMACOES_ACOMODACAO]	AS I  ON I.INFO_ACOMOD_ID_INT = A.ACO_INFO_ACOMOD_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO_RESERVA]			AS PR ON PR.PGTO_RES_RES_ID_INT = R.RES_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[PAGAMENTO]					AS P  ON P.PGTO_ID_INT = PR.PGTO_RES_PGTO_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[TIPO_PAGAMENTO]			AS TP ON TP.TPPGTO_ID_INT = P.PGTO_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_PAGAMENTO]			AS SP ON SP.ST_PGTO_ID_INT = PR.PGTO_RES_ST_PGTO_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_RESERVA]			AS SR ON SR.ST_RES_ID_INT = R.RES_STATUS_RESERVA_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[STATUS_ACOMODACAO]			AS SA ON SA.ST_ACOMOD_ID_INT = A.ACO_ST_ACOMOD_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[CATEGORIA_ACOMODACAO]		AS CA ON CA.CAT_ACOMOD_ID_INT = I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[HOSPEDE]					AS H  ON H.HSP_ID_INT = R.RES_HSP_ID_INT
+		INNER JOIN [RECPAPAGAIOS].[dbo].[ENDERECO_HOSPEDE]			AS EH ON EH.END_ID_HOSPEDE_INT = H.HSP_ID_INT
+		WHERE R.RES_ACO_ID_INT = @IdChale AND R.RES_EXCLUIDO_BIT = 0
+	END
+GO
+
+
+
 -----------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- PROCEDURES PARA REMOÇÃO --------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
