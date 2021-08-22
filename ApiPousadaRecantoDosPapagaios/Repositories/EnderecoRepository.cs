@@ -7,190 +7,190 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
-    public class EnderecoRepository : IEnderecoRepository
+    public class EnderecoRepository /*: IEnderecoRepository*/
     {
-        private readonly SqlConnection sqlConnection;
+        //private readonly SqlConnection sqlConnection;
 
-        public EnderecoRepository(IConfiguration configuration)
-        {
-            sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-        }
+        //public EnderecoRepository(IConfiguration configuration)
+        //{
+        //    sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+        //}
 
-        public void Dispose()
-        {
-            sqlConnection?.Close();
-            sqlConnection?.Dispose();
-        }
+        //public void Dispose()
+        //{
+        //    sqlConnection?.Close();
+        //    sqlConnection?.Dispose();
+        //}
 
-        public async Task<List<Endereco>> Obter()
-        {
-            var enderecos = new List<Endereco>();
+        //public async Task<List<Endereco>> Obter()
+        //{
+        //    var enderecos = new List<Endereco>();
 
-            var procedure = @"[RECPAPAGAIOS].[dbo].[ObterEnderecos]";
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[ObterEnderecos]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
-            while (sqlDataReader.Read())
-            {
-                enderecos.Add(new Endereco
-                {
-                    Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                    Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                    Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                    Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                    Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                    Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                    Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                    Pais = (string)sqlDataReader["END_PAIS_STR"],
-                    PessoaId = (int)sqlDataReader["END_ID_HOSPEDE_INT"]
-                });
-            }
+        //    while (sqlDataReader.Read())
+        //    {
+        //        enderecos.Add(new Endereco
+        //        {
+        //            Cep = (string)sqlDataReader["END_CEP_CHAR"],
+        //            Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+        //            Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+        //            Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+        //            Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+        //            Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+        //            Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+        //            Pais = (string)sqlDataReader["END_PAIS_STR"],
+        //            PessoaId = (int)sqlDataReader["END_ID_HOSPEDE_INT"]
+        //        });
+        //    }
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
+        //    await sqlConnection.CloseAsync();
 
-            return enderecos;
-        }
+        //    return enderecos;
+        //}
 
-        public async Task InserirEnderecoFuncionario(Endereco endereco, string cpfHospede)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoFuncionario]";
+        //public async Task InserirEnderecoFuncionario(Endereco endereco, string cpfHospede)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoFuncionario]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
-            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
-            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
-            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
-            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
-            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
-            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
-            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+        //    sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+        //    sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+        //    sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+        //    sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+        //    sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+        //    sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+        //    sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+        //    sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task InserirEnderecoHospede(Endereco endereco, string cpfHospede)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoHospede]";
+        //public async Task InserirEnderecoHospede(Endereco endereco, string cpfHospede)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[InserirEnderecoHospede]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
-            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
-            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
-            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
-            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
-            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
-            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
-            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+        //    sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+        //    sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+        //    sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+        //    sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+        //    sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+        //    sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+        //    sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+        //    sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task AtualizarEnderecoFuncionario(string cpfHospede, Endereco endereco)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoFuncionario]";
+        //public async Task AtualizarEnderecoFuncionario(string cpfHospede, Endereco endereco)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoFuncionario]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
-            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
-            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
-            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
-            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
-            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
-            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
-            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+        //    sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+        //    sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+        //    sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+        //    sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+        //    sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+        //    sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+        //    sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task AtualizarEnderecoHospede(string cpfHospede, Endereco endereco)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoHospede]";
+        //public async Task AtualizarEnderecoHospede(string cpfHospede, Endereco endereco)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarEnderecoHospede]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
-            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
-            sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
-            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
-            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
-            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
-            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
-            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@Cep", SqlDbType.NChar).Value = endereco.Cep;
+        //    sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = endereco.Logradouro;
+        //    sqlCommand.Parameters.Add("@Numero", SqlDbType.NChar).Value = endereco.Numero;
+        //    sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = endereco.Complemento;
+        //    sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = endereco.Bairro;
+        //    sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = endereco.Cidade;
+        //    sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = endereco.Estado;
+        //    sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = endereco.Pais;
+        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task RemoverEnderecoFuncionario(string cpfHospede)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoFuncionario]";
+        //public async Task RemoverEnderecoFuncionario(string cpfHospede)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoFuncionario]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task RemoverEnderecoHospede(string cpfHospede)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoHospede]";
+        //public async Task RemoverEnderecoHospede(string cpfHospede)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverEnderecoHospede]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
+        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = cpfHospede;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
     }
 }

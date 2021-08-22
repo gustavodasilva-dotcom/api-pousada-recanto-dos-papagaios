@@ -19,60 +19,60 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _FNRHService = FNRHService;
         }
 
-        [HttpGet("{cpfHospede}")]
-        public async Task<ActionResult<IEnumerable<FNRHViewModel>>> Obter([FromRoute] string cpfHospede)
-        {
-            var fnrh = await _FNRHService.Obter(cpfHospede);
+        //[HttpGet("{cpfHospede}")]
+        //public async Task<ActionResult<IEnumerable<FNRHViewModel>>> Obter([FromRoute] string cpfHospede)
+        //{
+        //    var fnrh = await _FNRHService.Obter(cpfHospede);
 
-            if (fnrh.Count == 0)
-                return NoContent();
+        //    if (fnrh.Count == 0)
+        //        return NoContent();
 
-            return Ok(fnrh);
-        }
+        //    return Ok(fnrh);
+        //}
 
-        [HttpPost("{cpfHospede}")]
-        public async Task<ActionResult<FNRHViewModel>> Inserir([FromRoute] string cpfHospede, [FromBody] FNRHInputModel fnrhInputModel)
-        {
-            try
-            {
-                var fnrh = await _FNRHService.Inserir(cpfHospede, fnrhInputModel);
+        //[HttpPost("{cpfHospede}")]
+        //public async Task<ActionResult<FNRHViewModel>> Inserir([FromRoute] string cpfHospede, [FromBody] FNRHInputModel fnrhInputModel)
+        //{
+        //    try
+        //    {
+        //        var fnrh = await _FNRHService.Inserir(cpfHospede, fnrhInputModel);
 
-                return Ok(fnrh);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(fnrh);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpPut("{idFNRH:int}")]
-        public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
-        {
-            try
-            {
-                var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
+        //[HttpPut("{idFNRH:int}")]
+        //public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
+        //{
+        //    try
+        //    {
+        //        var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
 
-                return Ok(fnrh);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(fnrh);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpDelete("{idFNRH:int}")]
-        public async Task<ActionResult> Deletar([FromRoute] int idFNRH)
-        {
-            try
-            {
-                await _FNRHService.Deletar(idFNRH);
+        //[HttpDelete("{idFNRH:int}")]
+        //public async Task<ActionResult> Deletar([FromRoute] int idFNRH)
+        //{
+        //    try
+        //    {
+        //        await _FNRHService.Deletar(idFNRH);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
     }
 }

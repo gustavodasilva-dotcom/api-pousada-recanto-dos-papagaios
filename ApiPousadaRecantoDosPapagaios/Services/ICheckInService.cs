@@ -7,8 +7,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface ICheckInService
     {
-        Task<List<CheckInViewModel>> Obter(int pagina, int quantidade);
-        Task<CheckInViewModel> Obter(int idCheckIn);
-        Task<CheckInViewModel> Inserir(CheckInInputModel checkInInputModel);
+        //Task<List<CheckInViewModel>> Obter(int pagina, int quantidade);
+        //Task<CheckInViewModel> Obter(int idCheckIn);
+        //Task<CheckInViewModel> Inserir(CheckInInputModel checkInInputModel);
     }
 }

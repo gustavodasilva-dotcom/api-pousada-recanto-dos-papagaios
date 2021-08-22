@@ -19,60 +19,60 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _funcionarioService = funcionarioService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FuncionarioViewModel>>> Obter()
-        {
-            var funcionarios = await _funcionarioService.Obter();
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<FuncionarioViewModel>>> Obter()
+        //{
+        //    var funcionarios = await _funcionarioService.Obter();
 
-            if (funcionarios.Count == 0)
-                return NoContent();
+        //    if (funcionarios.Count == 0)
+        //        return NoContent();
 
-            return Ok(funcionarios);
-        }
+        //    return Ok(funcionarios);
+        //}
 
-        [HttpGet("{cpfFuncionario}")]
-        public async Task<ActionResult<FuncionarioViewModel>> Obter([FromRoute] string cpfFuncionario)
-        {
-            try
-            {
-                var funcionario = await _funcionarioService.Obter(cpfFuncionario);
+        //[HttpGet("{cpfFuncionario}")]
+        //public async Task<ActionResult<FuncionarioViewModel>> Obter([FromRoute] string cpfFuncionario)
+        //{
+        //    try
+        //    {
+        //        var funcionario = await _funcionarioService.Obter(cpfFuncionario);
 
-                return Ok(funcionario);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(funcionario);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpPost]
-        public async Task<ActionResult<FuncionarioViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
-        {
-            try
-            {
-                var funcionario = await _funcionarioService.Inserir(funcionarioInputModel);
+        //[HttpPost]
+        //public async Task<ActionResult<FuncionarioViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
+        //{
+        //    try
+        //    {
+        //        var funcionario = await _funcionarioService.Inserir(funcionarioInputModel);
 
-                return Ok(funcionario);
-            }
-            catch (Exception ex)
-            {
-                return Conflict();
-            }
-        }
+        //        return Ok(funcionario);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Conflict();
+        //    }
+        //}
 
-        [HttpPut("{cpfFuncionario}")]
-        public async Task<ActionResult<FuncionarioViewModel>> Atualizar([FromRoute] string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)
-        {
-            try
-            {
-                var funcionario = await _funcionarioService.Atualizar(cpfFuncionario, funcionarioInputModel);
+        //[HttpPut("{cpfFuncionario}")]
+        //public async Task<ActionResult<FuncionarioViewModel>> Atualizar([FromRoute] string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)
+        //{
+        //    try
+        //    {
+        //        var funcionario = await _funcionarioService.Atualizar(cpfFuncionario, funcionarioInputModel);
 
-                return Ok(funcionario);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(funcionario);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
     }
 }

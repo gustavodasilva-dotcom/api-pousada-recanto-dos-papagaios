@@ -20,50 +20,50 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _checkInService = checkInService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CheckInViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
-        {
-            var checkIns = await _checkInService.Obter(pagina, quantidade);
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<CheckInViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
+        //{
+        //    var checkIns = await _checkInService.Obter(pagina, quantidade);
 
-            if (checkIns.Count == 0)
-                return NoContent();
+        //    if (checkIns.Count == 0)
+        //        return NoContent();
 
-            return Ok(checkIns);
-        }
+        //    return Ok(checkIns);
+        //}
 
-        [HttpGet("{idReserva:int}")]
-        public async Task<ActionResult<CheckInViewModel>> Obter([FromRoute] int idReserva)
-        {
-            try
-            {
-                var checkIn = await _checkInService.Obter(idReserva);
+        //[HttpGet("{idReserva:int}")]
+        //public async Task<ActionResult<CheckInViewModel>> Obter([FromRoute] int idReserva)
+        //{
+        //    try
+        //    {
+        //        var checkIn = await _checkInService.Obter(idReserva);
 
-                return Ok(checkIn);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(checkIn);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpPost]
-        public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
-        {
-            try
-            {
-                var checkIn = await _checkInService.Inserir(checkInInputModel);
+        //[HttpPost]
+        //public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
+        //{
+        //    try
+        //    {
+        //        var checkIn = await _checkInService.Inserir(checkInInputModel);
 
-                return Ok(checkIn);
-            }
-            catch (NullReferenceException nf)
-            {
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Conflict();
-            }
-        }
+        //        return Ok(checkIn);
+        //    }
+        //    catch (NullReferenceException nf)
+        //    {
+        //        return NoContent();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Conflict();
+        //    }
+        //}
 
     }
 }

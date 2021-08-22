@@ -18,19 +18,19 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _checkOutRepository = checkOutService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<CheckOutViewModel>> Inserir([FromBody] CheckOutInputModel checkOutInputModel)
-        {
-            try
-            {
-                var checkOut = await _checkOutRepository.Inserir(checkOutInputModel);
+        //[HttpPost]
+        //public async Task<ActionResult<CheckOutViewModel>> Inserir([FromBody] CheckOutInputModel checkOutInputModel)
+        //{
+        //    try
+        //    {
+        //        var checkOut = await _checkOutRepository.Inserir(checkOutInputModel);
 
-                return Ok(checkOut);
-            }
-            catch (Exception ex)
-            {
-                return Conflict();
-            }
-        }
+        //        return Ok(checkOut);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Conflict();
+        //    }
+        //}
     }
 }

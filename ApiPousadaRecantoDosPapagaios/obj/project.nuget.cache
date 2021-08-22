@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "QTPE+Yg/O7iR+0ufCMyklT8hML/YtMEki6bN29cKIsfINd7xyPUZKGE44pVZ/W5/uIDFtzGBAkl1PAao137W3g==",
+  "dgSpecHash": "y1+rRy8rTI8IMtPZ5vUDiWBvdQ7tbmjN2JJcG5sqUAvOiGh+rBjvrXU3/DBgVKSDJ3V4sREGjCOfE2Ig7ME6dA==",
   "success": true,
   "projectFilePath": "C:\\Users\\gusta\\source\\repos\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\gusta\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

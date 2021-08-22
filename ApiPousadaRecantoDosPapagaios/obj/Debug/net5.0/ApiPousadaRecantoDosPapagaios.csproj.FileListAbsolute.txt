@@ -33,3 +33,4 @@ C:\Users\gusta\source\repos\ApiPousadaRecantoDosPapagaios\ApiPousadaRecantoDosPa
 C:\Users\gusta\source\repos\ApiPousadaRecantoDosPapagaios\ApiPousadaRecantoDosPapagaios\obj\Debug\net5.0\ref\ApiPousadaRecantoDosPapagaios.dll
 C:\Users\gusta\source\repos\ApiPousadaRecantoDosPapagaios\ApiPousadaRecantoDosPapagaios\obj\Debug\net5.0\ApiPousadaRecantoDosPapagaios.pdb
 C:\Users\gusta\source\repos\ApiPousadaRecantoDosPapagaios\ApiPousadaRecantoDosPapagaios\obj\Debug\net5.0\ApiPousadaRecantoDosPapagaios.genruntimeconfig.cache
+C:\Users\gusta\source\repos\ApiPousadaRecantoDosPapagaios\ApiPousadaRecantoDosPapagaios\bin\Debug\net5.0\Dapper.dll

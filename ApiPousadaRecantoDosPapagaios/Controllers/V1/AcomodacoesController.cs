@@ -19,53 +19,53 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _acomodacaoService = acomodacaoService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
-        {
-            var acomodacoes = await _acomodacaoService.Obter();
+        //    [HttpGet]
+        //    public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
+        //    {
+        //        var acomodacoes = await _acomodacaoService.Obter();
 
-            if (acomodacoes.Count == 0)
-                return NoContent();
+        //        if (acomodacoes.Count == 0)
+        //            return NoContent();
 
-            return Ok(acomodacoes);
-        }
+        //        return Ok(acomodacoes);
+        //    }
 
-        [HttpGet("{idAcomodacao:int}")]
-        public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
-        {
-            var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
+        //    [HttpGet("{idAcomodacao:int}")]
+        //    public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
+        //    {
+        //        var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
 
-            return Ok(acomodacao);
-        }
+        //        return Ok(acomodacao);
+        //    }
 
-        [HttpPost]
-        public async Task<ActionResult<AcomodacaoViewModel>> Inserir([FromBody] AcomodacaoInputModel acomodacaoInputModel)
-        {
-            try
-            {
-                var acomodacao = await _acomodacaoService.Inserir(acomodacaoInputModel);
+        //    [HttpPost]
+        //    public async Task<ActionResult<AcomodacaoViewModel>> Inserir([FromBody] AcomodacaoInputModel acomodacaoInputModel)
+        //    {
+        //        try
+        //        {
+        //            var acomodacao = await _acomodacaoService.Inserir(acomodacaoInputModel);
 
-                return Ok(acomodacao);
-            }
-            catch (Exception ex)
-            {
-                return Conflict();
-            }
-        }
+        //            return Ok(acomodacao);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Conflict();
+        //        }
+        //    }
 
-        [HttpDelete("{idAcomodacao:int}")]
-        public async Task<ActionResult> Deletar([FromRoute] int idAcomodacao)
-        {
-            try
-            {
-                await _acomodacaoService.Deletar(idAcomodacao);
+        //    [HttpDelete("{idAcomodacao:int}")]
+        //    public async Task<ActionResult> Deletar([FromRoute] int idAcomodacao)
+        //    {
+        //        try
+        //        {
+        //            await _acomodacaoService.Deletar(idAcomodacao);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //            return Ok();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return NoContent();
+        //        }
+        //    }
     }
 }

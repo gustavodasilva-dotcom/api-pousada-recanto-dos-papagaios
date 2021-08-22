@@ -7,10 +7,12 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface IHospedeService
     {
-        Task<List<HospedeViewModel>> Obter();
-        Task<HospedeViewModel> Obter(string cpfHospede);
-        Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel);
-        Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel);
-        Task Remover(string cpfHospede);
+        Task<List<HospedeViewModel>> Obter(int pagina, int quantidade);
+
+        Task<HospedeViewModel> Obter(int idHospede);
+        //Task<HospedeViewModel> Obter(string cpfHospede);
+        //Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel);
+        //Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel);
+        //Task Remover(string cpfHospede);
     }
 }

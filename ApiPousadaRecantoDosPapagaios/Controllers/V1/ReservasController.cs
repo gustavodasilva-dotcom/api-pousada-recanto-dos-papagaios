@@ -20,75 +20,75 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _reservaService = reservaService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReservaViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
-        {
-            var reservas = await _reservaService.Obter(pagina, quantidade);
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<ReservaViewModel>>> Obter([FromQuery, Range(1, int.MaxValue)] int pagina = 1, [FromQuery, Range(1, 50)] int quantidade = 5)
+        //{
+        //    var reservas = await _reservaService.Obter(pagina, quantidade);
 
-            if (reservas.Count == 0)
-                return NoContent();
+        //    if (reservas.Count == 0)
+        //        return NoContent();
 
-            return Ok(reservas);
-        }
+        //    return Ok(reservas);
+        //}
 
-        [HttpGet("{idReserva:int}")]
-        public async Task<ActionResult<ReservaViewModel>> Obter([FromRoute] int idReserva)
-        {
-            try
-            {
-                var reserva = await _reservaService.Obter(idReserva);
+        //[HttpGet("{idReserva:int}")]
+        //public async Task<ActionResult<ReservaViewModel>> Obter([FromRoute] int idReserva)
+        //{
+        //    try
+        //    {
+        //        var reserva = await _reservaService.Obter(idReserva);
 
-                return Ok(reserva);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(reserva);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpPost]
-        public async Task<ActionResult<ReservaViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
-        {
-            try
-            {
-                var reserva = await _reservaService.Inserir(reservaInputModel);
+        //[HttpPost]
+        //public async Task<ActionResult<ReservaViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
+        //{
+        //    try
+        //    {
+        //        var reserva = await _reservaService.Inserir(reservaInputModel);
 
-                return Ok(reserva);
-            }
-            catch (Exception ex)
-            {
-                return Conflict();
-            }
-        }
+        //        return Ok(reserva);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Conflict();
+        //    }
+        //}
 
-        [HttpPut("{idReserva:int}")]
-        public async Task<ActionResult<ReservaViewModel>> Atualizar([FromRoute] int idReserva, [FromBody] ReservaInputModel reservaInputModel)
-        {
-            try
-            {
-                var reserva = await _reservaService.Atualizar(idReserva, reservaInputModel);
+        //[HttpPut("{idReserva:int}")]
+        //public async Task<ActionResult<ReservaViewModel>> Atualizar([FromRoute] int idReserva, [FromBody] ReservaInputModel reservaInputModel)
+        //{
+        //    try
+        //    {
+        //        var reserva = await _reservaService.Atualizar(idReserva, reservaInputModel);
 
-                return Ok(reserva);
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok(reserva);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
 
-        [HttpDelete("{idReserva:int}")]
-        public async Task<ActionResult> Deletar([FromRoute] int idReserva)
-        {
-            try
-            {
-                await _reservaService.Deletar(idReserva);
+        //[HttpDelete("{idReserva:int}")]
+        //public async Task<ActionResult> Deletar([FromRoute] int idReserva)
+        //{
+        //    try
+        //    {
+        //        await _reservaService.Deletar(idReserva);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return NoContent();
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NoContent();
+        //    }
+        //}
     }
 }

@@ -6,57 +6,57 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
-    public class DadosBancariosRepository : IDadosBancariosRepository
+    public class DadosBancariosRepository /*: IDadosBancariosRepository*/
     {
-        private readonly SqlConnection sqlConnection;
+        //private readonly SqlConnection sqlConnection;
 
-        public DadosBancariosRepository(IConfiguration configuration)
-        {
-            sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-        }
+        //public DadosBancariosRepository(IConfiguration configuration)
+        //{
+        //    sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+        //}
 
-        public void Dispose()
-        {
-            sqlConnection?.Close();
-            sqlConnection?.Dispose();
-        }
+        //public void Dispose()
+        //{
+        //    sqlConnection?.Close();
+        //    sqlConnection?.Dispose();
+        //}
 
-        public async Task Inserir(DadosBancarios dadosBancarios, string cpfFuncionario)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[InserirDadosBancarios]";
+        //public async Task Inserir(DadosBancarios dadosBancarios, string cpfFuncionario)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[InserirDadosBancarios]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
 
-            sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = dadosBancarios.Banco;
-            sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = dadosBancarios.Agencia;
-            sqlCommand.Parameters.Add("@NumeroDaConta", SqlDbType.NVarChar).Value = dadosBancarios.NumeroDaConta;
-            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
+        //    sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = dadosBancarios.Banco;
+        //    sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = dadosBancarios.Agencia;
+        //    sqlCommand.Parameters.Add("@NumeroDaConta", SqlDbType.NVarChar).Value = dadosBancarios.NumeroDaConta;
+        //    sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+        //    sqlCommand.ExecuteNonQuery();
 
-            await sqlConnection.CloseAsync();
-        }
+        //    await sqlConnection.CloseAsync();
+        //}
 
-        public async Task Atualizar(string cpfFuncionario, DadosBancarios dadosBancarios)
-        {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarDadosBancarios]";
+        //public async Task Atualizar(string cpfFuncionario, DadosBancarios dadosBancarios)
+        //{
+        //    var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarDadosBancarios]";
 
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlCommand.CommandType = CommandType.StoredProcedure;
             
-            sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = dadosBancarios.Banco;
-            sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = dadosBancarios.Agencia;
-            sqlCommand.Parameters.Add("@NumeroDaConta", SqlDbType.NVarChar).Value = dadosBancarios.NumeroDaConta;
-            sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
+        //    sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = dadosBancarios.Banco;
+        //    sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = dadosBancarios.Agencia;
+        //    sqlCommand.Parameters.Add("@NumeroDaConta", SqlDbType.NVarChar).Value = dadosBancarios.NumeroDaConta;
+        //    sqlCommand.Parameters.Add("@CpfFuncionario", SqlDbType.NChar).Value = cpfFuncionario;
 
-            await sqlConnection.OpenAsync();
+        //    await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
-        }
+        //    sqlCommand.ExecuteNonQuery();
+        //}
     }
 }

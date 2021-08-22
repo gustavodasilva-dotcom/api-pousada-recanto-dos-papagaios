@@ -2,8 +2,10 @@
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,28 +15,31 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IHospedeRepository _hospedeRepository;
 
-        private readonly IEnderecoRepository _enderecoRepository;
-
-        public HospedeService(IHospedeRepository hospedeRepository, IEnderecoRepository enderecoRepository)
+        public HospedeService(IHospedeRepository hospedeRepository)
         {
             _hospedeRepository = hospedeRepository;
-
-            _enderecoRepository = enderecoRepository;
         }
 
-        public async Task<List<HospedeViewModel>> Obter()
-        {
-            var hospedes = await _hospedeRepository.Obter();
+        public async Task<List<HospedeViewModel>> Obter(int pagina, int quantidade)
+        {   
+            var hospedes = await _hospedeRepository.Obter(pagina, quantidade);
 
             return hospedes.Select(h => new HospedeViewModel
             {
+                Id = h.Id,
                 NomeCompleto = h.NomeCompleto,
                 Cpf = h.Cpf,
                 DataDeNascimento = h.DataDeNascimento,
-                Email = h.Email,
-                Login = h.Login,
-                Senha = h.Senha,
-                Celular = h.Celular,
+                Usuario = new UsuarioViewModel
+                {
+                    NomeUsuario = h.Usuario.NomeUsuario
+                },
+                Contatos = new ContatosViewModel
+                {
+                    Email = h.Contatos.Email,
+                    Celular = h.Contatos.Celular,
+                    Telefone = h.Contatos.Telefone
+                },
                 Endereco = new EnderecoViewModel
                 {
                     Cep = h.Endereco.Cep,
@@ -49,22 +54,26 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             }).ToList();
         }
 
-        public async Task<HospedeViewModel> Obter(string cpfHospede)
+        public async Task<HospedeViewModel> Obter(int idHospede)
         {
-            var hospede = await _hospedeRepository.Obter(cpfHospede);
-
-            if (hospede == null)
-                throw new Exception();
+            var hospede = await _hospedeRepository.Obter(idHospede);
 
             return new HospedeViewModel
             {
+                Id = hospede.Id,
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
                 DataDeNascimento = hospede.DataDeNascimento,
-                Email = hospede.Email,
-                Login = hospede.Login,
-                Senha = hospede.Senha,
-                Celular = hospede.Celular,
+                Usuario = new UsuarioViewModel
+                {
+                    NomeUsuario = hospede.Usuario.NomeUsuario
+                },
+                Contatos = new ContatosViewModel
+                {
+                    Email = hospede.Contatos.Email,
+                    Celular = hospede.Contatos.Celular,
+                    Telefone = hospede.Contatos.Telefone
+                },
                 Endereco = new EnderecoViewModel
                 {
                     Cep = hospede.Endereco.Cep,
@@ -79,133 +88,133 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
-        {
-            var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
+        //public async Task<HospedeViewModel> Inserir(HospedeInputModel hospedeInputModel)
+        //{
+        //    var hospede = await _hospedeRepository.ObterPorCpf(hospedeInputModel.Cpf);
 
-            if (!(hospede == null))
-                throw new Exception();
+        //    if (!(hospede == null))
+        //        throw new Exception();
 
-            var hospedeInsert = new Hospede
-            {
-                NomeCompleto = hospedeInputModel.NomeCompleto,
-                Cpf = hospedeInputModel.Cpf,
-                DataDeNascimento = hospedeInputModel.DataDeNascimento,
-                Email = hospedeInputModel.Email,
-                Login = hospedeInputModel.Cpf,
-                Senha = hospedeInputModel.Senha,
-                Celular = hospedeInputModel.Celular
-            };
+        //    var hospedeInsert = new Hospede
+        //    {
+        //        NomeCompleto = hospedeInputModel.NomeCompleto,
+        //        Cpf = hospedeInputModel.Cpf,
+        //        DataDeNascimento = hospedeInputModel.DataDeNascimento,
+        //        Email = hospedeInputModel.Email,
+        //        Login = hospedeInputModel.Cpf,
+        //        Senha = hospedeInputModel.Senha,
+        //        Celular = hospedeInputModel.Celular
+        //    };
 
-            await _hospedeRepository.Inserir(hospedeInsert);
+        //    await _hospedeRepository.Inserir(hospedeInsert);
 
-            var ultimoHospede = await _hospedeRepository.ObterUltimoHospede();
+        //    var ultimoHospede = await _hospedeRepository.ObterUltimoHospede();
 
-            var enderecoInsert = new Endereco
-            {
-                Cep = hospedeInputModel.Endereco.Cep,
-                Logradouro = hospedeInputModel.Endereco.Logradouro,
-                Numero = hospedeInputModel.Endereco.Numero,
-                Complemento = hospedeInputModel.Endereco.Complemento,
-                Bairro = hospedeInputModel.Endereco.Bairro,
-                Cidade = hospedeInputModel.Endereco.Cidade,
-                Estado = hospedeInputModel.Endereco.Estado,
-                Pais = hospedeInputModel.Endereco.Pais
-            };
+        //    var enderecoInsert = new Endereco
+        //    {
+        //        Cep = hospedeInputModel.Endereco.Cep,
+        //        Logradouro = hospedeInputModel.Endereco.Logradouro,
+        //        Numero = hospedeInputModel.Endereco.Numero,
+        //        Complemento = hospedeInputModel.Endereco.Complemento,
+        //        Bairro = hospedeInputModel.Endereco.Bairro,
+        //        Cidade = hospedeInputModel.Endereco.Cidade,
+        //        Estado = hospedeInputModel.Endereco.Estado,
+        //        Pais = hospedeInputModel.Endereco.Pais
+        //    };
 
-            await _enderecoRepository.InserirEnderecoHospede(enderecoInsert, ultimoHospede.Cpf);
+        //    await _enderecoRepository.InserirEnderecoHospede(enderecoInsert, ultimoHospede.Cpf);
 
-            return new HospedeViewModel
-            {
-                NomeCompleto = hospedeInsert.NomeCompleto,
-                Cpf = hospedeInsert.Cpf,
-                DataDeNascimento = hospedeInsert.DataDeNascimento,
-                Email = hospedeInsert.Email,
-                Login = hospedeInsert.Login,
-                Senha = hospedeInsert.Senha,
-                Celular = hospedeInsert.Celular,
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = enderecoInsert.Cep,
-                    Logradouro = enderecoInsert.Logradouro,
-                    Numero = enderecoInsert.Numero,
-                    Complemento = enderecoInsert.Complemento,
-                    Bairro = enderecoInsert.Bairro,
-                    Cidade = enderecoInsert.Cidade,
-                    Estado = enderecoInsert.Estado,
-                    Pais = enderecoInsert.Pais
-                }
-            };
-        }
+        //    return new HospedeViewModel
+        //    {
+        //        NomeCompleto = hospedeInsert.NomeCompleto,
+        //        Cpf = hospedeInsert.Cpf,
+        //        DataDeNascimento = hospedeInsert.DataDeNascimento,
+        //        Email = hospedeInsert.Email,
+        //        Login = hospedeInsert.Login,
+        //        Senha = hospedeInsert.Senha,
+        //        Celular = hospedeInsert.Celular,
+        //        Endereco = new EnderecoViewModel
+        //        {
+        //            Cep = enderecoInsert.Cep,
+        //            Logradouro = enderecoInsert.Logradouro,
+        //            Numero = enderecoInsert.Numero,
+        //            Complemento = enderecoInsert.Complemento,
+        //            Bairro = enderecoInsert.Bairro,
+        //            Cidade = enderecoInsert.Cidade,
+        //            Estado = enderecoInsert.Estado,
+        //            Pais = enderecoInsert.Pais
+        //        }
+        //    };
+        //}
 
-        public async Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel)
-        {
-            var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
+        //public async Task<HospedeViewModel> Atualizar(string cpfHospede, HospedeInputModel hospedeInputModel)
+        //{
+        //    var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
 
-            if (hospede == null)
-                throw new Exception();
+        //    if (hospede == null)
+        //        throw new Exception();
 
-            var hospedeInsert = new Hospede
-            {
-                NomeCompleto = hospedeInputModel.NomeCompleto,
-                Cpf = hospedeInputModel.Cpf,
-                DataDeNascimento = hospedeInputModel.DataDeNascimento,
-                Email = hospedeInputModel.Email,
-                Login = hospedeInputModel.Cpf,
-                Senha = hospedeInputModel.Senha,
-                Celular = hospedeInputModel.Celular
-            };
+        //    var hospedeInsert = new Hospede
+        //    {
+        //        NomeCompleto = hospedeInputModel.NomeCompleto,
+        //        Cpf = hospedeInputModel.Cpf,
+        //        DataDeNascimento = hospedeInputModel.DataDeNascimento,
+        //        Email = hospedeInputModel.Email,
+        //        Login = hospedeInputModel.Cpf,
+        //        Senha = hospedeInputModel.Senha,
+        //        Celular = hospedeInputModel.Celular
+        //    };
 
-            await _hospedeRepository.Atualizar(cpfHospede, hospedeInsert);
+        //    await _hospedeRepository.Atualizar(cpfHospede, hospedeInsert);
 
-            var enderecoInsert = new Endereco
-            {
-                Cep = hospedeInputModel.Endereco.Cep,
-                Logradouro = hospedeInputModel.Endereco.Logradouro,
-                Numero = hospedeInputModel.Endereco.Numero,
-                Complemento = hospedeInputModel.Endereco.Complemento,
-                Bairro = hospedeInputModel.Endereco.Bairro,
-                Cidade = hospedeInputModel.Endereco.Cidade,
-                Estado = hospedeInputModel.Endereco.Estado,
-                Pais = hospedeInputModel.Endereco.Pais
-            };
+        //    var enderecoInsert = new Endereco
+        //    {
+        //        Cep = hospedeInputModel.Endereco.Cep,
+        //        Logradouro = hospedeInputModel.Endereco.Logradouro,
+        //        Numero = hospedeInputModel.Endereco.Numero,
+        //        Complemento = hospedeInputModel.Endereco.Complemento,
+        //        Bairro = hospedeInputModel.Endereco.Bairro,
+        //        Cidade = hospedeInputModel.Endereco.Cidade,
+        //        Estado = hospedeInputModel.Endereco.Estado,
+        //        Pais = hospedeInputModel.Endereco.Pais
+        //    };
 
-            await _enderecoRepository.AtualizarEnderecoHospede(cpfHospede, enderecoInsert);
+        //    await _enderecoRepository.AtualizarEnderecoHospede(cpfHospede, enderecoInsert);
 
-            return new HospedeViewModel
-            {
-                NomeCompleto = hospedeInsert.NomeCompleto,
-                Cpf = hospedeInsert.Cpf,
-                DataDeNascimento = hospedeInsert.DataDeNascimento,
-                Email = hospedeInsert.Email,
-                Login = hospedeInsert.Login,
-                Senha = hospedeInsert.Senha,
-                Celular = hospedeInsert.Celular,
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = enderecoInsert.Cep,
-                    Logradouro = enderecoInsert.Logradouro,
-                    Numero = enderecoInsert.Numero,
-                    Complemento = enderecoInsert.Complemento,
-                    Bairro = enderecoInsert.Bairro,
-                    Cidade = enderecoInsert.Cidade,
-                    Estado = enderecoInsert.Estado,
-                    Pais = enderecoInsert.Pais
-                }
-            };
-        }
+        //    return new HospedeViewModel
+        //    {
+        //        NomeCompleto = hospedeInsert.NomeCompleto,
+        //        Cpf = hospedeInsert.Cpf,
+        //        DataDeNascimento = hospedeInsert.DataDeNascimento,
+        //        Email = hospedeInsert.Email,
+        //        Login = hospedeInsert.Login,
+        //        Senha = hospedeInsert.Senha,
+        //        Celular = hospedeInsert.Celular,
+        //        Endereco = new EnderecoViewModel
+        //        {
+        //            Cep = enderecoInsert.Cep,
+        //            Logradouro = enderecoInsert.Logradouro,
+        //            Numero = enderecoInsert.Numero,
+        //            Complemento = enderecoInsert.Complemento,
+        //            Bairro = enderecoInsert.Bairro,
+        //            Cidade = enderecoInsert.Cidade,
+        //            Estado = enderecoInsert.Estado,
+        //            Pais = enderecoInsert.Pais
+        //        }
+        //    };
+        //}
 
-        public async Task Remover(string cpfHospede)
-        {
-            var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
+        //public async Task Remover(string cpfHospede)
+        //{
+        //    var hospede = await _hospedeRepository.ObterPorCpf(cpfHospede);
 
-            if (hospede == null)
-                throw new Exception();
+        //    if (hospede == null)
+        //        throw new Exception();
 
-            await _hospedeRepository.Remover(cpfHospede);
+        //    await _hospedeRepository.Remover(cpfHospede);
 
-            await _enderecoRepository.RemoverEnderecoHospede(cpfHospede);
-        }
+        //    await _enderecoRepository.RemoverEnderecoHospede(cpfHospede);
+        //}
 
     }
 }

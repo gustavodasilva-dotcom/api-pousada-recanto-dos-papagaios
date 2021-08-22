@@ -6,6 +6,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface ICheckOutService
     {
-        Task<CheckOutViewModel> Inserir(CheckOutInputModel checkOutInputModel);
+        //Task<CheckOutViewModel> Inserir(CheckOutInputModel checkOutInputModel);
     }
 }
