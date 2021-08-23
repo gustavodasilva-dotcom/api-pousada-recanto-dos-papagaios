@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ApiPousadaRecantoDosPapagaios.CustomDataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
 {
@@ -15,7 +16,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         public string Celular { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        [StringLength(maximumLength: 12, MinimumLength = 10, ErrorMessage = "O número de telefone deve conter entre 10 e 12 dígitos.")]
+        [RequiredIf(ErrorMessage = "O número de telefone deve conter entre 10 e 12 dígitos.")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "O telefone deve conter apenas números.")]
         public string Telefone { get; set; }
     }

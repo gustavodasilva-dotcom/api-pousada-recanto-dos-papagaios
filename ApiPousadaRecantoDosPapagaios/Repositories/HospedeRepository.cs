@@ -1,12 +1,10 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using Dapper;
 
 namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
@@ -126,138 +124,192 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return hospede;
         }
 
-        //public async Task Inserir(Hospede hospede)
-        //{
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[InserirHospede]";
+        public async Task<Hospede> ObterUltimoHospede()
+        {
+            Hospede hospede = null;
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            var procedure = $"[RECPAPAGAIOS].[dbo].[ObterUltimoHospede]";
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
-        //    sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
-        //    sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
-        //    sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Email;
-        //    sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = hospede.Login;
-        //    sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Senha;
-        //    sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Celular;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    await sqlConnection.OpenAsync();
+            await sqlConnection.OpenAsync();
 
-        //    sqlCommand.ExecuteNonQuery();
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
-        //    await sqlConnection.CloseAsync();
-        //}
+            while (sqlDataReader.Read())
+            {
+                hospede = new Hospede
+                {
+                    Id = (int)sqlDataReader["HSP_ID_INT"],
+                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
+                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
+                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
+                    Usuario = new Usuario
+                    {
+                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"],
+                    },
+                    Contatos = new Contatos
+                    {
+                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
+                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
+                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
+                    },
+                    Endereco = new Endereco
+                    {
+                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
+                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+                        Pais = (string)sqlDataReader["END_PAIS_STR"]
+                    }
+                };
+            }
 
-        //public async Task<Hospede> ObterUltimoHospede()
-        //{
-        //    Hospede hospede = null;
+            await sqlConnection.CloseAsync();
 
-        //    var procedure = $"[RECPAPAGAIOS].[dbo].[ObterUltimoHospede]";
+            return hospede;
+        }
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+        public async Task<Hospede> Inserir(Hospede hospede)
+        {
+            var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarNovoHospede]";
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    await sqlConnection.OpenAsync();
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Contatos.Email;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Contatos.Celular;
+            sqlCommand.Parameters.Add("@Telefone", SqlDbType.NVarChar).Value = hospede.Contatos.Telefone;
+            sqlCommand.Parameters.Add("@NomeUsuario", SqlDbType.NVarChar).Value = hospede.Usuario.NomeUsuario;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Usuario.SenhaUsuario;
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NVarChar).Value = hospede.Endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = hospede.Endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NVarChar).Value = hospede.Endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = hospede.Endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = hospede.Endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
 
-        //    while (sqlDataReader.Read())
-        //    {
-        //        hospede = new Hospede
-        //        {
-        //            Id = (int)sqlDataReader["HSP_ID_INT"],
-        //            NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-        //            Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
-        //            DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
-        //            Email = (string)sqlDataReader["HSP_EMAIL_STR"],
-        //            Login = (string)sqlDataReader["HSP_LOGIN_CPF_CHAR"],
-        //            Senha = (string)sqlDataReader["HSP_LOGIN_SENHA_STR"],
-        //            Celular = (string)sqlDataReader["HSP_CELULAR_STR"]
-        //        };
-        //    }
+            await sqlConnection.OpenAsync();
 
-        //    await sqlConnection.CloseAsync();
+            sqlCommand.ExecuteNonQuery();
 
-        //    return hospede;
-        //}
+            await sqlConnection.CloseAsync();
 
-        //public async Task<Hospede> ObterPorCpf(string cpfHospede)
-        //{
-        //    Hospede hospede = null;
+            Hospede hospedeReturno = null;
 
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[ObterPorCpf]";
+            procedure = $"[RECPAPAGAIOS].[dbo].[uspObterHospedePorCpf]";
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NChar).Value = hospede.Cpf;
 
-        //    await sqlConnection.OpenAsync();
+            await sqlConnection.OpenAsync();
 
-        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
-        //    while (sqlDataReader.Read())
-        //    {
-        //        hospede = new Hospede
-        //        {
-        //            Id = (int)sqlDataReader["HSP_ID_INT"],
-        //            NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-        //            Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
-        //            DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
-        //            Email = (string)sqlDataReader["HSP_EMAIL_STR"],
-        //            Login = (string)sqlDataReader["HSP_LOGIN_CPF_CHAR"],
-        //            Senha = (string)sqlDataReader["HSP_LOGIN_SENHA_STR"],
-        //            Celular = (string)sqlDataReader["HSP_CELULAR_STR"]
-        //        };
-        //    }
+            while (sqlDataReader.Read())
+            {
+                hospedeReturno = new Hospede
+                {
+                    Id = (int)sqlDataReader["HSP_ID_INT"],
+                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
+                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
+                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
+                    Usuario = new Usuario
+                    {
+                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"],
+                    },
+                    Contatos = new Contatos
+                    {
+                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
+                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
+                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
+                    },
+                    Endereco = new Endereco
+                    {
+                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
+                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+                        Pais = (string)sqlDataReader["END_PAIS_STR"]
+                    }
+                };
+            }
 
-        //    await sqlConnection.CloseAsync();
+            await sqlConnection.CloseAsync();
 
-        //    return hospede;
-        //}
+            return hospedeReturno;
+        }
 
-        //public async Task Atualizar(string cpfHospede, Hospede hospede)
-        //{
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarHospede]";
+        public async Task<Hospede> Atualizar(int idHospede, Hospede hospede)
+        {
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
-        //    sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
-        //    sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
-        //    sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Email;
-        //    sqlCommand.Parameters.Add("@Login", SqlDbType.NVarChar).Value = hospede.Login;
-        //    sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Senha;
-        //    sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Celular;
+            sqlCommand.Parameters.Add("@IdHospedeRota", SqlDbType.Int).Value = idHospede;
+            sqlCommand.Parameters.Add("@NomeCompleto", SqlDbType.NVarChar).Value = hospede.NomeCompleto;
+            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NVarChar).Value = hospede.Cpf;
+            sqlCommand.Parameters.Add("@DataDeNascimento", SqlDbType.Date).Value = hospede.DataDeNascimento;
+            sqlCommand.Parameters.Add("@Email", SqlDbType.NVarChar).Value = hospede.Contatos.Email;
+            sqlCommand.Parameters.Add("@Celular", SqlDbType.NVarChar).Value = hospede.Contatos.Celular;
+            sqlCommand.Parameters.Add("@Telefone", SqlDbType.NVarChar).Value = hospede.Contatos.Telefone;
+            sqlCommand.Parameters.Add("@NomeUsuario", SqlDbType.NVarChar).Value = hospede.Usuario.NomeUsuario;
+            sqlCommand.Parameters.Add("@Senha", SqlDbType.NVarChar).Value = hospede.Usuario.SenhaUsuario;
+            sqlCommand.Parameters.Add("@Cep", SqlDbType.NVarChar).Value = hospede.Endereco.Cep;
+            sqlCommand.Parameters.Add("@Logradouro", SqlDbType.NVarChar).Value = hospede.Endereco.Logradouro;
+            sqlCommand.Parameters.Add("@Numero", SqlDbType.NVarChar).Value = hospede.Endereco.Numero;
+            sqlCommand.Parameters.Add("@Complemento", SqlDbType.NVarChar).Value = hospede.Endereco.Complemento;
+            sqlCommand.Parameters.Add("@Bairro", SqlDbType.NVarChar).Value = hospede.Endereco.Bairro;
+            sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
+            sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
+            sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
 
-        //    await sqlConnection.OpenAsync();
+            await sqlConnection.OpenAsync();
 
-        //    sqlCommand.ExecuteNonQuery();
+            sqlCommand.ExecuteNonQuery();
 
-        //    await sqlConnection.CloseAsync();
-        //}
+            await sqlConnection.CloseAsync();
 
-        //public async Task Remover(string cpfHospede)
-        //{
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[RemoverHospede]";
+            var hospedeRetorno = await Obter(idHospede);
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            return hospedeRetorno;
+        }
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+        public async Task Remover(int idHospede)
+        {
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspDeletarHospede]";
 
-        //    sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    await sqlConnection.OpenAsync();
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    sqlCommand.ExecuteNonQuery();
+            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
 
-        //    await sqlConnection.CloseAsync();
-        //}
+            await sqlConnection.OpenAsync();
+
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+        }
 
     }
 }
