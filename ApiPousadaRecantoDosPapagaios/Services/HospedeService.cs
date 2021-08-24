@@ -116,7 +116,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var h = await _hospedeRepository.Inserir(hospedeInsert);
+            var h = await _hospedeRepository.Inserir(hospedeInsert, hospede);
 
             var hospedeRetorno = new HospedeViewModel
             {

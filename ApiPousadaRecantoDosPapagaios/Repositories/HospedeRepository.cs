@@ -1,5 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -175,9 +177,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return hospede;
         }
 
-        public async Task<Hospede> Inserir(Hospede hospede)
+        public async Task<Hospede> Inserir(Hospede hospede, HospedeInputModel hospedeJson)
         {
             var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarNovoHospede]";
+
+            var json = ConverterModelParaJson(hospedeJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -199,6 +203,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
+            sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
 
             await sqlConnection.OpenAsync();
 
@@ -311,5 +316,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
         }
 
+        private string ConverterModelParaJson(HospedeInputModel hospede)
+        {
+            var json = JsonConvert.SerializeObject(hospede);
+
+            return json;
+        }
     }
 }
