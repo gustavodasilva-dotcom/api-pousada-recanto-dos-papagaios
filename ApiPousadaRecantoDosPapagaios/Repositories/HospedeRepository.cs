@@ -262,9 +262,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return hospedeReturno;
         }
 
-        public async Task<Hospede> Atualizar(int idHospede, Hospede hospede)
+        public async Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson)
         {
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
+
+            var json = ConverterModelParaJson(hospedeJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -287,6 +289,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
+            sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
 
             await sqlConnection.OpenAsync();
 

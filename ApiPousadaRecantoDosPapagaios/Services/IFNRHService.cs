@@ -7,7 +7,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface IFNRHService
     {
-        //Task<List<FNRHViewModel>> Obter(string cpfHospede);
+        Task<List<FNRHViewModel>> Obter(int idHospede);
         //Task<FNRHViewModel> Inserir(string cpfHospede, FNRHInputModel fnrhInputModel);
         //Task<FNRHViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel);
         //Task Deletar(int idFNRH);

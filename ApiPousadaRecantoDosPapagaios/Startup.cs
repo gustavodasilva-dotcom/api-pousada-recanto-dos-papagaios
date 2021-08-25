@@ -26,8 +26,8 @@ namespace ApiPousadaRecantoDosPapagaios
 
             //services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
-            //services.AddScoped<IFNRHService, FNRHService>();
-            //services.AddScoped<IFNRHRepository, FNRHRepository>();
+            services.AddScoped<IFNRHService, FNRHService>();
+            services.AddScoped<IFNRHRepository, FNRHRepository>();
 
             //services.AddScoped<IFuncionarioService, FuncionarioService>();
             //services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();

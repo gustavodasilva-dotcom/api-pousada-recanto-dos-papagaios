@@ -8,60 +8,59 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
-    public class FNRHRepository /*: IFNRHRepository*/
+    public class FNRHRepository : IFNRHRepository
     {
-        //private readonly SqlConnection sqlConnection;
+        private readonly SqlConnection sqlConnection;
 
-        //public FNRHRepository(IConfiguration configuration)
-        //{
-        //    sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-        //}
+        public FNRHRepository(IConfiguration configuration)
+        {
+            sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+        }
 
-        //public void Dispose()
-        //{
-        //    sqlConnection?.Close();
-        //    sqlConnection?.Dispose();
-        //}
+        public void Dispose()
+        {
+            sqlConnection?.Close();
+            sqlConnection?.Dispose();
+        }
 
-        //public async Task<List<FNRH>> ObterFNRHsPorHospede(string cpfHospede)
-        //{
-        //    var fnrhs = new List<FNRH>();
+        public async Task<List<FNRH>> ObterFNRHsPorHospede(int idHospede)
+        {
+            var fnrhs = new List<FNRH>();
 
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFNRHsPorHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFNRH]";
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
+            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
 
-        //    await sqlConnection.OpenAsync();
-            
-        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-            
-        //    while (sqlDataReader.Read())
-        //    {
-        //        fnrhs.Add(new FNRH
-        //        {
-        //            Id = (int)sqlDataReader["FNRH_ID_INT"],
-        //            Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-        //            Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-        //            Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-        //            Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-        //            ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-        //            UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-        //            MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-        //            MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-        //            PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-        //            NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-        //            CpfHospede = (string)sqlDataReader["FNRH_CPF_HOSPEDE_STR"]
-        //        });
-        //    }
+            await sqlConnection.OpenAsync();
 
-        //    await sqlConnection.CloseAsync();
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
-        //    return fnrhs;
-        //}
+            while (sqlDataReader.Read())
+            {
+                fnrhs.Add(new FNRH
+                {
+                    Id = (int)sqlDataReader["FNRH_ID_INT"],
+                    Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
+                    Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
+                    Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
+                    Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
+                    ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
+                    UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
+                    MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
+                    MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
+                    PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
+                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"]
+                });
+            }
+
+            await sqlConnection.CloseAsync();
+
+            return fnrhs;
+        }
 
         //public async Task<FNRH> ObterUltimoRegistroPorHospede(string cpfHospede)
         //{
@@ -76,7 +75,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         //    sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
 
         //    await sqlConnection.OpenAsync();
-            
+
         //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
         //    while (sqlDataReader.Read())
@@ -116,7 +115,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         //    sqlCommand.Parameters.Add("@IdFNRH", SqlDbType.Int).Value = idFNRH;
 
         //    await sqlConnection.OpenAsync();
-            
+
         //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
         //    while (sqlDataReader.Read())

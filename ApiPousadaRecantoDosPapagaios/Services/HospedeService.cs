@@ -181,7 +181,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var h = await _hospedeRepository.Atualizar(idHospede, hospedeUpdate);
+            var h = await _hospedeRepository.Atualizar(idHospede, hospedeUpdate, hospede);
 
             return new HospedeViewModel
             {

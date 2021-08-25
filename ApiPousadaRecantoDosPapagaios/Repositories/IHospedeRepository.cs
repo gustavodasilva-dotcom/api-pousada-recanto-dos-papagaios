@@ -13,7 +13,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Hospede> Inserir(Hospede hospede, HospedeInputModel hospedeJson);
 
-        Task<Hospede> Atualizar(int idHospede, Hospede hospede);
+        Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson);
 
         Task Remover(int idHospede);
     }
