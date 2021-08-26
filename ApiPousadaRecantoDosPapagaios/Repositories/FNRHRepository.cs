@@ -1,5 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -53,7 +55,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
                     MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
                     MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
                     PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"]
+                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
+                    DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
                 });
             }
 
@@ -62,112 +65,72 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return fnrhs;
         }
 
-        //public async Task<FNRH> ObterUltimoRegistroPorHospede(string cpfHospede)
-        //{
-        //    FNRH fnrh = null;
+        public async Task<FNRH> Inserir(int idHospede, FNRH fnrh, FNRHInputModel fnrhJson)
+        {
+            FNRH fnrhRetorno = null;
 
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[ObterUltimaFNRHRegistroPorHospede]";
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarNovaFNRH]";
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            var json = ConverterModelParaJson(fnrhJson);
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.Parameters.Add("@cpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    await sqlConnection.OpenAsync();
+            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
+            sqlCommand.Parameters.Add("@Profissao", SqlDbType.NVarChar).Value = fnrh.Profissao;
+            sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = fnrh.Nacionalidade;
+            sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = fnrh.Sexo;
+            sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = fnrh.Rg;
+            sqlCommand.Parameters.Add("@ProximoDestino", SqlDbType.NVarChar).Value = fnrh.ProximoDestino;
+            sqlCommand.Parameters.Add("@UltimoDestino", SqlDbType.NVarChar).Value = fnrh.UltimoDestino;
+            sqlCommand.Parameters.Add("@MotivoViagem", SqlDbType.NVarChar).Value = fnrh.MotivoViagem;
+            sqlCommand.Parameters.Add("@MeioDeTransporte", SqlDbType.NVarChar).Value = fnrh.MeioDeTransporte;
+            sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
+            sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
+            sqlCommand.Parameters.Add("@FNRHJson", SqlDbType.NVarChar).Value = json;
 
-        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+            await sqlConnection.OpenAsync();
 
-        //    while (sqlDataReader.Read())
-        //    {
-        //        fnrh = new FNRH
-        //        {
-        //            Id = (int)sqlDataReader["FNRH_ID_INT"],
-        //            Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-        //            Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-        //            Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-        //            Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-        //            ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-        //            UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-        //            MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-        //            MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-        //            PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-        //            NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-        //            CpfHospede = (string)sqlDataReader["FNRH_CPF_HOSPEDE_STR"]
-        //        };
-        //    }
+            sqlCommand.ExecuteNonQuery();
 
-        //    await sqlConnection.CloseAsync();
+            await sqlConnection.CloseAsync();
 
-        //    return fnrh;
-        //}
+            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterUltimaFNRHPorHospedeId]";
 
-        //public async Task<FNRH> ObterPorId(int idFNRH)
-        //{
-        //    FNRH fnrh = null;
+            sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[ObterFNRHPorId]";
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            await sqlConnection.OpenAsync();
 
-        //    sqlCommand.Parameters.Add("@IdFNRH", SqlDbType.Int).Value = idFNRH;
+            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
 
-        //    await sqlConnection.OpenAsync();
+            while (sqlDataReader.Read())
+            {
+                fnrhRetorno = new FNRH
+                {
+                    Id = (int)sqlDataReader["FNRH_ID_INT"],
+                    Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
+                    Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
+                    Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
+                    Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
+                    ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
+                    UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
+                    MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
+                    MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
+                    PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
+                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
+                    DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
+                };
+            }
 
-        //    SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+            await sqlConnection.CloseAsync();
 
-        //    while (sqlDataReader.Read())
-        //    {
-        //        fnrh = new FNRH
-        //        {
-        //            Id = (int)sqlDataReader["FNRH_ID_INT"],
-        //            Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-        //            Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-        //            Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-        //            Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-        //            ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-        //            UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-        //            MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-        //            MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-        //            PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-        //            NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-        //            CpfHospede = (string)sqlDataReader["FNRH_CPF_HOSPEDE_STR"]
-        //        };
-        //    }
-
-        //    await sqlConnection.CloseAsync();
-
-        //    return fnrh;
-        //}
-
-        //public async Task Inserir(string cpfHospede, FNRH fnrh)
-        //{
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[InserirFNRH]";
-
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
-
-        //    sqlCommand.Parameters.Add("@Profissao", SqlDbType.NVarChar).Value = fnrh.Profissao;
-        //    sqlCommand.Parameters.Add("@Nacionalidade", SqlDbType.NVarChar).Value = fnrh.Nacionalidade;
-        //    sqlCommand.Parameters.Add("@Sexo", SqlDbType.NChar).Value = fnrh.Sexo;
-        //    sqlCommand.Parameters.Add("@Rg", SqlDbType.NChar).Value = fnrh.Rg;
-        //    sqlCommand.Parameters.Add("@ProximoDestino", SqlDbType.NVarChar).Value = fnrh.ProximoDestino;
-        //    sqlCommand.Parameters.Add("@UltimoDestino", SqlDbType.NVarChar).Value = fnrh.UltimoDestino;
-        //    sqlCommand.Parameters.Add("@MotivoViagem", SqlDbType.NVarChar).Value = fnrh.MotivoViagem;
-        //    sqlCommand.Parameters.Add("@MeioDeTransporte", SqlDbType.NVarChar).Value = fnrh.MeioDeTransporte;
-        //    sqlCommand.Parameters.Add("@PlacaAutomovel", SqlDbType.NVarChar).Value = fnrh.PlacaAutomovel;
-        //    sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
-        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NVarChar).Value = cpfHospede;
-
-        //    await sqlConnection.OpenAsync();
-
-        //    sqlCommand.ExecuteNonQuery();
-
-        //    await sqlConnection.CloseAsync();
-        //}
+            return fnrhRetorno;
+        }
 
         //public async Task Atualizar(int idFNRH, FNRH fnrh)
         //{
@@ -213,5 +176,12 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         //    await sqlConnection.CloseAsync();
         //}
+
+        public string ConverterModelParaJson(FNRHInputModel fnrh)
+        {
+            var json = JsonConvert.SerializeObject(fnrh);
+
+            return json;
+        }
     }
 }

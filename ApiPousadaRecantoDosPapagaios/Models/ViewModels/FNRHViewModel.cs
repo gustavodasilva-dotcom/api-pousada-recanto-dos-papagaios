@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
 {
@@ -25,5 +25,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
         public string PlacaAutomovel { get; set; }
 
         public int NumAcompanhantes { get; set; }
+
+        public DateTime DataCadastro { get; set; }
     }
 }

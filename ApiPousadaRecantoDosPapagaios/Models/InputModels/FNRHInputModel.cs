@@ -4,10 +4,6 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
 {
     public class FNRHInputModel
     {
-        [StringLength(maximumLength: 11, MinimumLength = 11, ErrorMessage = "O CPF deve conter 11 caracteres.")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "O CPF deve conter apenas números.")]
-        public string CpfHospede { get; set; }
-
         [DataType(DataType.Text, ErrorMessage = "O dado inserido não corresponde a um texto.")]
         public string Profissao { get; set; }
 

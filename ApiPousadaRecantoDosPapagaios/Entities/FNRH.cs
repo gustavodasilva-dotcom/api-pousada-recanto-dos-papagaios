@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ApiPousadaRecantoDosPapagaios.Entities
 {
@@ -16,5 +15,6 @@ namespace ApiPousadaRecantoDosPapagaios.Entities
         public string MeioDeTransporte { get; set; }
         public string PlacaAutomovel { get; set; }
         public int NumAcompanhantes { get; set; }
+        public DateTime DataCadastro { get; set; }
     }
 }

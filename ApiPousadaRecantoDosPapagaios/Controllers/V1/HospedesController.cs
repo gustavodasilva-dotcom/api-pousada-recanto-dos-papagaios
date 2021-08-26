@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers
 {
+    // TODO: Atualizei a tabela de logs de integrações. Verificar, portanto, em todos os endpoints,
+    // se erros são lançados e se os logs estão sendo gravados.
     [Route("api/V1/[controller]")]
     [ApiController]
     public class HospedesController : ControllerBase

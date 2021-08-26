@@ -179,6 +179,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<Hospede> Inserir(Hospede hospede, HospedeInputModel hospedeJson)
         {
+            Hospede hospedeReturno = null;
+
             var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarNovoHospede]";
 
             var json = ConverterModelParaJson(hospedeJson);
@@ -210,8 +212,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
-
-            Hospede hospedeReturno = null;
 
             procedure = $"[RECPAPAGAIOS].[dbo].[uspObterHospedePorCpf]";
 

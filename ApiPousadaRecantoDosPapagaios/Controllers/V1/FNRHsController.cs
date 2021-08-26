@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
 {
+    // TODO: Atualizei a tabela de logs de integrações. Verificar, portanto, em todos os endpoints,
+    // se erros são lançados e se os logs estão sendo gravados.
     [Route("api/V1/[controller]")]
     [ApiController]
     public class FNRHsController : ControllerBase
@@ -40,7 +42,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     statusCode = 404;
                     mensagem = "Não há FNRHs cadastradas para o hóspede informado.";
                 }
-                else if (ex.Message.Contains(" não existem em sistema."))
+                else if (ex.Message.Contains(" não existe em sistema."))
                 {
                     statusCode = 404;
                     mensagem = "Não existe, em sistema, hóspede para o id informado.";
@@ -55,20 +57,20 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
         }
 
-        //[HttpPost("{cpfHospede}")]
-        //public async Task<ActionResult<FNRHViewModel>> Inserir([FromRoute] string cpfHospede, [FromBody] FNRHInputModel fnrhInputModel)
-        //{
-        //    try
-        //    {
-        //        var fnrh = await _FNRHService.Inserir(cpfHospede, fnrhInputModel);
+        [HttpPost("{idHospede:int}")]
+        public async Task<ActionResult<FNRHViewModel>> Inserir([FromRoute] int idHospede, [FromBody] FNRHInputModel fnrhInputModel)
+        {
+            //try
+            //{
+                var fnrh = await _FNRHService.Inserir(idHospede, fnrhInputModel);
 
-        //        return Ok(fnrh);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NoContent();
-        //    }
-        //}
+                return Ok(fnrh);
+            //}
+            //catch (SqlException ex)
+            //{
+            //    return NoContent();
+            //}
+        }
 
         //[HttpPut("{idFNRH:int}")]
         //public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
