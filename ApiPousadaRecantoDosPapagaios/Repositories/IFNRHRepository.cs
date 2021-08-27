@@ -12,9 +12,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<FNRH> Inserir(int idHospede, FNRH fnrh, FNRHInputModel fnrhJson);
 
-        //Task<FNRH> ObterUltimoRegistroPorHospede(string cpfHospede);
-        //Task<FNRH> ObterPorId(int idFNRH);
-        //Task Atualizar(int idFNRH, FNRH fnrh);
-        //Task Deletar(int idFNRH);
+        Task<FNRH> Atualizar(int idFNRH, FNRH fnrh, FNRHInputModel fnrhJson);
     }
 }

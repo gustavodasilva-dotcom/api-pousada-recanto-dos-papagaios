@@ -2,15 +2,12 @@
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
 {
-    // TODO: Atualizei a tabela de logs de integrações. Verificar, portanto, em todos os endpoints,
-    // se erros são lançados e se os logs estão sendo gravados.
     [Route("api/V1/[controller]")]
     [ApiController]
     public class FNRHsController : ControllerBase
@@ -22,7 +19,6 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _FNRHService = FNRHService;
         }
 
-        // TODO: Continuar testes das exceptions lançadas pela procedure.
         [HttpGet("{idHospede:int}")]
         public async Task<ActionResult<IEnumerable<FNRHViewModel>>> Obter([FromRoute] int idHospede)
         {
@@ -60,46 +56,59 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpPost("{idHospede:int}")]
         public async Task<ActionResult<FNRHViewModel>> Inserir([FromRoute] int idHospede, [FromBody] FNRHInputModel fnrhInputModel)
         {
-            //try
-            //{
+            try
+            {
                 var fnrh = await _FNRHService.Inserir(idHospede, fnrhInputModel);
 
                 return Ok(fnrh);
-            //}
-            //catch (SqlException ex)
-            //{
-            //    return NoContent();
-            //}
+            }
+            catch (SqlException ex)
+            {
+                int statusCode;
+                string mensagem;
+                
+                if (ex.Message.Contains("Não existe, em sistema, hóspede cadastrado para o id "))
+                {
+                    statusCode = 404;
+                    mensagem = "Não existe, em sistema, hóspede cadastrado para o id informado.";
+                }
+                else
+                {
+                    statusCode = 500;
+                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
+                }
+
+                return StatusCode(statusCode, mensagem);
+            }
         }
 
-        //[HttpPut("{idFNRH:int}")]
-        //public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
-        //{
-        //    try
-        //    {
-        //        var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
+        [HttpPut("{idFNRH:int}")]
+        public async Task<ActionResult<FNRHViewModel>> Atualizar([FromRoute] int idFNRH, [FromBody] FNRHInputModel fnrhInputModel)
+        {
+            try
+            {
+                var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
 
-        //        return Ok(fnrh);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NoContent();
-        //    }
-        //}
+                return Ok(fnrh);
+            }
+            catch (SqlException ex)
+            {
+                int statusCode;
+                string mensagem;
 
-        //[HttpDelete("{idFNRH:int}")]
-        //public async Task<ActionResult> Deletar([FromRoute] int idFNRH)
-        //{
-        //    try
-        //    {
-        //        await _FNRHService.Deletar(idFNRH);
+                if (ex.Message.Contains("Não existe nenhuma FNRH cadastrada no sistema com o id "))
+                {
+                    statusCode = 404;
+                    mensagem = "Não existe nenhuma FNRH cadastrada no sistema com o id informado.";
+                }
+                else
+                {
+                    statusCode = 500;
+                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
+                }
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NoContent();
-        //    }
-        //}
+                return StatusCode(statusCode, mensagem);
+            }
+        }
     }
 }

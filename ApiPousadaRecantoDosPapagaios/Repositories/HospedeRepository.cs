@@ -31,6 +31,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             sqlCommand.Parameters.Add("@Pagina", SqlDbType.Int).Value = pagina;
             sqlCommand.Parameters.Add("Quantidade", SqlDbType.Int).Value = quantidade;
+            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
 
             await sqlConnection.OpenAsync();
 
@@ -84,57 +85,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
             sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
-            {
-                hospede = new Hospede
-                {
-                    Id = (int)sqlDataReader["HSP_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
-                    Usuario = new Usuario
-                    {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"],
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    }
-                };
-            }
-
-            await sqlConnection.CloseAsync();
-
-            return hospede;
-        }
-
-        public async Task<Hospede> ObterUltimoHospede()
-        {
-            Hospede hospede = null;
-
-            var procedure = $"[RECPAPAGAIOS].[dbo].[ObterUltimoHospede]";
-
-            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
 
             await sqlConnection.OpenAsync();
 
@@ -213,13 +164,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
 
-            procedure = $"[RECPAPAGAIOS].[dbo].[uspObterHospedePorCpf]";
+            procedure = $"[RECPAPAGAIOS].[dbo].[uspObterHospedes]";
 
             sqlCommand = new SqlCommand(procedure, sqlConnection);
 
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
             sqlCommand.Parameters.Add("@Cpf", SqlDbType.NChar).Value = hospede.Cpf;
+            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 2;
 
             await sqlConnection.OpenAsync();
 
