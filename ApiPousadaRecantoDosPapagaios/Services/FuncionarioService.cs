@@ -13,17 +13,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IFuncionarioRepository _funcionarioRepository;
 
-        private readonly IEnderecoRepository _enderecoRepository;
-
-        private readonly IDadosBancariosRepository _dadosBancariosRepository;
-
-        public FuncionarioService(IFuncionarioRepository funcionarioRepository, IEnderecoRepository enderecoRepository, IDadosBancariosRepository dadosBancariosRepository)
+        public FuncionarioService(IFuncionarioRepository funcionarioRepository)
         {
             _funcionarioRepository = funcionarioRepository;
-
-            _enderecoRepository = enderecoRepository;
-
-            _dadosBancariosRepository = dadosBancariosRepository;
         }
 
         //public async Task<List<FuncionarioViewModel>> Obter()
@@ -114,99 +106,93 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         //    };
         //}
 
-        //public async Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
-        //{
-        //    var funcionario = await _funcionarioRepository.Obter(funcionarioInputModel.Cpf);
+        public async Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
+        {
+            var funcionarioInsert = new Funcionario
+            {
+                NomeCompleto = funcionarioInputModel.NomeCompleto,
+                Cpf = funcionarioInputModel.Cpf,
+                Nacionalidade = funcionarioInputModel.Nacionalidade,
+                DataDeNascimento = funcionarioInputModel.DataDeNascimento,
+                Sexo = funcionarioInputModel.Sexo,
+                Rg = funcionarioInputModel.Rg,
+                Cargo = funcionarioInputModel.Cargo,
+                Setor = funcionarioInputModel.Setor,
+                Salario = funcionarioInputModel.Salario,
+                Endereco = new Endereco
+                {
+                    Cep = funcionarioInputModel.Endereco.Cep,
+                    Logradouro = funcionarioInputModel.Endereco.Logradouro,
+                    Numero = funcionarioInputModel.Endereco.Numero,
+                    Complemento = funcionarioInputModel.Endereco.Complemento,
+                    Bairro = funcionarioInputModel.Endereco.Bairro,
+                    Cidade = funcionarioInputModel.Endereco.Cidade,
+                    Estado = funcionarioInputModel.Endereco.Estado,
+                    Pais = funcionarioInputModel.Endereco.Pais,
+                },
+                Usuario = new Usuario
+                {
+                    NomeUsuario = funcionarioInputModel.Usuario.NomeUsuario,
+                    SenhaUsuario = funcionarioInputModel.Usuario.SenhaUsuario
+                },
+                Contatos = new Contatos
+                {
+                    Email = funcionarioInputModel.Contatos.Email,
+                    Celular = funcionarioInputModel.Contatos.Celular,
+                    Telefone = funcionarioInputModel.Contatos.Telefone
+                },                
+                CategoriaAcesso = new CategoriaAcesso
+                {
+                    Id = funcionarioInputModel.CategoriaAcesso.Id
+                },
+                DadosBancarios = new DadosBancarios
+                {
+                    Banco = funcionarioInputModel.DadosBancarios.Banco,
+                    Agencia = funcionarioInputModel.DadosBancarios.Agencia,
+                    NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta
+                }
+            };
 
-        //    if (!(funcionario == null))
-        //        throw new Exception();
+            await _funcionarioRepository.Inserir(funcionarioInsert);
 
-        //    var funcionarioInsert = new Funcionario
-        //    {
-        //        NomeCompleto = funcionarioInputModel.NomeCompleto,
-        //        Cpf = funcionarioInputModel.Cpf,
-        //        DataDeNascimento = funcionarioInputModel.DataDeNascimento,
-        //        Email = funcionarioInputModel.Email,
-        //        Login = funcionarioInputModel.Login,
-        //        Senha = funcionarioInputModel.Senha,
-        //        Celular = funcionarioInputModel.Celular,
-        //        Nacionalidade = funcionarioInputModel.Nacionalidade,
-        //        Sexo = funcionarioInputModel.Sexo,
-        //        Rg = funcionarioInputModel.Rg,
-        //        Cargo = funcionarioInputModel.Cargo,
-        //        Setor = funcionarioInputModel.Setor,
-        //        Salario = funcionarioInputModel.Salario,
-        //        CategoriaAcesso = new CategoriaAcesso
-        //        {
-        //            Id = funcionarioInputModel.CategoriaAcesso.Id
-        //        }  
-        //    };
-
-        //    await _funcionarioRepository.Inserir(funcionarioInsert);
-
-        //    var enderecoInsert = new Endereco
-        //    {
-        //        Cep = funcionarioInputModel.Endereco.Cep,
-        //        Logradouro = funcionarioInputModel.Endereco.Logradouro,
-        //        Numero = funcionarioInputModel.Endereco.Numero,
-        //        Complemento = funcionarioInputModel.Endereco.Complemento,
-        //        Bairro = funcionarioInputModel.Endereco.Bairro,
-        //        Cidade = funcionarioInputModel.Endereco.Cidade,
-        //        Estado = funcionarioInputModel.Endereco.Estado,
-        //        Pais = funcionarioInputModel.Endereco.Pais,
-        //        CpfPessoa = funcionarioInputModel.Cpf
-        //    };
-
-        //    await _enderecoRepository.InserirEnderecoFuncionario(enderecoInsert, funcionarioInsert.Cpf);
-
-        //    var dadosBancariosInsert = new DadosBancarios
-        //    {
-        //        Banco = funcionarioInputModel.DadosBancarios.Banco,
-        //        Agencia = funcionarioInputModel.DadosBancarios.Agencia,
-        //        NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta,
-        //        CpfFuncionario = funcionarioInputModel.Cpf
-        //    };
-
-        //    await _dadosBancariosRepository.Inserir(dadosBancariosInsert, funcionarioInsert.Cpf);
-
-        //    return new FuncionarioViewModel
-        //    {
-        //        NomeCompleto = funcionarioInsert.NomeCompleto,
-        //        Cpf = funcionarioInsert.Cpf,
-        //        DataDeNascimento = funcionarioInsert.DataDeNascimento,
-        //        Email = funcionarioInsert.Email,
-        //        Login = funcionarioInsert.Login,
-        //        Senha = funcionarioInsert.Senha,
-        //        Celular = funcionarioInsert.Celular,
-        //        Nacionalidade = funcionarioInsert.Nacionalidade,
-        //        Sexo = funcionarioInsert.Sexo,
-        //        Rg = funcionarioInsert.Rg,
-        //        Cargo = funcionarioInsert.Cargo,
-        //        Setor = funcionarioInsert.Setor,
-        //        Salario = funcionarioInsert.Salario,
-        //        Endereco = new EnderecoViewModel
-        //        {
-        //            Cep = enderecoInsert.Cep,
-        //            Logradouro = enderecoInsert.Logradouro,
-        //            Numero = enderecoInsert.Numero,
-        //            Complemento = enderecoInsert.Complemento,
-        //            Bairro = enderecoInsert.Bairro,
-        //            Cidade = enderecoInsert.Cidade,
-        //            Estado = enderecoInsert.Estado,
-        //            Pais = enderecoInsert.Pais
-        //        },
-        //        DadosBancarios = new DadosBancariosViewModel
-        //        {
-        //            Banco = dadosBancariosInsert.Banco,
-        //            Agencia = dadosBancariosInsert.Agencia,
-        //            NumeroDaConta = dadosBancariosInsert.NumeroDaConta
-        //        },
-        //        CategoriaAcesso = new CategoriaAcessoViewModel
-        //        {
-        //            Id = funcionarioInsert.CategoriaAcesso.Id
-        //        }
-        //    };
-        //}
+            return new FuncionarioViewModel
+            {
+                NomeCompleto = funcionarioInsert.NomeCompleto,
+                Cpf = funcionarioInsert.Cpf,
+                DataDeNascimento = funcionarioInsert.DataDeNascimento,
+                Email = funcionarioInsert.Email,
+                Login = funcionarioInsert.Login,
+                Senha = funcionarioInsert.Senha,
+                Celular = funcionarioInsert.Celular,
+                Nacionalidade = funcionarioInsert.Nacionalidade,
+                Sexo = funcionarioInsert.Sexo,
+                Rg = funcionarioInsert.Rg,
+                Cargo = funcionarioInsert.Cargo,
+                Setor = funcionarioInsert.Setor,
+                Salario = funcionarioInsert.Salario,
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = enderecoInsert.Cep,
+                    Logradouro = enderecoInsert.Logradouro,
+                    Numero = enderecoInsert.Numero,
+                    Complemento = enderecoInsert.Complemento,
+                    Bairro = enderecoInsert.Bairro,
+                    Cidade = enderecoInsert.Cidade,
+                    Estado = enderecoInsert.Estado,
+                    Pais = enderecoInsert.Pais
+                },
+                DadosBancarios = new DadosBancariosViewModel
+                {
+                    Banco = dadosBancariosInsert.Banco,
+                    Agencia = dadosBancariosInsert.Agencia,
+                    NumeroDaConta = dadosBancariosInsert.NumeroDaConta
+                },
+                CategoriaAcesso = new CategoriaAcessoViewModel
+                {
+                    Id = funcionarioInsert.CategoriaAcesso.Id
+                }
+            };
+        }
 
         //public async Task<FuncionarioViewModel> Atualizar(string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)
         //{

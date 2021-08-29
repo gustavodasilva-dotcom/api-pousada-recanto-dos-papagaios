@@ -9,7 +9,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         //Task<List<FuncionarioViewModel>> Obter();
         //Task<FuncionarioViewModel> Obter(string cpfFuncionario);
-        //Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel);
+        Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel);
         //Task<FuncionarioViewModel> Atualizar(string cpfFuncionario, FuncionarioInputModel funcionarioInputModel);
     }
 }

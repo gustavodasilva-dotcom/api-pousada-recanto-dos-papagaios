@@ -45,20 +45,20 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         //    }
         //}
 
-        //[HttpPost]
-        //public async Task<ActionResult<FuncionarioViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
-        //{
-        //    try
-        //    {
-        //        var funcionario = await _funcionarioService.Inserir(funcionarioInputModel);
+        [HttpPost]
+        public async Task<ActionResult<FuncionarioViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
+        {
+            try
+            {
+                var funcionario = await _funcionarioService.Inserir(funcionarioInputModel);
 
-        //        return Ok(funcionario);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Conflict();
-        //    }
-        //}
+                return Ok(funcionario);
+            }
+            catch (Exception ex)
+            {
+                return Conflict();
+            }
+        }
 
         //[HttpPut("{cpfFuncionario}")]
         //public async Task<ActionResult<FuncionarioViewModel>> Atualizar([FromRoute] string cpfFuncionario, FuncionarioInputModel funcionarioInputModel)

@@ -24,15 +24,11 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IHospedeService, HospedeService>();
             services.AddScoped<IHospedeRepository, HospedeRepository>();
 
-            //services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-
             services.AddScoped<IFNRHService, FNRHService>();
             services.AddScoped<IFNRHRepository, FNRHRepository>();
 
-            //services.AddScoped<IFuncionarioService, FuncionarioService>();
-            //services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
-
-            //services.AddScoped<IDadosBancariosRepository, DadosBancariosRepository>();
+            services.AddScoped<IFuncionarioService, FuncionarioService>();
+            services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
 
             //services.AddScoped<IAcomodacaoService, AcomodacaoService>();
             //services.AddScoped<IAcomodacaoRepository, AcomodacaoRepository>();
