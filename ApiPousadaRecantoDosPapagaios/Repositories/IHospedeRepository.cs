@@ -1,11 +1,12 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
-    public interface IHospedeRepository
+    public interface IHospedeRepository : IDisposable
     {
         Task<List<Hospede>> Obter(int pagina, int quantidade);
 

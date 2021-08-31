@@ -19,6 +19,12 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
         }
 
+        public void Dispose()
+        {
+            sqlConnection?.Close();
+            sqlConnection?.Dispose();
+        }
+
         public async Task<List<Hospede>> Obter(int pagina, int quantidade)
         {
             var hospedes = new List<Hospede>();

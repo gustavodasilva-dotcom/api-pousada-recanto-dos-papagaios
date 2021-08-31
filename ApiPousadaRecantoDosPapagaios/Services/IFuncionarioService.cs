@@ -7,9 +7,12 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface IFuncionarioService
     {
-        //Task<List<FuncionarioViewModel>> Obter();
-        //Task<FuncionarioViewModel> Obter(string cpfFuncionario);
+        Task<List<FuncionarioViewModel>> Obter(int pagina, int quantidade);
+
+        Task<FuncionarioViewModel> Obter(int idFuncionario);
+
         Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel);
-        //Task<FuncionarioViewModel> Atualizar(string cpfFuncionario, FuncionarioInputModel funcionarioInputModel);
+
+        Task<FuncionarioViewModel> Atualizar(int idFuncionario, FuncionarioInputModel funcionarioInputModel);
     }
 }

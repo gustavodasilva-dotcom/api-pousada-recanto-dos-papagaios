@@ -1,9 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
-using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -19,53 +18,44 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _acomodacaoService = acomodacaoService;
         }
 
-        //    [HttpGet]
-        //    public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
-        //    {
-        //        var acomodacoes = await _acomodacaoService.Obter();
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
+        {
+            var acomodacoes = await _acomodacaoService.Obter();
 
-        //        if (acomodacoes.Count == 0)
-        //            return NoContent();
+            if (acomodacoes.Count == 0)
+                return StatusCode(404, "Não há acomodações cadastradas.");
 
-        //        return Ok(acomodacoes);
-        //    }
+            return StatusCode(200, acomodacoes);
+        }
 
-        //    [HttpGet("{idAcomodacao:int}")]
-        //    public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
-        //    {
-        //        var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
+        [HttpGet("{idAcomodacao:int}")]
+        public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
+        {
+            try
+            {
+                var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
 
-        //        return Ok(acomodacao);
-        //    }
+                return StatusCode(200, acomodacao);
+            }
+            catch (SqlException ex)
+            {
+                int statusCode;
+                string mensagem;
 
-        //    [HttpPost]
-        //    public async Task<ActionResult<AcomodacaoViewModel>> Inserir([FromBody] AcomodacaoInputModel acomodacaoInputModel)
-        //    {
-        //        try
-        //        {
-        //            var acomodacao = await _acomodacaoService.Inserir(acomodacaoInputModel);
+                if (ex.Message.Contains("Não existe acomodação para o id"))
+                {
+                    statusCode = 404;
+                    mensagem = "Não existe acomodação para o id informado.";
+                }
+                else
+                {
+                    statusCode = 500;
+                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
+                }
 
-        //            return Ok(acomodacao);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return Conflict();
-        //        }
-        //    }
-
-        //    [HttpDelete("{idAcomodacao:int}")]
-        //    public async Task<ActionResult> Deletar([FromRoute] int idAcomodacao)
-        //    {
-        //        try
-        //        {
-        //            await _acomodacaoService.Deletar(idAcomodacao);
-
-        //            return Ok();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return NoContent();
-        //        }
-        //    }
+                return StatusCode(statusCode, mensagem);
+            }
+        }
     }
 }

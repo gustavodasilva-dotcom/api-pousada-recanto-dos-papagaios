@@ -7,9 +7,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface IAcomodacaoService
     {
-        //Task<List<AcomodacaoViewModel>> Obter();
-        //Task<AcomodacaoViewModel> Obter(int idAcomodacao);
-        //Task<AcomodacaoViewModel> Inserir(AcomodacaoInputModel acomodacaoInputModel);
-        //Task Deletar(int idAcomodacao);
+        Task<List<AcomodacaoViewModel>> Obter();
+        Task<AcomodacaoViewModel> Obter(int idAcomodacao);
     }
 }
