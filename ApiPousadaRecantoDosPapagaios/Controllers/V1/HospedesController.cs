@@ -1,8 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -15,20 +15,36 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
     {
         private readonly IHospedeService _hospedeService;
 
+        private readonly Erro _erro;
+
         public HospedesController(IHospedeService hospedeService)
         {
             _hospedeService = hospedeService;
+
+            _erro = new Erro();
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<HospedeViewModel>>> Obter([FromQuery] int pagina, [FromQuery] int quantidade)
         {
+            int statusCode;
+            string mensagem;
+
             var hospedes = await _hospedeService.Obter(pagina, quantidade);
-            
+
+            statusCode = 200;
+
             if (hospedes.Count == 0)
-                return StatusCode(404, "Não há hóspedes cadastrados.");
+            {
+                statusCode = 404;
+                mensagem = "Não há hóspedes cadastrados.";
+
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
+            }
             
-            return StatusCode(200, hospedes);
+            return StatusCode(statusCode, hospedes);
         }
 
         [HttpGet("{idHospede:int}")]
@@ -56,7 +72,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 
@@ -90,7 +108,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 
@@ -139,7 +159,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 
@@ -168,7 +190,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,20 +14,36 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IAcomodacaoService _acomodacaoService;
 
+        private readonly Erro _erro;
+
         public AcomodacoesController(IAcomodacaoService acomodacaoService)
         {
             _acomodacaoService = acomodacaoService;
+
+            _erro = new Erro();
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
         {
+            int statusCode;
+            string mensagem;
+
             var acomodacoes = await _acomodacaoService.Obter();
 
-            if (acomodacoes.Count == 0)
-                return StatusCode(404, "Não há acomodações cadastradas.");
+            statusCode = 200;
 
-            return StatusCode(200, acomodacoes);
+            if (acomodacoes.Count == 0)
+            {
+                statusCode = 404;
+                mensagem = "Não há acomodações cadastradas.";
+
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
+            }
+
+            return StatusCode(statusCode, acomodacoes);
         }
 
         [HttpGet("{idAcomodacao:int}")]
@@ -54,7 +71,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
     }

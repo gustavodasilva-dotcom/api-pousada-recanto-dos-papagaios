@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.CheckOutViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly ICheckOutService _checkOutRepository;
 
+        private readonly Erro _erro;
+
         public CheckOutsController(ICheckOutService checkOutService)
         {
             _checkOutRepository = checkOutService;
+
+            _erro = new Erro();
         }
 
         //[HttpPost]

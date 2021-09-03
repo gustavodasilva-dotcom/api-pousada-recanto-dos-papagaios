@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IFNRHService _FNRHService;
 
+        private readonly Erro _erro;
+
         public FNRHsController(IFNRHService FNRHService)
         {
             _FNRHService = FNRHService;
+
+            _erro = new Erro();
         }
 
         [HttpGet("{idHospede:int}")]
@@ -49,7 +54,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 
@@ -78,7 +85,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
 
@@ -107,7 +116,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                return StatusCode(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, retornoErro);
             }
         }
     }

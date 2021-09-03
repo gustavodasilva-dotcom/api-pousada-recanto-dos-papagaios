@@ -30,7 +30,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 },
                 InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
                 {
-                    Id = a.InformacoesAcomodacao.Id,
                     MetrosQuadrados = a.InformacoesAcomodacao.MetrosQuadrados,
                     Capacidade = a.InformacoesAcomodacao.Capacidade,
                     TipoDeCama = a.InformacoesAcomodacao.TipoDeCama,
@@ -59,7 +58,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 },
                 InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
                 {
-                    Id = acomodacao.InformacoesAcomodacao.Id,
                     MetrosQuadrados = acomodacao.InformacoesAcomodacao.MetrosQuadrados,
                     Capacidade = acomodacao.InformacoesAcomodacao.Capacidade,
                     TipoDeCama = acomodacao.InformacoesAcomodacao.TipoDeCama,

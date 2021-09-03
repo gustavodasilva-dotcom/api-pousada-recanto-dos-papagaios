@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly ICheckInService _checkInService;
 
+        private readonly Erro _erro;
+
         public CheckInsController(ICheckInService checkInService)
         {
             _checkInService = checkInService;
+
+            _erro = new Erro();
         }
 
         //[HttpGet]

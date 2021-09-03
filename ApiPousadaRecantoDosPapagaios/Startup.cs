@@ -33,8 +33,8 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IAcomodacaoService, AcomodacaoService>();
             services.AddScoped<IAcomodacaoRepository, AcomodacaoRepository>();
 
-            //services.AddScoped<IReservaRepository, ReservaRepository>();
-            //services.AddScoped<IReservaService, ReservaService>();
+            services.AddScoped<IReservaRepository, ReservaRepository>();
+            services.AddScoped<IReservaService, ReservaService>();
 
             //services.AddScoped<ICheckInRepository, CheckInRepository>();
             //services.AddScoped<ICheckInService, CheckInService>();
