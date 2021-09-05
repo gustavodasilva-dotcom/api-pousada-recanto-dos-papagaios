@@ -5,6 +5,5 @@
         public int Id { get; set; }
         public ReservaViewModel Reserva { get; set; }
         public string UsuarioFuncionario { get; set; }
-        public bool Excluido { get; set; }
     }
 }

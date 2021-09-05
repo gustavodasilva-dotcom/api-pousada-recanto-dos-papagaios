@@ -4,8 +4,6 @@ using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -51,24 +49,24 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         //    }
         //}
 
-        //[HttpPost]
-        //public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
-        //{
-        //    try
-        //    {
-        //        var checkIn = await _checkInService.Inserir(checkInInputModel);
+        [HttpPost]
+        public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
+        {
+            //try
+            //{
+                var checkIn = await _checkInService.Inserir(checkInInputModel);
 
-        //        return Ok(checkIn);
-        //    }
-        //    catch (NullReferenceException nf)
-        //    {
-        //        return NoContent();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Conflict();
-        //    }
-        //}
+                return StatusCode(201, checkIn);
+            //}
+            //catch (NullReferenceException nf)
+            //{
+            //    return NoContent();
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Conflict();
+            //}
+        }
 
     }
 }

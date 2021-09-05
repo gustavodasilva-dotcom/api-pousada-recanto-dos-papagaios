@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VerificarReservas.Repository;
@@ -16,11 +14,15 @@ namespace VerificarReservas
 
         private readonly IReservaRepository _reservaRepository;
 
-        public Worker(ILogger<Worker> logger, IReservaRepository reservaRepository)
+        private readonly IPagamentoRepository _pagamentoRepository;
+
+        public Worker(ILogger<Worker> logger, IReservaRepository reservaRepository, IPagamentoRepository pagamentoService)
         {
             _logger = logger;
 
             _reservaRepository = reservaRepository;
+
+            _pagamentoRepository = pagamentoService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,18 +32,19 @@ namespace VerificarReservas
                 try
                 {
                     await ReservasSemCheckIn();
-                    _logger.LogInformation("Execução realizada com sucesso!");
+
+                    await PagamentoCartaoCredito();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Um erro ocorreu ao executar as rotinas de verificação de reserva.");
+                    _logger.LogError(ex, "Um erro ocorreu ao executar as rotinas.", ex.Message);
                 }
                 finally
                 {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    _logger.LogInformation("Serviço rodando em: {time}", DateTimeOffset.Now);
                 }
                 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(100000, stoppingToken);
             }
         }
 
@@ -50,6 +53,22 @@ namespace VerificarReservas
             try
             {
                 await _reservaRepository.VerificarReservasSemCheckIn();
+
+                _logger.LogInformation("Verificar reservas sem check-in: execução realizada com sucesso!");
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+        }
+
+        private async Task PagamentoCartaoCredito()
+        {
+            try
+            {
+                var mensagem = await _pagamentoRepository.CertaoDeCreditoPagamentoPendente();
+
+                _logger.LogInformation(mensagem);
             }
             catch (SqlException ex)
             {

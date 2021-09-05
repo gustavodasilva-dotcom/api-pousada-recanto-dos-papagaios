@@ -36,11 +36,11 @@ namespace ApiPousadaRecantoDosPapagaios
             services.AddScoped<IReservaRepository, ReservaRepository>();
             services.AddScoped<IReservaService, ReservaService>();
 
-            //services.AddScoped<ICheckInRepository, CheckInRepository>();
-            //services.AddScoped<ICheckInService, CheckInService>();
+            services.AddScoped<ICheckInRepository, CheckInRepository>();
+            services.AddScoped<ICheckInService, CheckInService>();
 
-            //services.AddScoped<ICheckOutRepository, CheckOutRepository>();
-            //services.AddScoped<ICheckOutService, CheckOutService>();
+            services.AddScoped<ICheckOutRepository, CheckOutRepository>();
+            services.AddScoped<ICheckOutService, CheckOutService>();
 
             services.AddControllers();
 

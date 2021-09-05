@@ -4,6 +4,7 @@ using ApiPousadaRecantoDosPapagaios.Models.ViewModels.CheckOutViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -23,19 +24,19 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             _erro = new Erro();
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<CheckOutViewModel>> Inserir([FromBody] CheckOutInputModel checkOutInputModel)
-        //{
-        //    try
-        //    {
-        //        var checkOut = await _checkOutRepository.Inserir(checkOutInputModel);
+        [HttpPost]
+        public async Task<ActionResult<CheckOutViewModel>> Inserir([FromBody] CheckOutInputModel checkOutInputModel)
+        {
+            try
+            {
+                var checkOut = await _checkOutRepository.Inserir(checkOutInputModel);
 
-        //        return Ok(checkOut);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Conflict();
-        //    }
-        //}
+                return Ok(checkOut);
+            }
+            catch (SqlException ex)
+            {
+                return Conflict();
+            }
+        }
     }
 }

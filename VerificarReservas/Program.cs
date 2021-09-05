@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VerificarReservas.Repository;
@@ -19,6 +18,8 @@ namespace VerificarReservas
                     services.AddHostedService<Worker>();
 
                     services.AddSingleton<IReservaRepository, ReservaRepository>();
+
+                    services.AddSingleton<IPagamentoRepository, PagamentoRepository>();
                 });
     }
 }

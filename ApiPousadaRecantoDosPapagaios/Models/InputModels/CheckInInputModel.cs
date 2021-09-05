@@ -3,6 +3,6 @@
     public class CheckInInputModel
     {
         public int IdReserva { get; set; }
-        public string LoginFuncionario { get; set; }
+        public int IdFuncionario { get; set; }
     }
 }
