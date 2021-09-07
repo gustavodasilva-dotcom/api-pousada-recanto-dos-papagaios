@@ -27,5 +27,28 @@ namespace VerificarReservas.Repository
 
             await sqlConnection.CloseAsync();
         }
+
+        public async Task<string> VerificarAcomodacoesOcupadas()
+        {
+            DataTable dataTable = new DataTable();
+            
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspTrocarAcomodacoesOcupadoParaDisponivel]";
+
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+
+            await sqlConnection.OpenAsync();
+
+            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+            sqlDataAdapter.Fill(dataTable);
+
+            await sqlConnection.CloseAsync();
+
+            var mensagem = dataTable.Rows[0].Field<string>(0);
+
+            return mensagem;
+        }
     }
 }

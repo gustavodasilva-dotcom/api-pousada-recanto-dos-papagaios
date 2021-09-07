@@ -34,6 +34,8 @@ namespace VerificarReservas
                     await ReservasSemCheckIn();
 
                     await PagamentoCartaoCredito();
+
+                    await AcomodacaoOcupadaParaDisponivel();
                 }
                 catch (Exception ex)
                 {
@@ -67,6 +69,20 @@ namespace VerificarReservas
             try
             {
                 var mensagem = await _pagamentoRepository.CertaoDeCreditoPagamentoPendente();
+
+                _logger.LogInformation(mensagem);
+            }
+            catch (SqlException ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+        }
+
+        private async Task AcomodacaoOcupadaParaDisponivel()
+        {
+            try
+            {
+                var mensagem = await _reservaRepository.VerificarAcomodacoesOcupadas();
 
                 _logger.LogInformation(mensagem);
             }
