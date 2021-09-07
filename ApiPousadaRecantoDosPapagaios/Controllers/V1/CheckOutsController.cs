@@ -27,16 +27,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<CheckOutViewModel>> Inserir([FromBody] CheckOutInputModel checkOutInputModel)
         {
-            try
-            {
+            //try
+            //{
                 var checkOut = await _checkOutRepository.Inserir(checkOutInputModel);
 
                 return Ok(checkOut);
-            }
-            catch (SqlException ex)
-            {
-                return Conflict();
-            }
+            //}
+            //catch (SqlException ex)
+            //{
+            //    return Conflict();
+            //}
         }
     }
 }

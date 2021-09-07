@@ -12,102 +12,87 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly ICheckOutRepository _checkOutRepository;
 
-        private readonly ICheckInRepository _checkInRepository;
-
         public CheckOutService(ICheckOutRepository checkOutRepository, ICheckInRepository checkInRepository)
         {
             _checkOutRepository = checkOutRepository;
-
-            _checkInRepository = checkInRepository;
         }
 
-        //public async Task<CheckOutViewModel> Inserir(CheckOutInputModel checkOutInputModel)
-        //{
-        //    // TODO: Mesmo quando o check-in não existe, está retornando um objecto. Verificar.
-        //    // Deve retornar um valor nulo para funcionar corretamente.
-        //    var checkIn = await _checkInRepository.ObterCheckInPorReserva(checkOutInputModel.ReservaId);
+        public async Task<CheckOutViewModel> Inserir(CheckOutInputModel checkOutInputModel)
+        {
+            var checkOut = new CheckOut
+            {
+                ValoresAdicionais = checkOutInputModel.ValorAdicional,
+                CheckIn = new CheckIn
+                {
+                    Reserva = new Reserva
+                    {
+                        Id = checkOutInputModel.IdReserva,
+                    },
+                },
+                Funcionario = new Funcionario
+                {
+                    Id = checkOutInputModel.IdFuncionario
+                },
+                Pagamento = new Pagamento
+                {
+                    Id = checkOutInputModel.TipoPagamento
+                }
+            };
 
-        //    if (checkIn == null)
-        //        throw new Exception();
+            var c = await _checkOutRepository.Inserir(checkOut, checkOutInputModel.ValoresAdicionais, checkOutInputModel);
 
-        //    var checkOut = new CheckOut
-        //    {
-        //        ValoresAdicionais = checkOutInputModel.ValoresAdicionais,
-        //        CheckIn = new CheckIn
-        //        {
-        //            Reserva = new Reserva
-        //            {
-        //                Id = checkOutInputModel.ReservaId,
-        //            },
-        //        },
-        //        Funcionario = new Funcionario
-        //        {
-        //            Login = checkOutInputModel.LoginFuncionario
-        //        },
-        //        Pagamento = new Pagamento
-        //        {
-        //            Id = checkOutInputModel.PagamentoId
-        //        }
-        //    };
-
-        //    await _checkOutRepository.Inserir(checkOut);
-
-        //    var ultimoCheckOut = await _checkOutRepository.ObterUltimoCheckOut();
-
-        //    return new CheckOutViewModel
-        //    {
-        //        Id = ultimoCheckOut.Id,
-        //        ValoresAdicionais = ultimoCheckOut.ValoresAdicionais,
-        //        ValorTotal = ultimoCheckOut.ValorTotal,
-        //        CheckIn = new CheckInCheckOutViewModel
-        //        {
-        //            Id = ultimoCheckOut.CheckIn.Id,
-        //            Reserva = new ReservaCheckOutViewModel
-        //            {
-        //                Id = ultimoCheckOut.CheckIn.Reserva.Id,
-        //                DataReserva = ultimoCheckOut.CheckIn.Reserva.DataReserva,
-        //                DataCheckIn = ultimoCheckOut.CheckIn.Reserva.DataCheckIn,
-        //                DataCheckOut = ultimoCheckOut.CheckIn.Reserva.DataCheckOut,
-        //                PrecoUnitario = ultimoCheckOut.CheckIn.Reserva.PrecoUnitario,
-        //                PrecoTotal = ultimoCheckOut.CheckIn.Reserva.PrecoTotal,
-        //                Hospede = new HospedeCheckOutViewModel
-        //                {
-        //                    NomeCompleto = ultimoCheckOut.CheckIn.Reserva.Hospede.NomeCompleto,
-        //                    Cpf = ultimoCheckOut.CheckIn.Reserva.Hospede.Cpf,
-        //                    Email = ultimoCheckOut.CheckIn.Reserva.Hospede.Email
-        //                },
-        //                Acomodacao = new AcomodacaoCheckOutViewModel
-        //                {
-        //                    Id = ultimoCheckOut.CheckIn.Reserva.Acomodacao.Id,
-        //                    Nome = ultimoCheckOut.CheckIn.Reserva.Acomodacao.Nome
-        //                },
-        //                Acompanhantes = ultimoCheckOut.CheckIn.Reserva.Acompanhantes
-        //            }
-        //        },
-        //        Funcionario = new FuncionarioCheckOutViewModel
-        //        {
-        //            Id = ultimoCheckOut.Funcionario.Id,
-        //            Login = ultimoCheckOut.Funcionario.Login,
-        //            Email = ultimoCheckOut.Funcionario.Email,
-        //            Setor = ultimoCheckOut.Funcionario.Setor
-        //        },
-        //        Pagamento = new PagamentoViewModel
-        //        {
-        //            Id = ultimoCheckOut.Pagamento.Id,
-        //            TipoPagamento = new TipoPagamentoViewModel
-        //            {
-        //                Id = ultimoCheckOut.Pagamento.TipoPagamento.Id,
-        //                Descricao = ultimoCheckOut.Pagamento.TipoPagamento.Descricao
-        //            },
-        //            StatusPagamento = new StatusPagamentoViewModel
-        //            {
-        //                Id = ultimoCheckOut.Pagamento.StatusPagamento.Id,
-        //                Descricao = ultimoCheckOut.Pagamento.StatusPagamento.Descricao
-        //            }
-        //        },
-        //        Excluido = ultimoCheckOut.Excluido
-        //    };
-        //}
+            return new CheckOutViewModel
+            {
+                Id = c.Id,
+                ValoresAdicionais = c.ValoresAdicionais,
+                ValorTotal = c.ValorTotal,
+                CheckIn = new CheckInCheckOutViewModel
+                {
+                    Id = c.CheckIn.Id,
+                    Reserva = new ReservaCheckOutViewModel
+                    {
+                        Id = c.CheckIn.Reserva.Id,
+                        DataReserva = c.CheckIn.Reserva.DataReserva,
+                        DataCheckIn = c.CheckIn.Reserva.DataCheckIn,
+                        DataCheckOut = c.CheckIn.Reserva.DataCheckOut,
+                        PrecoUnitario = c.CheckIn.Reserva.PrecoUnitario,
+                        PrecoTotal = c.CheckIn.Reserva.PrecoTotal,
+                        Hospede = new HospedeCheckOutViewModel
+                        {
+                            NomeCompleto = c.CheckIn.Reserva.Hospede.NomeCompleto,
+                            Cpf = c.CheckIn.Reserva.Hospede.Cpf
+                        },
+                        Acomodacao = new AcomodacaoCheckOutViewModel
+                        {
+                            Id = c.CheckIn.Reserva.Acomodacao.Id,
+                            Nome = c.CheckIn.Reserva.Acomodacao.Nome
+                        },
+                        Acompanhantes = c.CheckIn.Reserva.Acompanhantes
+                    }
+                },
+                Funcionario = new FuncionarioCheckOutViewModel
+                {
+                    NomeCompleto = c.Funcionario.NomeCompleto,
+                    Usuario = new UsuarioViewModel
+                    {
+                        NomeUsuario = c.Funcionario.Usuario.NomeUsuario
+                    }
+                },
+                Pagamento = new PagamentoViewModel
+                {
+                    TipoPagamento = new TipoPagamentoViewModel
+                    {
+                        Id = c.Pagamento.TipoPagamento.Id,
+                        Descricao = c.Pagamento.TipoPagamento.Descricao
+                    },
+                    StatusPagamento = new StatusPagamentoViewModel
+                    {
+                        Id = c.Pagamento.StatusPagamento.Id,
+                        Descricao = c.Pagamento.StatusPagamento.Descricao
+                    }
+                }
+            };
+        }
 
     }
 }
