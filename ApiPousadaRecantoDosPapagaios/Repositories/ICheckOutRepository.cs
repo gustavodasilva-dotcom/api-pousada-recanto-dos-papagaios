@@ -7,6 +7,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
     public interface ICheckOutRepository : IDisposable
     {
+        Task<CheckOut> Obter(int idReserva);
+
         Task<CheckOut> Inserir(CheckOut checkOut, int ValoresAdicionais, CheckOutInputModel checkOutInputModel);
     }
 }
