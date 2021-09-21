@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -14,9 +15,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+
         public FuncionarioRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -172,7 +177,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarNovoFuncionario]";
 
-            var json = ConverterModelParaJson(funcionarioJson);
+            var json = _json.ConverterModelParaJson(funcionarioJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -284,7 +289,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarFuncionario]";
 
-            var json = ConverterModelParaJson(funcionarioJson);
+            var json = _json.ConverterModelParaJson(funcionarioJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -390,13 +395,5 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             return f;
         }
-
-        private string ConverterModelParaJson(FuncionarioInputModel funcionario)
-        {
-            var json = JsonConvert.SerializeObject(funcionario);
-
-            return json;
-        }
-
     }
 }

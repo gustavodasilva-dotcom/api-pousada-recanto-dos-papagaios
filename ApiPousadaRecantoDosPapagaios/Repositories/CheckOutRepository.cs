@@ -1,7 +1,7 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -13,9 +13,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+
         public CheckOutRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -104,7 +108,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             CheckOut c = null;
 
-            var json = ConverterModelParaJson(checkOutInputModel);
+            var json = _json.ConverterModelParaJson(checkOutInputModel);
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarCheckOut]";
 
@@ -200,13 +204,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
 
             return c;
-        }
-
-        private string ConverterModelParaJson(CheckOutInputModel checkOut)
-        {
-            var json = JsonConvert.SerializeObject(checkOut);
-
-            return json;
         }
     }
 }

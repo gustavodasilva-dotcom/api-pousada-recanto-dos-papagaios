@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rH1lclTp7AkDfDlGjLxPW5T4uO9bVk6N86WxL3qangbLJ48xlIRLnsAWf3fOlsMOLzKeGyMfYnW5TS4Rmws63Q==",
+  "dgSpecHash": "kOq50MH8Ra23AQblcteK9VwaJJpZ2MH0qmy5BOD2SIE4ltnrlEQIZGBBb77y/sARll2Fu8L6xaPA39oa9TRIoQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\gusta\\source\\repos\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\gusta\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.10.14\\microsoft.visualstudio.azure.containers.tools.targets.1.10.14.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\runtime.native.system.data.sqlclient.sni\\4.7.0\\runtime.native.system.data.sqlclient.sni.4.7.0.nupkg.sha512",

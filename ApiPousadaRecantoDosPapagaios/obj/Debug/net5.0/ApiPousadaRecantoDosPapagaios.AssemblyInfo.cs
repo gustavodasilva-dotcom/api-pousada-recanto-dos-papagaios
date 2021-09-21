@@ -11,6 +11,7 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("f9022123-fa68-4b39-80f9-7945a8199e9b")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiPousadaRecantoDosPapagaios")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

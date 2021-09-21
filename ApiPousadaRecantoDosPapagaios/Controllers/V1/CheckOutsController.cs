@@ -15,13 +15,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly ICheckOutService _checkOutRepository;
 
-        private readonly Erro _erro;
+        private readonly Json _erro;
 
         public CheckOutsController(ICheckOutService checkOutService)
         {
             _checkOutRepository = checkOutService;
 
-            _erro = new Erro();
+            _erro = new Json();
         }
 
         [HttpGet("{idReserva:int}")]

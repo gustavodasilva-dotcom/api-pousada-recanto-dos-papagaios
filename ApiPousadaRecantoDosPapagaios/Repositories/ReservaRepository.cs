@@ -1,9 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -14,9 +13,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+
         public ReservaRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -113,7 +116,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarReserva]";
 
-            var json = ConverterModelParaJson(reservaJson);
+            var json = _json.ConverterModelParaJson(reservaJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -209,28 +212,34 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return r;
         }
 
-        //public async Task Atualizar(int idReserva, Reserva reserva)
-        //{
-        //    var procedure = @"[RECPAPAGAIOS].[dbo].[AtualizarReserva]";
+        public async Task<Reserva> Atualizar(Reserva reserva, ReservaUpdateInputModel reservaJson)
+        {
+            var json = _json.ConverterModelParaJson(reservaJson);
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarReserva]";
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
-        //    sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
-        //    sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
-        //    sqlCommand.Parameters.Add("@CpfHospede", SqlDbType.NChar).Value = reserva.Hospede.Cpf;
-        //    sqlCommand.Parameters.Add("@AcomodacaoId", SqlDbType.Int).Value = reserva.Acomodacao.Id;
-        //    sqlCommand.Parameters.Add("@PagamentoId", SqlDbType.Int).Value = reserva.Pagamento.Id;
-        //    sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    await sqlConnection.OpenAsync();
+            sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = reserva.Id;
+            sqlCommand.Parameters.Add("@Chale", SqlDbType.Int).Value = reserva.Acomodacao.Id;
+            sqlCommand.Parameters.Add("@Pagamento", SqlDbType.Int).Value = reserva.Pagamento.Id;
+            sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
+            sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
+            sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
+            sqlCommand.Parameters.Add("@ReservaJson", SqlDbType.NVarChar).Value = json;
 
-        //    sqlCommand.ExecuteNonQuery();
+            await sqlConnection.OpenAsync();
 
-        //    await sqlConnection.CloseAsync();
-        //}
+            sqlCommand.ExecuteNonQuery();
+
+            await sqlConnection.CloseAsync();
+
+            var r = await Obter(reserva.Id);
+
+            return r;
+        }
 
         //public async Task Deletar(int idReserva)
         //{
@@ -248,12 +257,5 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         //    await sqlConnection.CloseAsync();
         //}
-
-        private string ConverterModelParaJson(ReservaInputModel reservaJson)
-        {
-            var json = JsonConvert.SerializeObject(reservaJson);
-
-            return json;
-        }
     }
 }

@@ -1,9 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -14,9 +13,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+        
         public CheckInRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -124,7 +127,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarCheckIn]";
 
-            var json = ConverterModelParaJson(checkInJson);
+            var json = _json.ConverterModelParaJson(checkInJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -228,13 +231,5 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             return c;
         }
-
-        public string ConverterModelParaJson(CheckInInputModel checkInJson)
-        {
-            var json = JsonConvert.SerializeObject(checkInJson);
-
-            return json;
-        }
-
     }
 }

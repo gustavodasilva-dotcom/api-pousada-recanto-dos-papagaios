@@ -15,13 +15,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
     {
         private readonly IHospedeService _hospedeService;
 
-        private readonly Erro _erro;
+        private readonly Json _erro;
 
         public HospedesController(IHospedeService hospedeService)
         {
             _hospedeService = hospedeService;
 
-            _erro = new Erro();
+            _erro = new Json();
         }
 
         [HttpGet]

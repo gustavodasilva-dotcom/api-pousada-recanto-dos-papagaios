@@ -1,7 +1,7 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,9 +14,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+
         public FNRHRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -72,7 +76,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarNovaFNRH]";
 
-            var json = ConverterModelParaJson(fnrhJson);
+            var json = _json.ConverterModelParaJson(fnrhJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -140,7 +144,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarFNRH]";
 
-            var json = ConverterModelParaJson(fnrhJson);
+            var json = _json.ConverterModelParaJson(fnrhJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -200,13 +204,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             await sqlConnection.CloseAsync();
 
             return fnrhRetorno;
-        }
-
-        public string ConverterModelParaJson(FNRHInputModel fnrh)
-        {
-            var json = JsonConvert.SerializeObject(fnrh);
-
-            return json;
         }
     }
 }

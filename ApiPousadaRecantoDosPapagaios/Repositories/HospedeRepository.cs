@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -14,9 +15,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
+        private readonly Json _json;
+
         public HospedeRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
+
+            _json = new Json();
         }
 
         public void Dispose()
@@ -140,7 +145,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarNovoHospede]";
 
-            var json = ConverterModelParaJson(hospedeJson);
+            var json = _json.ConverterModelParaJson(hospedeJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -224,7 +229,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         {
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
 
-            var json = ConverterModelParaJson(hospedeJson);
+            var json = _json.ConverterModelParaJson(hospedeJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -275,13 +280,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.ExecuteNonQuery();
 
             await sqlConnection.CloseAsync();
-        }
-
-        private string ConverterModelParaJson(HospedeInputModel hospede)
-        {
-            var json = JsonConvert.SerializeObject(hospede);
-
-            return json;
         }
     }
 }

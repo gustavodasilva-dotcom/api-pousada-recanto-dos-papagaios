@@ -14,13 +14,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IAcomodacaoService _acomodacaoService;
 
-        private readonly Erro _erro;
+        private readonly Json _erro;
 
         public AcomodacoesController(IAcomodacaoService acomodacaoService)
         {
             _acomodacaoService = acomodacaoService;
 
-            _erro = new Erro();
+            _erro = new Json();
         }
 
         [HttpGet]
