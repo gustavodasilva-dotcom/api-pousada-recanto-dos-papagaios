@@ -13,6 +13,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Reserva> Atualizar(Reserva reserva, ReservaUpdateInputModel reservaJson);
 
-        //Task Deletar(int idReserva);
+        Task Deletar(int idReserva);
     }
 }

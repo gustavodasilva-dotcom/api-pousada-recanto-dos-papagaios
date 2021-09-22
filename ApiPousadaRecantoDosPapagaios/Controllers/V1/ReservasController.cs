@@ -186,19 +186,42 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
         }
 
-        //[HttpDelete("{idReserva:int}")]
-        //public async Task<ActionResult> Deletar([FromRoute] int idReserva)
-        //{
-        //    try
-        //    {
-        //        await _reservaService.Deletar(idReserva);
+        [HttpDelete("{idReserva:int}")]
+        public async Task<ActionResult> Deletar([FromRoute] int idReserva)
+        {
+            string mensagem;
+            int statusCode;
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NoContent();
-        //    }
-        //}
+            try
+            {
+                await _reservaService.Deletar(idReserva);
+
+                statusCode = 200;
+
+                return StatusCode(statusCode);
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Message.Contains("não existe em sistema."))
+                {
+                    mensagem = "A reserva informada não existe em sistema.";
+                    statusCode = 404;
+                }
+                else if (ex.Message.Contains("Não é possível excluir uma reserva que"))
+                {
+                    mensagem = "Não é possível excluir uma reserva que possua um pagamento com status de Em Processamento.";
+                    statusCode = 409;
+                }
+                else
+                {
+                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
+                    statusCode = 500;
+                }
+
+                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+
+                return StatusCode(statusCode, erro);
+            }
+        }
     }
 }

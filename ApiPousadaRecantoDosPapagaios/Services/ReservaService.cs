@@ -237,15 +237,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        //public async Task Deletar(int idReserva)
-        //{
-        //    var reserva = await _reservaRepository.Obter(idReserva);
-
-        //    if (reserva == null)
-        //        throw new Exception();
-
-        //    await _reservaRepository.Deletar(idReserva);
-        //}
-
+        public async Task Deletar(int idReserva)
+        {
+            await _reservaRepository.Deletar(idReserva);
+        }
     }
 }

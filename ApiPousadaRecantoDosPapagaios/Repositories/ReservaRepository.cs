@@ -241,21 +241,21 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return r;
         }
 
-        //public async Task Deletar(int idReserva)
-        //{
-        //    var procedure = @"dbo.[RemoverReserva]";
+        public async Task Deletar(int idReserva)
+        {
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspDeletarReserva]";
 
-        //    SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
+            SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
-        //    sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandType = CommandType.StoredProcedure;
 
-        //    sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
+            sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
 
-        //    await sqlConnection.OpenAsync();
+            await sqlConnection.OpenAsync();
 
-        //    sqlCommand.ExecuteNonQuery();
+            sqlCommand.ExecuteNonQuery();
 
-        //    await sqlConnection.CloseAsync();
-        //}
+            await sqlConnection.CloseAsync();
+        }
     }
 }
