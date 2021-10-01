@@ -51,7 +51,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var erro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, erro);
             }
@@ -116,7 +116,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var erro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, erro);
             }

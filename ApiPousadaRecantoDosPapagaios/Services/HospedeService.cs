@@ -85,7 +85,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<HospedeViewModel> Inserir(HospedeInputModel hospede)
+        public async Task<RetornoViewModel> Inserir(HospedeInputModel hospede)
         {
             var hospedeInsert = new Hospede
             {
@@ -116,38 +116,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var h = await _hospedeRepository.Inserir(hospedeInsert, hospede);
+            var r = await _hospedeRepository.Inserir(hospedeInsert);
 
-            var hospedeRetorno = new HospedeViewModel
+            return new RetornoViewModel
             {
-                Id = h.Id,
-                NomeCompleto = h.NomeCompleto,
-                Cpf = h.Cpf,
-                DataDeNascimento = h.DataDeNascimento,
-                Usuario = new UsuarioViewModel
-                {
-                    NomeUsuario = h.Usuario.NomeUsuario
-                },
-                Contatos = new ContatosViewModel
-                {
-                    Email = h.Contatos.Email,
-                    Celular = h.Contatos.Celular,
-                    Telefone = h.Contatos.Telefone
-                },
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = h.Endereco.Cep,
-                    Logradouro = h.Endereco.Logradouro,
-                    Numero = h.Endereco.Numero,
-                    Complemento = h.Endereco.Complemento,
-                    Bairro = h.Endereco.Bairro,
-                    Cidade = h.Endereco.Cidade,
-                    Estado = h.Endereco.Estado,
-                    Pais = h.Endereco.Pais
-                }
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
-
-            return hospedeRetorno;
         }
 
         public async Task<HospedeViewModel> Atualizar(int idHospede, HospedeInputModel hospede)

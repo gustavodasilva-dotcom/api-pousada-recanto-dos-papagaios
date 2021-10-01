@@ -39,7 +39,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                 statusCode = 404;
                 mensagem = "Não há hóspedes cadastrados.";
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -72,46 +72,18 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult<HospedeViewModel>> Inserir([FromBody] HospedeInputModel hospedeInputModel)
+        public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] HospedeInputModel hospedeInputModel)
         {
-            try
-            {
-                var hospede = await _hospedeService.Inserir(hospedeInputModel);
-
-                return StatusCode(201, hospede);
-            }
-            catch (SqlException ex)
-            {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Já existe um hóspede cadastrado no sistema"))
-                {
-                    statusCode = 409;
-                    mensagem = "Já existe um hóspede cadastrado no sistema com o CPF informado.";
-                }
-                else if (ex.Message.Contains("Já existe um hóspede cadastrado com o nome de usuário"))
-                {
-                    statusCode = 409;
-                    mensagem = "Já existe um hóspede cadastrado com o nome de usuário informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
-            }
+            var retorno = await _hospedeService.Inserir(hospedeInputModel);
+            
+            return StatusCode(retorno.StatusCode, retorno);
         }
 
         [HttpPut("{idHospede:int}")]
@@ -159,7 +131,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -190,7 +162,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }

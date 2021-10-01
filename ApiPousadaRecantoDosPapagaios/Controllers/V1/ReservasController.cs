@@ -48,62 +48,18 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReservaViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
+        public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
         {
-            try
-            {
-                var reserva = await _reservaService.Inserir(reservaInputModel);
+            var reserva = await _reservaService.Inserir(reservaInputModel);
 
-                return StatusCode(201, reserva);
-            }
-            catch (SqlException ex)
-            {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Não há hóspede cadastrado com o id"))
-                {
-                    statusCode = 404;
-                    mensagem = "Não há hóspede cadastrado com o id informado.";
-                }
-                else if (ex.Message.Contains("As data de check-in e check-out não podem ser menores do que o dia atual."))
-                {
-                    statusCode = 422;
-                    mensagem = "As data de check-in e check-out não podem ser menores do que o dia atual.";
-                }
-                else if (ex.Message.Contains("A data de check-in selecionada está a mais do que 3 dias de hoje."))
-                {
-                    statusCode = 422;
-                    mensagem = "A data de check-in selecionada está a mais do que 3 dias de hoje. " +
-                               "Em casos assim, deve-se contatar a Pousada para realizar a reserva.";
-                }
-                else if (ex.Message.Contains("A data de check-in é maior do que a data de check-out."))
-                {
-                    statusCode = 422;
-                    mensagem = "A data de check-in é maior do que a data de check-out.";
-                }
-                else if (ex.Message.Contains("Esse chalé está ocupado no período selecionado."))
-                {
-                    statusCode = 409;
-                    mensagem = "Esse chalé está ocupado no período selecionado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
-            }
+            return StatusCode(201, reserva);
         }
 
         [HttpPut("{idReserva:int}")]
@@ -180,7 +136,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     statusCode = 500;
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -218,7 +174,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     statusCode = 500;
                 }
 
-                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var erro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, erro);
             }

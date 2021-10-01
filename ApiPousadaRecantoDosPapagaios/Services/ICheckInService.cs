@@ -9,6 +9,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         Task<CheckInViewModel> Obter(int idCheckIn);
 
-        Task<CheckInViewModel> Inserir(CheckInInputModel checkInInputModel);
+        Task<RetornoViewModel> Inserir(CheckInInputModel checkInInputModel);
     }
 }

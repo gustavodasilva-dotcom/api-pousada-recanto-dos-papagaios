@@ -78,7 +78,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<ReservaViewModel> Inserir(ReservaInputModel reservaInputModel)
+        public async Task<RetornoViewModel> Inserir(ReservaInputModel reservaInputModel)
         {
             var reservaInsert = new Reserva
             {
@@ -99,63 +99,12 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Acompanhantes = reservaInputModel.Acompanhantes
             };
 
-            var reserva = await _reservaRepository.Inserir(reservaInsert, reservaInputModel);
+            var reserva = await _reservaRepository.Inserir(reservaInsert);
 
-            return new ReservaViewModel
+            return new RetornoViewModel
             {
-                Id = reserva.Id,
-                DataReserva = reserva.DataReserva,
-                DataCheckIn = reserva.DataCheckIn,
-                DataCheckOut = reserva.DataCheckOut,
-                Acompanhantes = reserva.Acompanhantes,
-                PrecoUnitario = reserva.PrecoUnitario,
-                PrecoTotal = reserva.PrecoTotal,
-                StatusReserva = new StatusReservaViewModel
-                {
-                    Id = reserva.StatusReserva.Id,
-                    Descricao = reserva.StatusReserva.Descricao
-                },
-                Hospede = new HospedeReservaViewModel
-                {
-                    Id = reserva.Hospede.Id,
-                    NomeCompleto = reserva.Hospede.NomeCompleto,
-                    Cpf = reserva.Hospede.Cpf
-                },
-                Acomodacao = new AcomodacaoViewModel
-                {
-                    Id = reserva.Acomodacao.Id,
-                    Nome = reserva.Acomodacao.Nome,
-                    StatusAcomodacao = new StatusAcomodacaoViewModel
-                    {
-                        Id = reserva.Acomodacao.StatusAcomodacao.Id,
-                        Descricao = reserva.Acomodacao.StatusAcomodacao.Descricao
-                    },
-                    InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
-                    {
-                        MetrosQuadrados = reserva.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
-                        Capacidade = reserva.Acomodacao.InformacoesAcomodacao.Capacidade,
-                        TipoDeCama = reserva.Acomodacao.InformacoesAcomodacao.TipoDeCama,
-                        Preco = reserva.Acomodacao.InformacoesAcomodacao.Preco
-                    },
-                    CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
-                    {
-                        Id = reserva.Acomodacao.CategoriaAcomodacao.Id,
-                        Descricao = reserva.Acomodacao.CategoriaAcomodacao.Descricao
-                    }
-                },
-                Pagamento = new PagamentoViewModel
-                {
-                    TipoPagamento = new TipoPagamentoViewModel
-                    {
-                        Id = reserva.Pagamento.TipoPagamento.Id,
-                        Descricao = reserva.Pagamento.TipoPagamento.Descricao
-                    },
-                    StatusPagamento = new StatusPagamentoViewModel
-                    {
-                        Id = reserva.Pagamento.StatusPagamento.Id,
-                        Descricao = reserva.Pagamento.StatusPagamento.Descricao
-                    }
-                }
+                StatusCode = reserva.StatusCode,
+                Mensagem = reserva.Mensagem
             };
         }
 

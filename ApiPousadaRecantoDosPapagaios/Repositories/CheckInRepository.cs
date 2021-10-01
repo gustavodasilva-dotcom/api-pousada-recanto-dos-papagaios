@@ -121,13 +121,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return checkIn;
         }
 
-        public async Task<CheckIn> Inserir(CheckIn checkIn, CheckInInputModel checkInJson)
+        public async Task<Retorno> Inserir(CheckIn checkIn)
         {
-            CheckIn c = null;
-            
-            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarCheckIn]";
+            var retorno = new Retorno();
 
-            var json = _json.ConverterModelParaJson(checkInJson);
+            var dataTable = new DataTable();
+
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarCheckIn]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -135,101 +135,27 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = checkIn.Reserva.Id;
             sqlCommand.Parameters.Add("@IdFuncionario", SqlDbType.Int).Value = checkIn.Funcionario.Id;
-            sqlCommand.Parameters.Add("@CheckInJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterCheckIns]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = checkIn.Reserva.Id;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                c = new CheckIn
-                {
-                    Id = (int)sqlDataReader["CHECKIN_ID_INT"],
-                    Reserva = new Reserva
-                    {
-                        Id = (int)sqlDataReader["RES_ID_INT"],
-                        DataReserva = (DateTime)sqlDataReader["RES_DATA_RESERVA_DATE"],
-                        DataCheckIn = (DateTime)sqlDataReader["RES_DATA_CHECKIN_DATE"],
-                        DataCheckOut = (DateTime)sqlDataReader["RES_DATA_CHECKOUT_DATE"],
-                        Acompanhantes = (int)sqlDataReader["RES_ACOMPANHANTES_ID_INT"],
-                        PrecoUnitario = (float)sqlDataReader["RES_VALOR_UNITARIO_FLOAT"],
-                        PrecoTotal = (float)sqlDataReader["RES_VALOR_RESERVA_FLOAT"],
-                        StatusReserva = new StatusReserva
-                        {
-                            Id = (int)sqlDataReader["ST_RES_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
-                        },
-                        Hospede = new Hospede
-                        {
-                            Id = (int)sqlDataReader["HSP_ID_INT"],
-                            NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-                            Cpf = (string)sqlDataReader["HSP_CPF_CHAR"]
-                        },
-                        Acomodacao = new Acomodacao
-                        {
-                            Id = (int)sqlDataReader["ACO_ID_INT"],
-                            Nome = (string)sqlDataReader["ACO_NOME_STR"],
-                            StatusAcomodacao = new StatusAcomodacao
-                            {
-                                Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
-                                Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
-                            },
-                            InformacoesAcomodacao = new InformacoesAcomodacao
-                            {
-                                MetrosQuadrados = (float)sqlDataReader["INFO_ACOMOD_METROS_QUADRADOS_FLOAT"],
-                                Capacidade = (int)sqlDataReader["INFO_ACOMOD_CAPACIDADE_INT"],
-                                TipoDeCama = (string)sqlDataReader["INFO_ACOMOD_TIPO_DE_CAMA_STR"],
-                                Preco = (float)sqlDataReader["INFO_ACOMOD_PRECO_FLOAT"]
-                            },
-                            CategoriaAcomodacao = new CategoriaAcomodacao
-                            {
-                                Id = (int)sqlDataReader["CAT_ACOMOD_ID_INT"],
-                                Descricao = (string)sqlDataReader["CAT_ACOMOD_DESCRICAO_STR"]
-                            }
-                        },
-                        Pagamento = new Pagamento
-                        {
-                            TipoPagamento = new TipoPagamento
-                            {
-                                Id = (int)sqlDataReader["TPPGTO_ID_INT"],
-                                Descricao = (string)sqlDataReader["TPPGTO_TIPO_PAGAMENTO_STR"]
-                            },
-                            StatusPagamento = new StatusPagamento
-                            {
-                                Id = (int)sqlDataReader["ST_PGTO_ID_INT"],
-                                Descricao = (string)sqlDataReader["ST_PGTO_DESCRICAO_STR"]
-                            }
-                        }
-                    },
-                    Funcionario = new Funcionario
-                    {
-                        Usuario = new Usuario
-                        {
-                            NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
-                        }
-                    }
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno = _json.SerializarJsonDeRetorno(dataTable);
+            }
+            catch (SqlException ex)
+            {
+                retorno = _json.SerializarJsonDeRetorno(ex.Number, ex.Message);
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
-
-            return c;
+            return retorno;
         }
     }
 }
