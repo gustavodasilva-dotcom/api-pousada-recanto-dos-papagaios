@@ -139,13 +139,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return hospede;
         }
 
-        public async Task<Hospede> Inserir(Hospede hospede, HospedeInputModel hospedeJson)
+        public async Task<Retorno> Inserir(Hospede hospede)
         {
-            Hospede hospedeReturno = null;
+            var retorno = new Retorno();
+            
+            var dataTable = new DataTable();
 
-            var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarNovoHospede]";
-
-            var json = _json.ConverterModelParaJson(hospedeJson);
+            var procedure = "[RECPAPAGAIOS].[dbo].[uspCadastrarHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -167,62 +167,27 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
-            sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = $"[RECPAPAGAIOS].[dbo].[uspObterHospedes]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@Cpf", SqlDbType.NChar).Value = hospede.Cpf;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 2;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                hospedeReturno = new Hospede
-                {
-                    Id = (int)sqlDataReader["HSP_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-                    Cpf = (string)sqlDataReader["HSP_CPF_CHAR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["HSP_DTNASC_DATE"],
-                    Usuario = new Usuario
-                    {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"],
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    }
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno = _json.SerializarJsonDeRetorno(dataTable);
+            }
+            catch (SqlException ex)
+            {
+                retorno = _json.SerializarJsonDeRetorno(ex.Number, ex.Message);
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
-
-            return hospedeReturno;
+            return retorno;
         }
 
         public async Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson)

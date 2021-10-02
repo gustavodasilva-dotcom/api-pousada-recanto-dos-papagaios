@@ -1,9 +1,9 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
+using System;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -14,13 +14,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly ICheckInService _checkInService;
 
-        private readonly Json _erro;
-
         public CheckInsController(ICheckInService checkInService)
         {
             _checkInService = checkInService;
-
-            _erro = new Json();
         }
 
         [HttpGet("{idReserva:int}")]
@@ -37,77 +33,35 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
 
                 return StatusCode(statusCode, checkIn);
             }
-            catch (SqlException ex)
+            catch (NaoEncontradoException)
             {
-                if (ex.Message.Contains("A reserva informada não existe ou não possui check-in."))
-                {
-                    statusCode = 404;
-                    mensagem = "A reserva informada não existe ou não possui check-in.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
+                statusCode = 404;
+                mensagem = "A reserva informada não existe ou ainda não possui check-in.";
 
-                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                return StatusCode(statusCode, mensagem);
+            }
+            catch (Exception)
+            {
+                statusCode = 500;
+                mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
 
-                return StatusCode(statusCode, erro);
+                return StatusCode(statusCode, mensagem);
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult<CheckInViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
+        public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
         {
-            int statusCode;
-            string mensagem;
-
             try
             {
-                var checkIn = await _checkInService.Inserir(checkInInputModel);
+                var retorno = await _checkInService.Inserir(checkInInputModel);
 
-                statusCode = 201;
-
-                return StatusCode(statusCode, checkIn);
+                return StatusCode(retorno.StatusCode, retorno);
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                if (ex.Message.Contains("Não existe, no sistema, reserva com o id"))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe, no sistema, reserva com o id informado.";
-                }
-                else if (ex.Message.Contains(" já possui check-in."))
-                {
-                    statusCode = 409;
-                    mensagem = "A reserva informada já possui check-in.";
-                }
-                else if (ex.Message.Contains(" já possui check-out."))
-                {
-                    statusCode = 409;
-                    mensagem = "A reserva informada já possui check-out.";
-                }
-                else if (ex.Message.Contains(" passou da data de check-in."))
-                {
-                    statusCode = 409;
-                    mensagem = "A reserva informada passou da data de check-in.";
-                }
-                else if (ex.Message.Contains(" não corresponde a um funcionário."))
-                {
-                    statusCode = 404;
-                    mensagem = "O id do funcionário informado não corresponde a um funcionário.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var erro = _erro.SerializarJsonDeErro(statusCode, mensagem);
-
-                return StatusCode(statusCode, erro);
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
-
     }
 }

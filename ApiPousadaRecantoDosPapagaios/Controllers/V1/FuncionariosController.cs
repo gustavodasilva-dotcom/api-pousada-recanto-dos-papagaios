@@ -40,7 +40,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                 statusCode = 404;
                 mensagem = "Não há funcionários cadastrados.";
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -73,7 +73,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -109,7 +109,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }
@@ -165,7 +165,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                     mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
                 }
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
 
                 return StatusCode(statusCode, retornoErro);
             }

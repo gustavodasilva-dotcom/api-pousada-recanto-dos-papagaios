@@ -1,7 +1,9 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -29,51 +31,58 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             int statusCode;
             string mensagem;
 
-            var acomodacoes = await _acomodacaoService.Obter();
-
-            statusCode = 200;
-
-            if (acomodacoes.Count == 0)
+            try
             {
-                statusCode = 404;
-                mensagem = "Não há acomodações cadastradas.";
+                var acomodacoes = await _acomodacaoService.Obter();
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
+                statusCode = 200;
 
-                return StatusCode(statusCode, retornoErro);
+                if (acomodacoes.Count == 0)
+                {
+                    statusCode = 404;
+                    mensagem = "Não há acomodações cadastradas.";
+
+                    var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
+
+                    return StatusCode(statusCode, retornoErro);
+                }
+
+                return StatusCode(statusCode, acomodacoes);
             }
+            catch (Exception)
+            {
+                statusCode = 500;
+                mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
 
-            return StatusCode(statusCode, acomodacoes);
+                return StatusCode(statusCode, mensagem);
+            }
         }
 
         [HttpGet("{idAcomodacao:int}")]
         public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
         {
+            int statusCode;
+            string mensagem;
+
             try
             {
                 var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
 
                 return StatusCode(200, acomodacao);
             }
-            catch (SqlException ex)
+            catch (NaoEncontradoException)
             {
-                int statusCode;
-                string mensagem;
+                statusCode = 404;
+                mensagem = "Chalé inválido.";
 
-                if (ex.Message.Contains("Não existe acomodação para o id"))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe acomodação para o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
+                return StatusCode(statusCode, mensagem);
+            }
+            catch (Exception)
+            {
+                statusCode = 500;
+                mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
 
-                var retornoErro = _erro.SerializarJsonDeErro(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return StatusCode(statusCode, mensagem);
             }
         }
     }

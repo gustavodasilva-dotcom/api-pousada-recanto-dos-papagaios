@@ -9,7 +9,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         Task<ReservaViewModel> Obter(int idReserva);
 
-        Task<ReservaViewModel> Inserir(ReservaInputModel reservaInputModel);
+        Task<RetornoViewModel> Inserir(ReservaInputModel reservaInputModel);
 
         Task<ReservaViewModel> Atualizar(int idReserva, ReservaUpdateInputModel reservaInputModel);
 

@@ -1,4 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
@@ -21,6 +22,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             var checkIn = await _checkInRepository.Obter(idCheckIn);
 
+            if (checkIn == null)
+                throw new NaoEncontradoException();
+
             return new CheckInViewModel
             {
                 Id = checkIn.Id,
@@ -84,7 +88,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<CheckInViewModel> Inserir(CheckInInputModel checkInInputModel)
+        public async Task<RetornoViewModel> Inserir(CheckInInputModel checkInInputModel)
         {
             var checkInInsert = new CheckIn
             {
@@ -98,68 +102,12 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var checkIn = await _checkInRepository.Inserir(checkInInsert, checkInInputModel);
+            var r = await _checkInRepository.Inserir(checkInInsert);
 
-            return new CheckInViewModel
+            return new RetornoViewModel
             {
-                Id = checkIn.Id,
-                Reserva = new ReservaViewModel
-                {
-                    Id = checkIn.Reserva.Id,
-                    DataReserva = checkIn.Reserva.DataReserva,
-                    DataCheckIn = checkIn.Reserva.DataCheckIn,
-                    DataCheckOut = checkIn.Reserva.DataCheckOut,
-                    PrecoUnitario = checkIn.Reserva.PrecoUnitario,
-                    PrecoTotal = checkIn.Reserva.PrecoTotal,
-                    StatusReserva = new StatusReservaViewModel
-                    {
-                        Id = checkIn.Reserva.StatusReserva.Id,
-                        Descricao = checkIn.Reserva.StatusReserva.Descricao
-                    },
-                    Hospede = new HospedeReservaViewModel
-                    {
-                        Id = checkIn.Reserva.Hospede.Id,
-                        NomeCompleto = checkIn.Reserva.Hospede.NomeCompleto,
-                        Cpf = checkIn.Reserva.Hospede.Cpf
-                    },
-                    Acomodacao = new AcomodacaoViewModel
-                    {
-                        Id = checkIn.Reserva.Acomodacao.Id,
-                        Nome = checkIn.Reserva.Acomodacao.Nome,
-                        StatusAcomodacao = new StatusAcomodacaoViewModel
-                        {
-                            Id = checkIn.Reserva.Acomodacao.StatusAcomodacao.Id,
-                            Descricao = checkIn.Reserva.Acomodacao.StatusAcomodacao.Descricao
-                        },
-                        InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
-                        {
-                            MetrosQuadrados = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
-                            Capacidade = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Capacidade,
-                            TipoDeCama = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.TipoDeCama,
-                            Preco = checkIn.Reserva.Acomodacao.InformacoesAcomodacao.Preco
-                        },
-                        CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
-                        {
-                            Id = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Id,
-                            Descricao = checkIn.Reserva.Acomodacao.CategoriaAcomodacao.Descricao
-                        }
-                    },
-                    Pagamento = new PagamentoViewModel
-                    {
-                        TipoPagamento = new TipoPagamentoViewModel
-                        {
-                            Id = checkIn.Reserva.Pagamento.TipoPagamento.Id,
-                            Descricao = checkIn.Reserva.Pagamento.TipoPagamento.Descricao
-                        },
-                        StatusPagamento = new StatusPagamentoViewModel
-                        {
-                            Id = checkIn.Reserva.Pagamento.StatusPagamento.Id,
-                            Descricao = checkIn.Reserva.Pagamento.StatusPagamento.Descricao
-                        }
-                    },
-                    Acompanhantes = checkIn.Reserva.Acompanhantes
-                },
-                UsuarioFuncionario = checkIn.Funcionario.Usuario.NomeUsuario
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
         }
 

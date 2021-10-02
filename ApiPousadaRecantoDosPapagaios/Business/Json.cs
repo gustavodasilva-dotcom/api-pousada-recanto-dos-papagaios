@@ -1,5 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Newtonsoft.Json;
+using System.Data;
 
 namespace ApiPousadaRecantoDosPapagaios.Business
 {
@@ -12,15 +13,26 @@ namespace ApiPousadaRecantoDosPapagaios.Business
             return json;
         }
 
-        public ErroViewModel SerializarJsonDeErro(int statusCode, string mensagem)
+        public Retorno SerializarJsonDeRetorno(DataTable dataTable)
         {
-            var erroJson = new ErroViewModel
+            var retornoJson = new Retorno
+            {
+                StatusCode = (int)dataTable.Rows[0]["Codigo"],
+                Mensagem = dataTable.Rows[0]["Mensagem"].ToString()
+            };
+
+            return retornoJson;
+        }
+
+        public Retorno SerializarJsonDeRetorno(int statusCode, string mensagem)
+        {
+            var retornoJson = new Retorno
             {
                 StatusCode = statusCode,
                 Mensagem = mensagem
             };
 
-            return erroJson;
+            return retornoJson;
         }
     }
 }

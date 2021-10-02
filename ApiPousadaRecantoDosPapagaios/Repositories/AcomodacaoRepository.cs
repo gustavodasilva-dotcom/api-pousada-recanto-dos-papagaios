@@ -24,6 +24,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<List<Acomodacao>> Obter()
         {
+            #region SQL
+
             var acomodacoes = new List<Acomodacao>();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterAcomodacoes]";
@@ -66,6 +68,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             }
 
             await sqlConnection.CloseAsync();
+
+            #endregion SQL
 
             return acomodacoes;
         }

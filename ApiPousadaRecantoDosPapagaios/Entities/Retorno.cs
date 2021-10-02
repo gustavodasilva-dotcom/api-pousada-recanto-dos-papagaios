@@ -1,6 +1,6 @@
-﻿namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
+﻿namespace ApiPousadaRecantoDosPapagaios.Entities
 {
-    public class ErroViewModel
+    public class Retorno
     {
         public int StatusCode { get; set; }
         public string Mensagem { get; set; }
