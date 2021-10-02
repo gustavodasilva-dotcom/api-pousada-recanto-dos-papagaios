@@ -1,5 +1,7 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +48,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         public async Task<AcomodacaoViewModel> Obter(int idAcomodacao)
         {
             var acomodacao = await _acomodacaoRepository.Obter(idAcomodacao);
+
+            if (acomodacao == null)
+                throw new NaoEncontradoException();
 
             return new AcomodacaoViewModel
             {

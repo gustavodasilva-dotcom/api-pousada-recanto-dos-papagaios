@@ -1,6 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Business;
 using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
@@ -30,6 +29,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<CheckIn> Obter(int idCheckIn)
         {
+            #region SQL
+
             CheckIn checkIn = null;
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterCheckIns]";
@@ -39,7 +40,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.CommandType = CommandType.StoredProcedure;
 
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idCheckIn;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
 
             await sqlConnection.OpenAsync();
 
@@ -118,11 +118,15 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
 
+            #endregion SQL
+
             return checkIn;
         }
 
         public async Task<Retorno> Inserir(CheckIn checkIn)
         {
+            #region SQL
+
             var retorno = new Retorno();
 
             var dataTable = new DataTable();
@@ -136,24 +140,18 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = checkIn.Reserva.Id;
             sqlCommand.Parameters.Add("@IdFuncionario", SqlDbType.Int).Value = checkIn.Funcionario.Id;
 
-            try
-            {
-                await sqlConnection.OpenAsync();
+            await sqlConnection.OpenAsync();
 
-                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+            var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
-                sqlDataAdapter.Fill(dataTable);
+            sqlDataAdapter.Fill(dataTable);
 
-                retorno = _json.SerializarJsonDeRetorno(dataTable);
-            }
-            catch (SqlException ex)
-            {
-                retorno = _json.SerializarJsonDeRetorno(ex.Number, ex.Message);
-            }
-            finally
-            {
-                await sqlConnection.CloseAsync();
-            }
+            await sqlConnection.CloseAsync();
+
+            retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+            retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+
+            #endregion SQL
 
             return retorno;
         }

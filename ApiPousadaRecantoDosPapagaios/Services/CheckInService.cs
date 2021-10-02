@@ -1,4 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
@@ -20,6 +21,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         public async Task<CheckInViewModel> Obter(int idCheckIn)
         {
             var checkIn = await _checkInRepository.Obter(idCheckIn);
+
+            if (checkIn == null)
+                throw new NaoEncontradoException();
 
             return new CheckInViewModel
             {

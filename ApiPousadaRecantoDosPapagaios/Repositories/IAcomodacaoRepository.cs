@@ -8,6 +8,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     public interface IAcomodacaoRepository : IDisposable
     {
         Task<List<Acomodacao>> Obter();
+
         Task<Acomodacao> Obter(int idAcomodacao);
     }
 }
