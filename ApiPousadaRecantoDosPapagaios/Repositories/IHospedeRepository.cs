@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Retorno> Inserir(Hospede hospede, string json);
 
-        Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson);
+        Task<Retorno> Atualizar(int idHospede, Hospede hospede, string json);
 
         Task<Retorno> Remover(int idHospede);
     }

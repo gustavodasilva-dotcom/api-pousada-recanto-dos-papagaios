@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,8 +9,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<FNRH>> ObterFNRHsPorHospede(int idHospede);
 
-        Task<FNRH> Inserir(int idHospede, FNRH fnrh, FNRHInputModel fnrhJson);
+        Task<Retorno> Inserir(int idHospede, FNRH fnrh, string json);
 
-        Task<FNRH> Atualizar(int idFNRH, FNRH fnrh, FNRHInputModel fnrhJson);
+        Task<Retorno> Atualizar(int idFNRH, FNRH fnrh, string json);
     }
 }

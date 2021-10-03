@@ -1,4 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
@@ -12,14 +14,21 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IFNRHRepository _FNRHRepository;
 
+        private readonly Json _json;
+
         public FNRHService(IFNRHRepository FNRHRepository)
         {
             _FNRHRepository = FNRHRepository;
+
+            _json = new Json();
         }
 
         public async Task<List<FNRHViewModel>> Obter(int idHospede)
         {
             var fnrhs = await _FNRHRepository.ObterFNRHsPorHospede(idHospede);
+
+            if (fnrhs.Count == 0)
+                throw new NaoEncontradoException();
 
             return fnrhs.Select(f => new FNRHViewModel
             {
@@ -38,7 +47,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             }).ToList();
         }
 
-        public async Task<FNRHViewModel> Inserir(int idHospede, FNRHInputModel fnrhInputModel)
+        public async Task<RetornoViewModel> Inserir(int idHospede, FNRHInputModel fnrhInputModel)
         {
             var fnrhInsert = new FNRH
             {
@@ -54,26 +63,18 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 NumAcompanhantes = fnrhInputModel.NumAcompanhantes
             };
 
-            var f = await _FNRHRepository.Inserir(idHospede, fnrhInsert, fnrhInputModel);
+            var json = _json.ConverterModelParaJson(fnrhInputModel);
 
-            return new FNRHViewModel
+            var r = await _FNRHRepository.Inserir(idHospede, fnrhInsert, json);
+
+            return new RetornoViewModel
             {
-                Id = f.Id,
-                Profissao = f.Profissao,
-                Nacionalidade = f.Nacionalidade,
-                Sexo = f.Sexo,
-                Rg = f.Rg,
-                ProximoDestino = f.ProximoDestino,
-                UltimoDestino = f.UltimoDestino,
-                MotivoViagem = f.MotivoViagem,
-                MeioDeTransporte = f.MeioDeTransporte,
-                PlacaAutomovel = f.PlacaAutomovel,
-                NumAcompanhantes = f.NumAcompanhantes,
-                DataCadastro = f.DataCadastro
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
         }
 
-        public async Task<FNRHViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel)
+        public async Task<RetornoViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel)
         {
             var fnrhUpdate = new FNRH
             {
@@ -89,22 +90,14 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 NumAcompanhantes = fnrhInputModel.NumAcompanhantes
             };
 
-            var f = await _FNRHRepository.Atualizar(idFNRH, fnrhUpdate, fnrhInputModel);
+            var json = _json.ConverterModelParaJson(fnrhInputModel);
 
-            return new FNRHViewModel
+            var r = await _FNRHRepository.Atualizar(idFNRH, fnrhUpdate, json);
+
+            return new RetornoViewModel
             {
-                Id = f.Id,
-                Profissao = f.Profissao,
-                Nacionalidade = f.Nacionalidade,
-                Sexo = f.Sexo,
-                Rg = f.Rg,
-                ProximoDestino = f.ProximoDestino,
-                UltimoDestino = f.UltimoDestino,
-                MotivoViagem = f.MotivoViagem,
-                MeioDeTransporte = f.MeioDeTransporte,
-                PlacaAutomovel = f.PlacaAutomovel,
-                NumAcompanhantes = f.NumAcompanhantes,
-                DataCadastro = f.DataCadastro
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
         }
     }

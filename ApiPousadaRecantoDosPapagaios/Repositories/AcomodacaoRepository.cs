@@ -76,6 +76,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<Acomodacao> Obter(int idAcomodacao)
         {
+            #region SQL
+
             Acomodacao acomodacao = null;
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterAcomodacoes]";
@@ -119,6 +121,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             }
 
             await sqlConnection.CloseAsync();
+
+            #endregion SQL
 
             return acomodacao;
         }

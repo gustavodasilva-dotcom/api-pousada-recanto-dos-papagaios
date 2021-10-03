@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -198,8 +197,14 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return retorno;
         }
 
-        public async Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson)
+        public async Task<Retorno> Atualizar(int idHospede, Hospede hospede, string json)
         {
+            #region SQL
+
+            var retorno = new Retorno();
+
+            var dataTable = new DataTable();
+
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
@@ -223,17 +228,31 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
-            //sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
+            sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
-            await sqlConnection.CloseAsync();
+                sqlDataAdapter.Fill(dataTable);
 
-            var hospedeRetorno = await Obter(idHospede);
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
 
-            return hospedeRetorno;
+            #endregion SQL
+
+            return retorno;
         }
 
         public async Task<Retorno> Remover(int idHospede)

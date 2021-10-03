@@ -10,5 +10,6 @@
         public double Salario { get; set; }
         public DadosBancarios DadosBancarios { get; set; }
         public CategoriaAcesso CategoriaAcesso { get; set; }
+        public PerguntaDeSeguranca PerguntaDeSeguranca { get; set; }
     }
 }

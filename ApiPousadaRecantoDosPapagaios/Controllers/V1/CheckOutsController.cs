@@ -1,12 +1,10 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Exceptions;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.CheckOutViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
