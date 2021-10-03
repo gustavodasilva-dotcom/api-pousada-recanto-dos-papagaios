@@ -4,6 +4,7 @@ GO
 ALTER PROCEDURE [dbo].[uspCadastrarCheckIn]
 	 @IdReserva		int
 	,@IdFuncionario	int
+	,@CheckOutJson	varchar(max)
 AS
 	BEGIN
 /*************************************************************************************************************************************
@@ -18,6 +19,8 @@ Declaração de variáveis:
 		DECLARE @DescricaoPagamento		nvarchar(255);
 		DECLARE @StatusPagamento		nvarchar(255);
 		DECLARE @StatusReserva			nvarchar(255);
+		DECLARE @Entidade				nvarchar(255);
+		DECLARE @Acao					nvarchar(255);
 		DECLARE @DataCheckIn			date;
 		DECLARE @Codigo					int;
 		DECLARE @IdStatusPagamento		int;
@@ -27,6 +30,28 @@ Declaração de variáveis:
 		DECLARE @IdCheckOut				int;
 		DECLARE @IdPagamento			int;
 
+/*************************************************************************************************************************************
+INÍCIO: Gravando log de início de análise.
+*************************************************************************************************************************************/
+		SET @Codigo		= 0;
+		
+		SET @Mensagem	= 'Início da análise para cadastro do check-out referente à reserva ' + CAST(@IdReserva AS VARCHAR) + '.';
+		
+		SET @Entidade	= 'Check-in';
+
+		SET @Acao		= 'Cadastrar';
+
+		EXEC [dbo].[uspGravarLog]
+		@Json		= @CheckOutJson,
+		@Entidade	= @Entidade,
+		@Mensagem	= @Mensagem,
+		@Acao		= @Acao,
+		@StatusCode	= @Codigo;
+
+		SET @Mensagem = NULL;
+/*************************************************************************************************************************************
+FIM: Gravando log de início de análise.
+*************************************************************************************************************************************/
 
 /*************************************************************************************************************************************
 SELECT prinicpal que atribui valor às variáveis:
@@ -72,6 +97,13 @@ Validando se a reserva existe no sistema:
 		BEGIN
 			SET @Codigo = 404;
 			SET	@Mensagem = 'Não existe, no sistema, reserva com o id ' + CAST(@IdReserva AS VARCHAR) + '.';
+
+			EXEC [dbo].[uspGravarLog]
+			@Json		= @CheckOutJson,
+			@Entidade	= @Entidade,
+			@Mensagem	= @Mensagem,
+			@Acao		= @Acao,
+			@StatusCode	= @Codigo;
 		END;
 
 /*************************************************************************************************************************************
@@ -83,6 +115,13 @@ Validando se a reserva está cancelada:
 			BEGIN
 				SET @Codigo = 409;	
 				SET @Mensagem = 'A reserva está ' + @StatusReserva + '. Sendo assim, não é possível executar o check-in.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 		END;
 
@@ -95,6 +134,13 @@ Verificando se a reserva já possui check-in:
 			BEGIN
 				SET @Codigo = 409;
 				SET	@Mensagem = 'A reserva ' + CAST(@IdReserva AS VARCHAR) + ' já possui check-in.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 		END;
 		
@@ -107,6 +153,13 @@ Verificando se a reserva já possui check-out:
 			BEGIN
 				SET @Codigo = 409;
 				SET	@Mensagem = 'A reserva ' + CAST(@IdReserva AS VARCHAR) + ' já possui check-out.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 		END;
 		
@@ -120,6 +173,13 @@ Verificando se a data de check-in da reserva é igual a data do dia (GETDATE()):
 			BEGIN
 				SET @Codigo = 422;
 				SET	@Mensagem = 'A reserva ' + CAST(@IdReserva AS VARCHAR) + ' passou da data de check-in.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 
 		END;
@@ -135,6 +195,13 @@ Verificando os dados de pagamento da reserva:
 				SET @Codigo = 409;
 				SET @Mensagem = 'A forma de pagamento selecionada para essa reserva foi ' + @DescricaoPagamento + ' e, no momento,' +
 								' encontra-se ' + @StatusPagamento + '.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 
 		END;
@@ -148,6 +215,13 @@ Verificando se o funcionário informado existe no sistema:
 			BEGIN
 				SET @Codigo = 409;
 				SET	@Mensagem = 'O id ' + CAST(@IdFuncionario AS VARCHAR) + ' não corresponde a um funcionário.';
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @CheckOutJson,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 			END;
 		END;
 		
@@ -202,6 +276,13 @@ INÍCIO: Inserindo na tabela CHECKIN:
 					SELECT @Codigo = ERROR_NUMBER();
 					SELECT @Mensagem = ERROR_MESSAGE();
 
+					EXEC [dbo].[uspGravarLog]
+					@Json		= @CheckOutJson,
+					@Entidade	= @Entidade,
+					@Mensagem	= @Mensagem,
+					@Acao		= @Acao,
+					@StatusCode	= @Codigo;
+
 				END CATCH;
 
 			IF @@TRANCOUNT > 0
@@ -252,6 +333,13 @@ INÍCIO: Atualizando na tabela RESERVA:
 					SELECT @Codigo = ERROR_NUMBER();
 					SELECT @Mensagem = ERROR_MESSAGE();
 
+					EXEC [dbo].[uspGravarLog]
+					@Json		= @CheckOutJson,
+					@Entidade	= @Entidade,
+					@Mensagem	= @Mensagem,
+					@Acao		= @Acao,
+					@StatusCode	= @Codigo;
+
 				END CATCH;
 
 			IF @@TRANCOUNT > 0
@@ -274,6 +362,14 @@ FIM: Atualizando na tabela RESERVA.
 		BEGIN
 			SET @Codigo = 201;
 			SET @Mensagem = 'Check-in da reserva ' + CAST(@IdReserva AS VARCHAR) + ' realizado com sucesso.';
+
+			EXEC [dbo].[uspGravarLog]
+			@Json		= @CheckOutJson,
+			@Entidade	= @Entidade,
+			@Mensagem	= @Mensagem,
+			@Acao		= @Acao,
+			@IdCadastro = @IdCheckIn,
+			@StatusCode	= @Codigo;
 		END;
 
 		SELECT @Codigo AS Codigo, @Mensagem AS Mensagem;

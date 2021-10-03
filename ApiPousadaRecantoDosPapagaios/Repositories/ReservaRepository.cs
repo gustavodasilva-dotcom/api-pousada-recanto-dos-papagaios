@@ -1,5 +1,4 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,13 +12,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
-        private readonly Json _json;
-
         public ReservaRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-
-            _json = new Json();
         }
 
         public void Dispose()
@@ -110,9 +105,11 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return reserva;
         }
 
-        public async Task<Retorno> Inserir(Reserva reserva)
+        public async Task<Retorno> Inserir(Reserva reserva, string json)
         {
-            Retorno retorno = null;
+            #region SQL
+
+            var retorno = new Retorno();
 
             var dataTable = new DataTable();
 
@@ -128,6 +125,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
             sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
             sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
+            sqlCommand.Parameters.Add("@Json", SqlDbType.VarChar).Value = json;
 
             try
             {
@@ -137,23 +135,26 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
                 sqlDataAdapter.Fill(dataTable);
 
-                retorno = _json.SerializarJsonDeRetorno(dataTable);
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                retorno = _json.SerializarJsonDeRetorno(ex.Number, ex.Message);
+                throw;
             }
             finally
             {
                 await sqlConnection.CloseAsync();
             }
 
+            #endregion SQL
+
             return retorno;
         }
 
-        public async Task<Reserva> Atualizar(Reserva reserva, ReservaUpdateInputModel reservaJson)
+        public async Task<Reserva> Atualizar(Reserva reserva)
         {
-            var json = _json.ConverterModelParaJson(reservaJson);
+            //var json = _json.ConverterModelParaJson(reservaJson);
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarReserva]";
 
@@ -167,7 +168,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
             sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
             sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
-            sqlCommand.Parameters.Add("@ReservaJson", SqlDbType.NVarChar).Value = json;
+            //sqlCommand.Parameters.Add("@ReservaJson", SqlDbType.NVarChar).Value = json;
 
             await sqlConnection.OpenAsync();
 

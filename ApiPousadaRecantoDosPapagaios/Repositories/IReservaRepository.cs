@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using System;
 using System.Threading.Tasks;
 
@@ -9,9 +8,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<Reserva> Obter(int idReserva);
 
-        Task<Retorno> Inserir(Reserva reserva);
+        Task<Retorno> Inserir(Reserva reserva, string json);
 
-        Task<Reserva> Atualizar(Reserva reserva, ReservaUpdateInputModel reservaJson);
+        Task<Reserva> Atualizar(Reserva reserva);
 
         Task Deletar(int idReserva);
     }

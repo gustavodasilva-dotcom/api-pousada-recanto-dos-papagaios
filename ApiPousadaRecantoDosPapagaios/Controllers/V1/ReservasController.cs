@@ -3,6 +3,7 @@ using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -57,9 +58,19 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpPost]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
         {
-            var reserva = await _reservaService.Inserir(reservaInputModel);
+            try
+            {
+                var retorno = await _reservaService.Inserir(reservaInputModel);
 
-            return StatusCode(201, reserva);
+                return StatusCode(retorno.StatusCode, retorno);
+            }
+            catch (Exception)
+            {
+                int statusCode = 500;
+                string mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
+
+                return StatusCode(statusCode, mensagem);
+            }
         }
 
         [HttpPut("{idReserva:int}")]

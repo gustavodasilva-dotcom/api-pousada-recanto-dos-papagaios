@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
@@ -11,9 +12,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IReservaRepository _reservaRepository;
 
+        private readonly Json _json;
+
         public ReservaService(IReservaRepository reservaRepository)
         {
             _reservaRepository = reservaRepository;
+
+            _json = new Json();
         }
 
         public async Task<ReservaViewModel> Obter(int idReserva)
@@ -99,7 +104,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Acompanhantes = reservaInputModel.Acompanhantes
             };
 
-            var reserva = await _reservaRepository.Inserir(reservaInsert);
+            var json = _json.ConverterModelParaJson(reservaInputModel);
+
+            var reserva = await _reservaRepository.Inserir(reservaInsert, json);
 
             return new RetornoViewModel
             {
@@ -126,7 +133,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 Acompanhantes = reservaInputModel.Acompanhantes
             };
 
-            var reserva = await _reservaRepository.Atualizar(reservaUpdate, reservaInputModel);
+            var reserva = await _reservaRepository.Atualizar(reservaUpdate);
 
             return new ReservaViewModel
             {

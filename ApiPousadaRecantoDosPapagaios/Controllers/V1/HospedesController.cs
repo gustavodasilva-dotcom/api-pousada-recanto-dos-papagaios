@@ -1,8 +1,10 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -25,26 +27,22 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HospedeViewModel>>> Obter([FromQuery] int pagina, [FromQuery] int quantidade)
+        public async Task<ActionResult<IEnumerable<HospedeViewModel>>> Obter([FromQuery] int pagina = 1, [FromQuery] int quantidade = 5)
         {
-            int statusCode;
-            string mensagem;
-
-            var hospedes = await _hospedeService.Obter(pagina, quantidade);
-
-            statusCode = 200;
-
-            if (hospedes.Count == 0)
+            try
             {
-                statusCode = 404;
-                mensagem = "Não há hóspedes cadastrados.";
+                var hospedes = await _hospedeService.Obter(pagina, quantidade);
 
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return Ok(hospedes);
             }
-            
-            return StatusCode(statusCode, hospedes);
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
         }
 
         [HttpGet("{idHospede:int}")]
@@ -54,36 +52,31 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
             {
                 var hospede = await _hospedeService.Obter(idHospede);
 
-                return StatusCode(200, hospede);
+                return Ok(hospede);
             }
-            catch (SqlException ex)
+            catch (NaoEncontradoException)
             {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Não há hóspede cadastrado com o id informado."))
-                {
-                    statusCode = 404;
-                    mensagem = "Não há hóspede cadastrado com o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 
         [HttpPost]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] HospedeInputModel hospedeInputModel)
         {
-            var retorno = await _hospedeService.Inserir(hospedeInputModel);
-            
-            return StatusCode(retorno.StatusCode, retorno);
+            try
+            {
+                var retorno = await _hospedeService.Inserir(hospedeInputModel);
+
+                return StatusCode(retorno.StatusCode, retorno);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
         }
 
         [HttpPut("{idHospede:int}")]
@@ -138,33 +131,17 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
         }
 
         [HttpDelete("{idHospede:int}")]
-        public async Task<ActionResult> Remover([FromRoute] int idHospede)
+        public async Task<ActionResult<RetornoViewModel>> Remover([FromRoute] int idHospede)
         {
             try
             {
-                await _hospedeService.Remover(idHospede);
+                var hospede = await _hospedeService.Remover(idHospede);
 
-                return StatusCode(200);
+                return StatusCode(hospede.StatusCode, hospede);
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Não existe nenhum hóspede cadastrado no sistema com o id"))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe nenhum hóspede cadastrado no sistema com o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 

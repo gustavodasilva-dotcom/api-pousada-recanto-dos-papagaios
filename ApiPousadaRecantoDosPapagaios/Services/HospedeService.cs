@@ -1,4 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
@@ -12,14 +14,21 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IHospedeRepository _hospedeRepository;
 
+        private readonly Json _json;
+
         public HospedeService(IHospedeRepository hospedeRepository)
         {
             _hospedeRepository = hospedeRepository;
+
+            _json = new Json();
         }
 
         public async Task<List<HospedeViewModel>> Obter(int pagina, int quantidade)
         {   
             var hospedes = await _hospedeRepository.Obter(pagina, quantidade);
+
+            if (hospedes.Count == 0)
+                throw new NaoEncontradoException();
 
             return hospedes.Select(h => new HospedeViewModel
             {
@@ -54,6 +63,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         public async Task<HospedeViewModel> Obter(int idHospede)
         {
             var hospede = await _hospedeRepository.Obter(idHospede);
+
+            if (hospede == null)
+                throw new NaoEncontradoException();
 
             return new HospedeViewModel
             {
@@ -116,7 +128,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var r = await _hospedeRepository.Inserir(hospedeInsert);
+            var json = _json.ConverterModelParaJson(hospede);
+
+            var r = await _hospedeRepository.Inserir(hospedeInsert, json);
 
             return new RetornoViewModel
             {
@@ -188,9 +202,15 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task Remover(int idHospede)
+        public async Task<RetornoViewModel> Remover(int idHospede)
         {
-            await _hospedeRepository.Remover(idHospede);
+            var r = await _hospedeRepository.Remover(idHospede);
+
+            return new RetornoViewModel
+            {
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
+            };
         }
 
     }

@@ -22,30 +22,19 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         [HttpGet("{idReserva:int}")]
         public async Task<ActionResult<CheckInViewModel>> Obter([FromRoute] int idReserva)
         {
-            int statusCode;
-            string mensagem;
-
             try
             {
                 var checkIn = await _checkInService.Obter(idReserva);
 
-                statusCode = 200;
-
-                return StatusCode(statusCode, checkIn);
+                return Ok(checkIn);
             }
             catch (NaoEncontradoException)
             {
-                statusCode = 404;
-                mensagem = "A reserva informada não existe ou ainda não possui check-in.";
-
-                return StatusCode(statusCode, mensagem);
+                return NotFound();
             }
             catch (Exception)
             {
-                statusCode = 500;
-                mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
-
-                return StatusCode(statusCode, mensagem);
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
@@ -60,7 +49,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
+                int statusCode = 500;
+                string mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
+
+                return StatusCode(statusCode, mensagem);
             }
         }
     }

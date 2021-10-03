@@ -14,6 +14,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         Task<RetornoViewModel> Inserir(HospedeInputModel hospede);
 
         Task<HospedeViewModel> Atualizar(int idHospede, HospedeInputModel hospede);
-        Task Remover(int idHospede);
+        Task<RetornoViewModel> Remover(int idHospede);
     }
 }

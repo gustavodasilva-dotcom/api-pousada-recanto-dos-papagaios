@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +8,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<CheckOut> Obter(int idReserva);
 
-        Task<CheckOut> Inserir(CheckOut checkOut, int ValoresAdicionais, CheckOutInputModel checkOutInputModel);
+        Task<Retorno> Inserir(CheckOut checkOut, int ValoresAdicionais, string json);
     }
 }
