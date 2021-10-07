@@ -16,13 +16,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IFuncionarioService _funcionarioService;
 
-        private readonly Json _erro;
-
         public FuncionariosController(IFuncionarioService funcionarioService)
         {
             _funcionarioService = funcionarioService;
-
-            _erro = new Json();
         }
 
         [HttpGet]

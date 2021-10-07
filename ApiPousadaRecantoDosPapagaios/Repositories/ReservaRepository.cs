@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
@@ -25,6 +24,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<Reserva> Obter(int idReserva)
         {
+            #region SQL
+
             Reserva reserva = null;
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterReserva]";
@@ -36,71 +37,82 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
             sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
 
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                reserva = new Reserva
-                {
-                    Id = (int)sqlDataReader["RES_ID_INT"],
-                    DataReserva = (DateTime)sqlDataReader["RES_DATA_RESERVA_DATE"],
-                    DataCheckIn = (DateTime)sqlDataReader["RES_DATA_CHECKIN_DATE"],
-                    DataCheckOut = (DateTime)sqlDataReader["RES_DATA_CHECKOUT_DATE"],
-                    Acompanhantes = (int)sqlDataReader["RES_ACOMPANHANTES_ID_INT"],
-                    PrecoUnitario = (float)sqlDataReader["RES_VALOR_UNITARIO_FLOAT"],
-                    PrecoTotal = (float)sqlDataReader["RES_VALOR_RESERVA_FLOAT"],
-                    StatusReserva = new StatusReserva
-                    {
-                        Id = (int)sqlDataReader["ST_RES_ID_INT"],
-                        Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
-                    },
-                    Hospede = new Hospede
-                    {
-                        Id = (int)sqlDataReader["HSP_ID_INT"],
-                        NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
-                        Cpf = (string)sqlDataReader["HSP_CPF_CHAR"]
-                    },
-                    Acomodacao = new Acomodacao
-                    {
-                        Id = (int)sqlDataReader["ACO_ID_INT"],
-                        Nome = (string)sqlDataReader["ACO_NOME_STR"],
-                        StatusAcomodacao = new StatusAcomodacao
-                        {
-                            Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
-                        },
-                        InformacoesAcomodacao = new InformacoesAcomodacao
-                        {
-                            MetrosQuadrados = (float)sqlDataReader["INFO_ACOMOD_METROS_QUADRADOS_FLOAT"],
-                            Capacidade = (int)sqlDataReader["INFO_ACOMOD_CAPACIDADE_INT"],
-                            TipoDeCama = (string)sqlDataReader["INFO_ACOMOD_TIPO_DE_CAMA_STR"],
-                            Preco = (float)sqlDataReader["INFO_ACOMOD_PRECO_FLOAT"]
-                        },
-                        CategoriaAcomodacao = new CategoriaAcomodacao
-                        {
-                            Id = (int)sqlDataReader["CAT_ACOMOD_ID_INT"],
-                            Descricao = (string)sqlDataReader["CAT_ACOMOD_DESCRICAO_STR"]
-                        }
-                    },
-                    Pagamento = new Pagamento
-                    {
-                        TipoPagamento = new TipoPagamento
-                        {
-                            Id = (int)sqlDataReader["TPPGTO_ID_INT"],
-                            Descricao = (string)sqlDataReader["TPPGTO_TIPO_PAGAMENTO_STR"]
-                        },
-                        StatusPagamento = new StatusPagamento
-                        {
-                            Id = (int)sqlDataReader["ST_PGTO_ID_INT"],
-                            Descricao = (string)sqlDataReader["ST_PGTO_DESCRICAO_STR"]
-                        }
-                    }
-                };
-            }
+                await sqlConnection.OpenAsync();
 
-            await sqlConnection.CloseAsync();
+                SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+                while (sqlDataReader.Read())
+                {
+                    reserva = new Reserva
+                    {
+                        Id = (int)sqlDataReader["RES_ID_INT"],
+                        DataReserva = (DateTime)sqlDataReader["RES_DATA_RESERVA_DATE"],
+                        DataCheckIn = (DateTime)sqlDataReader["RES_DATA_CHECKIN_DATE"],
+                        DataCheckOut = (DateTime)sqlDataReader["RES_DATA_CHECKOUT_DATE"],
+                        Acompanhantes = (int)sqlDataReader["RES_ACOMPANHANTES_ID_INT"],
+                        PrecoUnitario = (float)sqlDataReader["RES_VALOR_UNITARIO_FLOAT"],
+                        PrecoTotal = (float)sqlDataReader["RES_VALOR_RESERVA_FLOAT"],
+                        StatusReserva = new StatusReserva
+                        {
+                            Id = (int)sqlDataReader["ST_RES_ID_INT"],
+                            Descricao = (string)sqlDataReader["ST_RES_DESCRICAO_STR"]
+                        },
+                        Hospede = new Hospede
+                        {
+                            Id = (int)sqlDataReader["HSP_ID_INT"],
+                            NomeCompleto = (string)sqlDataReader["HSP_NOME_STR"],
+                            Cpf = (string)sqlDataReader["HSP_CPF_CHAR"]
+                        },
+                        Acomodacao = new Acomodacao
+                        {
+                            Id = (int)sqlDataReader["ACO_ID_INT"],
+                            Nome = (string)sqlDataReader["ACO_NOME_STR"],
+                            StatusAcomodacao = new StatusAcomodacao
+                            {
+                                Id = (int)sqlDataReader["ST_ACOMOD_ID_INT"],
+                                Descricao = (string)sqlDataReader["ST_ACOMOD_DESCRICAO_STR"]
+                            },
+                            InformacoesAcomodacao = new InformacoesAcomodacao
+                            {
+                                MetrosQuadrados = (float)sqlDataReader["INFO_ACOMOD_METROS_QUADRADOS_FLOAT"],
+                                Capacidade = (int)sqlDataReader["INFO_ACOMOD_CAPACIDADE_INT"],
+                                TipoDeCama = (string)sqlDataReader["INFO_ACOMOD_TIPO_DE_CAMA_STR"],
+                                Preco = (float)sqlDataReader["INFO_ACOMOD_PRECO_FLOAT"]
+                            },
+                            CategoriaAcomodacao = new CategoriaAcomodacao
+                            {
+                                Id = (int)sqlDataReader["CAT_ACOMOD_ID_INT"],
+                                Descricao = (string)sqlDataReader["CAT_ACOMOD_DESCRICAO_STR"]
+                            }
+                        },
+                        Pagamento = new Pagamento
+                        {
+                            TipoPagamento = new TipoPagamento
+                            {
+                                Id = (int)sqlDataReader["TPPGTO_ID_INT"],
+                                Descricao = (string)sqlDataReader["TPPGTO_TIPO_PAGAMENTO_STR"]
+                            },
+                            StatusPagamento = new StatusPagamento
+                            {
+                                Id = (int)sqlDataReader["ST_PGTO_ID_INT"],
+                                Descricao = (string)sqlDataReader["ST_PGTO_DESCRICAO_STR"]
+                            }
+                        }
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+            
+            #endregion SQL
 
             return reserva;
         }
@@ -152,9 +164,13 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return retorno;
         }
 
-        public async Task<Reserva> Atualizar(Reserva reserva)
+        public async Task<Retorno> Atualizar(Reserva reserva, string json)
         {
-            //var json = _json.ConverterModelParaJson(reservaJson);
+            #region SQL
+
+            var dataTable = new DataTable();
+
+            var retorno = new Retorno();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarReserva]";
 
@@ -168,21 +184,41 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@DataCheckIn", SqlDbType.DateTime).Value = reserva.DataCheckIn;
             sqlCommand.Parameters.Add("@DataCheckOut", SqlDbType.DateTime).Value = reserva.DataCheckOut;
             sqlCommand.Parameters.Add("@Acompanhantes", SqlDbType.Int).Value = reserva.Acompanhantes;
-            //sqlCommand.Parameters.Add("@ReservaJson", SqlDbType.NVarChar).Value = json;
+            sqlCommand.Parameters.Add("@ReservaJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+                var adapter = new SqlDataAdapter(sqlCommand);
 
-            await sqlConnection.CloseAsync();
+                adapter.Fill(dataTable);
 
-            var r = await Obter(reserva.Id);
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
 
-            return r;
+            #endregion SQL
+
+            return retorno;
         }
 
-        public async Task Deletar(int idReserva)
+        public async Task<Retorno> Deletar(int idReserva)
         {
+            #region SQL
+
+            var dataTable = new DataTable();
+
+            var retorno = new Retorno();
+
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspDeletarReserva]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
@@ -191,11 +227,29 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = idReserva;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+                var adapter = new SqlDataAdapter(sqlCommand);
 
-            await sqlConnection.CloseAsync();
+                adapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+
+            #endregion SQL
+
+            return retorno;
         }
     }
 }

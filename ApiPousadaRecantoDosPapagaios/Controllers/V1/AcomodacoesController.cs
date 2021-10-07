@@ -1,11 +1,9 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Exceptions;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -16,13 +14,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IAcomodacaoService _acomodacaoService;
 
-        private readonly Json _erro;
-
         public AcomodacoesController(IAcomodacaoService acomodacaoService)
         {
             _acomodacaoService = acomodacaoService;
-
-            _erro = new Json();
         }
 
         [HttpGet]

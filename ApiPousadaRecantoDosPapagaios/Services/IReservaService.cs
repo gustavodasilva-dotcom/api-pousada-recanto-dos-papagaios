@@ -1,6 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Services
@@ -11,8 +10,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         Task<RetornoViewModel> Inserir(ReservaInputModel reservaInputModel);
 
-        Task<ReservaViewModel> Atualizar(int idReserva, ReservaUpdateInputModel reservaInputModel);
+        Task<RetornoViewModel> Atualizar(int idReserva, ReservaUpdateInputModel reservaInputModel);
 
-        Task Deletar(int idReserva);
+        Task<RetornoViewModel> Deletar(int idReserva);
     }
 }

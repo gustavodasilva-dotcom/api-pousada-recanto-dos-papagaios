@@ -49,10 +49,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                int statusCode = 500;
-                string mensagem = "Um erro inesperado aconteceu. Por favor, tente mais tarde.";
-
-                return StatusCode(statusCode, mensagem);
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
     }

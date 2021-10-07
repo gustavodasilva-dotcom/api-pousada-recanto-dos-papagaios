@@ -10,8 +10,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Retorno> Inserir(Reserva reserva, string json);
 
-        Task<Reserva> Atualizar(Reserva reserva);
+        Task<Retorno> Atualizar(Reserva reserva, string json);
 
-        Task Deletar(int idReserva);
+        Task<Retorno> Deletar(int idReserva);
     }
 }
