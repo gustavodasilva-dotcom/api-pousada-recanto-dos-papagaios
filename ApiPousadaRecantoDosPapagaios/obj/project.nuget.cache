@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kOq50MH8Ra23AQblcteK9VwaJJpZ2MH0qmy5BOD2SIE4ltnrlEQIZGBBb77y/sARll2Fu8L6xaPA39oa9TRIoQ==",
+  "dgSpecHash": "hVc7hfc+FFYSPVSZ+gseLmfY6vSuiFHaLqk8mqG/Z56zPI9Dd76aUYEn5F+JNhQXpZv1DFh3MIvshOokMWqaZg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\gusta\\source\\repos\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
+  "projectFilePath": "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gusta\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",
     "C:\\Users\\gusta\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
