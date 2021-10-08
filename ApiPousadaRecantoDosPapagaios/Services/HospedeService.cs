@@ -1,4 +1,6 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
@@ -12,14 +14,21 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IHospedeRepository _hospedeRepository;
 
+        private readonly Json _json;
+
         public HospedeService(IHospedeRepository hospedeRepository)
         {
             _hospedeRepository = hospedeRepository;
+
+            _json = new Json();
         }
 
         public async Task<List<HospedeViewModel>> Obter(int pagina, int quantidade)
         {   
             var hospedes = await _hospedeRepository.Obter(pagina, quantidade);
+
+            if (hospedes.Count == 0)
+                throw new NaoEncontradoException();
 
             return hospedes.Select(h => new HospedeViewModel
             {
@@ -54,6 +63,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         public async Task<HospedeViewModel> Obter(int idHospede)
         {
             var hospede = await _hospedeRepository.Obter(idHospede);
+
+            if (hospede == null)
+                throw new NaoEncontradoException();
 
             return new HospedeViewModel
             {
@@ -116,7 +128,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var r = await _hospedeRepository.Inserir(hospedeInsert);
+            var json = _json.ConverterModelParaJson(hospede);
+
+            var r = await _hospedeRepository.Inserir(hospedeInsert, json);
 
             return new RetornoViewModel
             {
@@ -125,7 +139,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<HospedeViewModel> Atualizar(int idHospede, HospedeInputModel hospede)
+        public async Task<RetornoViewModel> Atualizar(int idHospede, HospedeInputModel hospede)
         {
             var hospedeUpdate = new Hospede
             {
@@ -156,41 +170,26 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var h = await _hospedeRepository.Atualizar(idHospede, hospedeUpdate, hospede);
+            var json = _json.ConverterModelParaJson(hospede);
 
-            return new HospedeViewModel
+            var r = await _hospedeRepository.Atualizar(idHospede, hospedeUpdate, json);
+
+            return new RetornoViewModel
             {
-                Id = h.Id,
-                NomeCompleto = h.NomeCompleto,
-                Cpf = h.Cpf,
-                DataDeNascimento = h.DataDeNascimento,
-                Usuario = new UsuarioViewModel
-                {
-                    NomeUsuario = h.Usuario.NomeUsuario
-                },
-                Contatos = new ContatosViewModel
-                {
-                    Email = h.Contatos.Email,
-                    Celular = h.Contatos.Celular,
-                    Telefone = h.Contatos.Telefone
-                },
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = h.Endereco.Cep,
-                    Logradouro = h.Endereco.Logradouro,
-                    Numero = h.Endereco.Numero,
-                    Complemento = h.Endereco.Complemento,
-                    Bairro = h.Endereco.Bairro,
-                    Cidade = h.Endereco.Cidade,
-                    Estado = h.Endereco.Estado,
-                    Pais = h.Endereco.Pais
-                }
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
         }
 
-        public async Task Remover(int idHospede)
+        public async Task<RetornoViewModel> Remover(int idHospede)
         {
-            await _hospedeRepository.Remover(idHospede);
+            var r = await _hospedeRepository.Remover(idHospede);
+
+            return new RetornoViewModel
+            {
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
+            };
         }
 
     }

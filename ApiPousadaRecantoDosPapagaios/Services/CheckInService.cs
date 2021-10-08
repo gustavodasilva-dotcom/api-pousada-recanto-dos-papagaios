@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
@@ -13,9 +14,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly ICheckInRepository _checkInRepository;
 
+        private readonly Json _json;
+
         public CheckInService(ICheckInRepository checkInRepository)
         {
             _checkInRepository = checkInRepository;
+
+            _json = new Json();
         }
 
         public async Task<CheckInViewModel> Obter(int idCheckIn)
@@ -102,7 +107,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 }
             };
 
-            var r = await _checkInRepository.Inserir(checkInInsert);
+            var json = _json.ConverterModelParaJson(checkInInputModel);
+
+            var r = await _checkInRepository.Inserir(checkInInsert, json);
 
             return new RetornoViewModel
             {

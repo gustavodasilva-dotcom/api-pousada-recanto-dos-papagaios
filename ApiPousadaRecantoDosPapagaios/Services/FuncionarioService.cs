@@ -1,8 +1,9 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,14 +14,21 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IFuncionarioRepository _funcionarioRepository;
 
+        private readonly Json _json;
+
         public FuncionarioService(IFuncionarioRepository funcionarioRepository)
         {
             _funcionarioRepository = funcionarioRepository;
+
+            _json = new Json();
         }
 
         public async Task<List<FuncionarioViewModel>> Obter(int pagina, int quantidade)
         {
             var funcionarios = await _funcionarioRepository.Obter(pagina, quantidade);
+
+            if (funcionarios.Count == 0)
+                throw new NaoEncontradoException();
 
             return funcionarios.Select(f => new FuncionarioViewModel
             {
@@ -72,6 +80,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             var f = await _funcionarioRepository.Obter(idFuncionario);
 
+            if (f == null)
+                throw new NaoEncontradoException();
+
             return new FuncionarioViewModel
             {
                 Id = f.Id,
@@ -118,7 +129,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
-        public async Task<FuncionarioViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
+        public async Task<RetornoViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
         {
             var funcionarioInsert = new Funcionario
             {
@@ -162,58 +173,26 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Banco = funcionarioInputModel.DadosBancarios.Banco,
                     Agencia = funcionarioInputModel.DadosBancarios.Agencia,
                     NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta
+                },
+                PerguntaDeSeguranca = new PerguntaDeSeguranca
+                {
+                    PerguntaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.PerguntaSeguranca,
+                    RespostaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.RespostaSeguranca
                 }
             };
 
-            var f = await _funcionarioRepository.Inserir(funcionarioInsert, funcionarioInputModel);
+            var json = _json.ConverterModelParaJson(funcionarioInputModel);
 
-            return new FuncionarioViewModel
+            var f = await _funcionarioRepository.Inserir(funcionarioInsert, json);
+
+            return new RetornoViewModel
             {
-                Id = f.Id,
-                NomeCompleto = f.NomeCompleto,
-                Cpf = f.Cpf,
-                Nacionalidade = f.Nacionalidade,
-                DataDeNascimento = f.DataDeNascimento,
-                Sexo = f.Sexo,
-                Rg = f.Rg,
-                Cargo = f.Cargo,
-                Setor = f.Setor,
-                Salario = f.Salario,
-                Usuario = new UsuarioViewModel
-                {
-                    NomeUsuario = f.Usuario.NomeUsuario
-                },
-                Contatos = new ContatosViewModel
-                {
-                    Email = f.Contatos.Email,
-                    Celular = f.Contatos.Celular,
-                    Telefone = f.Contatos.Telefone
-                },
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = f.Endereco.Cep,
-                    Logradouro = f.Endereco.Logradouro,
-                    Numero = f.Endereco.Numero,
-                    Complemento = f.Endereco.Complemento,
-                    Bairro = f.Endereco.Bairro,
-                    Cidade = f.Endereco.Cidade,
-                    Estado = f.Endereco.Estado,
-                    Pais = f.Endereco.Pais
-                },
-                DadosBancarios = new DadosBancariosViewModel
-                {
-                    Banco = f.DadosBancarios.Banco,
-                    Agencia = f.DadosBancarios.Agencia,
-                    NumeroDaConta = f.DadosBancarios.NumeroDaConta
-                },
-                CategoriaAcesso = new CategoriaAcessoViewModel
-                {
-                    Descricao = f.CategoriaAcesso.Descricao
-                }
+                StatusCode = f.StatusCode,
+                Mensagem = f.Mensagem
             };
         }
 
-        public async Task<FuncionarioViewModel> Atualizar(int idFuncionario, FuncionarioInputModel funcionarioInputModel)
+        public async Task<RetornoViewModel> Atualizar(int idFuncionario, FuncionarioInputModel funcionarioInputModel)
         {
             var funcionarioUpdate = new Funcionario
             {
@@ -257,54 +236,22 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Banco = funcionarioInputModel.DadosBancarios.Banco,
                     Agencia = funcionarioInputModel.DadosBancarios.Agencia,
                     NumeroDaConta = funcionarioInputModel.DadosBancarios.NumeroDaConta
+                },
+                PerguntaDeSeguranca = new PerguntaDeSeguranca
+                {
+                    PerguntaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.PerguntaSeguranca,
+                    RespostaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.RespostaSeguranca
                 }
             };
 
-            var f = await _funcionarioRepository.Atualizar(idFuncionario, funcionarioUpdate, funcionarioInputModel);
+            var json = _json.ConverterModelParaJson(funcionarioInputModel);
 
-            return new FuncionarioViewModel
+            var r = await _funcionarioRepository.Atualizar(idFuncionario, funcionarioUpdate, json);
+
+            return new RetornoViewModel
             {
-                Id = f.Id,
-                NomeCompleto = f.NomeCompleto,
-                Cpf = f.Cpf,
-                Nacionalidade = f.Nacionalidade,
-                DataDeNascimento = f.DataDeNascimento,
-                Sexo = f.Sexo,
-                Rg = f.Rg,
-                Cargo = f.Cargo,
-                Setor = f.Setor,
-                Salario = f.Salario,
-                Usuario = new UsuarioViewModel
-                {
-                    NomeUsuario = f.Usuario.NomeUsuario
-                },
-                Contatos = new ContatosViewModel
-                {
-                    Email = f.Contatos.Email,
-                    Celular = f.Contatos.Celular,
-                    Telefone = f.Contatos.Telefone
-                },
-                Endereco = new EnderecoViewModel
-                {
-                    Cep = f.Endereco.Cep,
-                    Logradouro = f.Endereco.Logradouro,
-                    Numero = f.Endereco.Numero,
-                    Complemento = f.Endereco.Complemento,
-                    Bairro = f.Endereco.Bairro,
-                    Cidade = f.Endereco.Cidade,
-                    Estado = f.Endereco.Estado,
-                    Pais = f.Endereco.Pais
-                },
-                DadosBancarios = new DadosBancariosViewModel
-                {
-                    Banco = f.DadosBancarios.Banco,
-                    Agencia = f.DadosBancarios.Agencia,
-                    NumeroDaConta = f.DadosBancarios.NumeroDaConta
-                },
-                CategoriaAcesso = new CategoriaAcessoViewModel
-                {
-                    Descricao = f.CategoriaAcesso.Descricao
-                }
+                StatusCode = r.StatusCode,
+                Mensagem = r.Mensagem
             };
         }
 

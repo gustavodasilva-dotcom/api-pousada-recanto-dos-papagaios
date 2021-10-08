@@ -1,4 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.CheckOutViewModels;
 using System.Threading.Tasks;
 
@@ -8,6 +9,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         Task<CheckOutViewModel> Obter(int idReserva);
 
-        Task<CheckOutViewModel> Inserir(CheckOutInputModel checkOutInputModel);
+        Task<RetornoViewModel> Inserir(CheckOutInputModel checkOutInputModel);
     }
 }

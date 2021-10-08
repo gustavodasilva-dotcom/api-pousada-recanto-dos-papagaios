@@ -9,8 +9,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         Task<List<FNRHViewModel>> Obter(int idHospede);
 
-        Task<FNRHViewModel> Inserir(int idHospede, FNRHInputModel fnrhInputModel);
+        Task<RetornoViewModel> Inserir(int idHospede, FNRHInputModel fnrhInputModel);
 
-        Task<FNRHViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel);
+        Task<RetornoViewModel> Atualizar(int idFNRH, FNRHInputModel fnrhInputModel);
     }
 }

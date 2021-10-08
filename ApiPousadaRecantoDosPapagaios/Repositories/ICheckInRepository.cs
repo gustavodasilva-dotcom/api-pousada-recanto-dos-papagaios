@@ -10,6 +10,6 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<CheckIn> Obter(int idCheckIn);
 
-        Task<Retorno> Inserir(CheckIn checkIn);
+        Task<Retorno> Inserir(CheckIn checkIn, string json);
     }
 }

@@ -44,5 +44,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         public DadosBancariosInputModel DadosBancarios { get; set; }
         
         public CategoriaAcessoInputModel CategoriaAcesso { get; set; }
+
+        public PerguntaDeSegurancaInputModel PerguntaDeSeguranca { get; set; }
     }
 }

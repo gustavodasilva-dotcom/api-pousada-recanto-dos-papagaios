@@ -1,10 +1,10 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -15,13 +15,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
     {
         private readonly IFNRHService _FNRHService;
 
-        private readonly Json _erro;
-
         public FNRHsController(IFNRHService FNRHService)
         {
             _FNRHService = FNRHService;
-
-            _erro = new Json();
         }
 
         [HttpGet("{idHospede:int}")]
@@ -31,32 +27,15 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             {
                 var fnrh = await _FNRHService.Obter(idHospede);
 
-                return StatusCode(200, fnrh);
+                return Ok(fnrh);
             }
-            catch (SqlException ex)
+            catch (NaoEncontradoException)
             {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Não há FNRHs cadastradas para o hóspede"))
-                {
-                    statusCode = 404;
-                    mensagem = "Não há FNRHs cadastradas para o hóspede informado.";
-                }
-                else if (ex.Message.Contains(" não existe em sistema."))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe, em sistema, hóspede para o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 
@@ -65,29 +44,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         {
             try
             {
-                var fnrh = await _FNRHService.Inserir(idHospede, fnrhInputModel);
+                var retorno = await _FNRHService.Inserir(idHospede, fnrhInputModel);
 
-                return Ok(fnrh);
+                return StatusCode(retorno.StatusCode, retorno);
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                int statusCode;
-                string mensagem;
-                
-                if (ex.Message.Contains("Não existe, em sistema, hóspede cadastrado para o id "))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe, em sistema, hóspede cadastrado para o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 
@@ -98,27 +61,11 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             {
                 var fnrh = await _FNRHService.Atualizar(idFNRH, fnrhInputModel);
 
-                return Ok(fnrh);
+                return StatusCode(fnrh.StatusCode, fnrh);
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                int statusCode;
-                string mensagem;
-
-                if (ex.Message.Contains("Não existe nenhuma FNRH cadastrada no sistema com o id "))
-                {
-                    statusCode = 404;
-                    mensagem = "Não existe nenhuma FNRH cadastrada no sistema com o id informado.";
-                }
-                else
-                {
-                    statusCode = 500;
-                    mensagem = "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.";
-                }
-
-                var retornoErro = _erro.SerializarJsonDeRetorno(statusCode, mensagem);
-
-                return StatusCode(statusCode, retornoErro);
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
     }

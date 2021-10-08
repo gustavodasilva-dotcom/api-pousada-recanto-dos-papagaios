@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,8 +11,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Funcionario> Obter(int idFuncionario);
 
-        Task<Funcionario> Inserir(Funcionario funcionario, FuncionarioInputModel funcionarioJson);
+        Task<Retorno> Inserir(Funcionario funcionario, string json);
 
-        Task<Funcionario> Atualizar(int idFuncionario, Funcionario funcionario, FuncionarioInputModel funcionarioJson);
+        Task<Retorno> Atualizar(int idFuncionario, Funcionario funcionario, string json);
     }
 }

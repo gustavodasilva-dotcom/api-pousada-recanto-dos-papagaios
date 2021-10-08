@@ -1,5 +1,4 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
@@ -12,13 +11,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
-        private readonly Json _json;
-        
         public CheckInRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-
-            _json = new Json();
         }
 
         public void Dispose()
@@ -123,7 +118,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return checkIn;
         }
 
-        public async Task<Retorno> Inserir(CheckIn checkIn)
+        public async Task<Retorno> Inserir(CheckIn checkIn, string json)
         {
             #region SQL
 
@@ -139,18 +134,28 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             sqlCommand.Parameters.Add("@IdReserva", SqlDbType.Int).Value = checkIn.Reserva.Id;
             sqlCommand.Parameters.Add("@IdFuncionario", SqlDbType.Int).Value = checkIn.Funcionario.Id;
+            sqlCommand.Parameters.Add("@CheckOutJson", SqlDbType.VarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
-            sqlDataAdapter.Fill(dataTable);
+                sqlDataAdapter.Fill(dataTable);
 
-            await sqlConnection.CloseAsync();
-
-            retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
-            retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
-
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+            
             #endregion SQL
 
             return retorno;

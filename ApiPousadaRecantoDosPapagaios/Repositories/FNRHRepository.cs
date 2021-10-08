@@ -1,6 +1,4 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,13 +12,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
-        private readonly Json _json;
-
         public FNRHRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-
-            _json = new Json();
         }
 
         public void Dispose()
@@ -31,6 +25,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<List<FNRH>> ObterFNRHsPorHospede(int idHospede)
         {
+            #region SQL
+
             var fnrhs = new List<FNRH>();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFNRH]";
@@ -42,41 +38,54 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = idHospede;
             sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
 
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                fnrhs.Add(new FNRH
+                await sqlConnection.OpenAsync();
+
+                SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+                while (sqlDataReader.Read())
                 {
-                    Id = (int)sqlDataReader["FNRH_ID_INT"],
-                    Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-                    Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-                    Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-                    ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-                    UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-                    MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-                    MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-                    PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-                    DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
-                });
+                    fnrhs.Add(new FNRH
+                    {
+                        Id = (int)sqlDataReader["FNRH_ID_INT"],
+                        Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
+                        Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
+                        Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
+                        Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
+                        ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
+                        UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
+                        MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
+                        MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
+                        PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
+                        NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
+                        DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
             return fnrhs;
         }
 
-        public async Task<FNRH> Inserir(int idHospede, FNRH fnrh, FNRHInputModel fnrhJson)
+        public async Task<Retorno> Inserir(int idHospede, FNRH fnrh, string json)
         {
-            FNRH fnrhRetorno = null;
+            #region SQL
 
-            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarNovaFNRH]";
+            var retorno = new Retorno();
 
-            var json = _json.ConverterModelParaJson(fnrhJson);
+            var dataTable = new DataTable();
+
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarFNRH]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -95,56 +104,40 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
             sqlCommand.Parameters.Add("@FNRHJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFNRH]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = idHospede;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 2;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                fnrhRetorno = new FNRH
-                {
-                    Id = (int)sqlDataReader["FNRH_ID_INT"],
-                    Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-                    Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-                    Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-                    ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-                    UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-                    MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-                    MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-                    PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-                    DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
-            return fnrhRetorno;
+            return retorno;
         }
 
-        public async Task<FNRH> Atualizar(int idFNRH, FNRH fnrh, FNRHInputModel fnrhJson)
+        public async Task<Retorno> Atualizar(int idFNRH, FNRH fnrh, string json)
         {
-            FNRH fnrhRetorno = null;
+            #region SQL
+
+            var dataTable = new DataTable();
+
+            var retorno = new Retorno();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarFNRH]";
-
-            var json = _json.ConverterModelParaJson(fnrhJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -163,47 +156,29 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@NumAcompanhantes", SqlDbType.Int).Value = fnrh.NumAcompanhantes;
             sqlCommand.Parameters.Add("@FNRHJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFNRH]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@Id", SqlDbType.Int).Value = idFNRH;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 3;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                fnrhRetorno = new FNRH
-                {
-                    Id = (int)sqlDataReader["FNRH_ID_INT"],
-                    Profissao = (string)sqlDataReader["FNRH_PROFISSAO_STR"],
-                    Nacionalidade = (string)sqlDataReader["FNRH_NACIONALIDADE_STR"],
-                    Sexo = (string)sqlDataReader["FNRH_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FNRH_RG_CHAR"],
-                    ProximoDestino = (string)sqlDataReader["FNRH_PROXIMO_DESTINO_STR"],
-                    UltimoDestino = (string)sqlDataReader["FNRH_ULTIMO_DESTINO_STR"],
-                    MotivoViagem = (string)sqlDataReader["FNRH_MOTIVO_VIAGEM_STR"],
-                    MeioDeTransporte = (string)sqlDataReader["FNRH_MEIO_DE_TRANSPORTE_STR"],
-                    PlacaAutomovel = (string)sqlDataReader["FNRH_PLACA_AUTOMOVEL_STR"],
-                    NumAcompanhantes = (int)sqlDataReader["FNRH_NUM_ACOMPANHANTES_INT"],
-                    DataCadastro = (DateTime)sqlDataReader["FNRH_DATA_CADASTRO_DATETIME"]
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
-            return fnrhRetorno;
+            return retorno;
         }
     }
 }

@@ -1,8 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,13 +12,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
-        private readonly Json _json;
-
         public HospedeRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-
-            _json = new Json();
         }
 
         public void Dispose()
@@ -32,6 +25,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<List<Hospede>> Obter(int pagina, int quantidade)
         {
+            #region SQL
+
             var hospedes = new List<Hospede>();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterHospedes]";
@@ -82,11 +77,15 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
 
+            #endregion SQL
+
             return hospedes;
         }
 
         public async Task<Hospede> Obter(int idHospede)
         {
+            #region SQL
+
             Hospede hospede = null;
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterHospedes]";
@@ -136,11 +135,15 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             await sqlConnection.CloseAsync();
 
+            #endregion SQL
+
             return hospede;
         }
 
-        public async Task<Retorno> Inserir(Hospede hospede)
+        public async Task<Retorno> Inserir(Hospede hospede, string json)
         {
+            #region SQL
+
             var retorno = new Retorno();
             
             var dataTable = new DataTable();
@@ -167,6 +170,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Cidade", SqlDbType.NVarChar).Value = hospede.Endereco.Cidade;
             sqlCommand.Parameters.Add("@Estado", SqlDbType.NVarChar).Value = hospede.Endereco.Estado;
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
+            sqlCommand.Parameters.Add("@Json", SqlDbType.VarChar).Value = json;
 
             try
             {
@@ -176,25 +180,32 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
                 sqlDataAdapter.Fill(dataTable);
 
-                retorno = _json.SerializarJsonDeRetorno(dataTable);
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
             }
-            catch (SqlException ex)
+            catch (Exception)
             {
-                retorno = _json.SerializarJsonDeRetorno(ex.Number, ex.Message);
+                throw;
             }
             finally
             {
                 await sqlConnection.CloseAsync();
             }
 
+            #endregion SQL
+
             return retorno;
         }
 
-        public async Task<Hospede> Atualizar(int idHospede, Hospede hospede, HospedeInputModel hospedeJson)
+        public async Task<Retorno> Atualizar(int idHospede, Hospede hospede, string json)
         {
-            var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
+            #region SQL
 
-            var json = _json.ConverterModelParaJson(hospedeJson);
+            var retorno = new Retorno();
+
+            var dataTable = new DataTable();
+
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -219,19 +230,39 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Pais", SqlDbType.NVarChar).Value = hospede.Endereco.Pais;
             sqlCommand.Parameters.Add("@HospedeJson", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
-            await sqlConnection.CloseAsync();
+                sqlDataAdapter.Fill(dataTable);
 
-            var hospedeRetorno = await Obter(idHospede);
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
 
-            return hospedeRetorno;
+            #endregion SQL
+
+            return retorno;
         }
 
-        public async Task Remover(int idHospede)
+        public async Task<Retorno> Remover(int idHospede)
         {
+            #region SQL
+
+            var dataTable = new DataTable();
+
+            var retorno = new Retorno();
+
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspDeletarHospede]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
@@ -240,11 +271,29 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             sqlCommand.Parameters.Add("@IdHospede", SqlDbType.Int).Value = idHospede;
 
-            await sqlConnection.OpenAsync();
+            try
+            {
+                await sqlConnection.OpenAsync();
 
-            sqlCommand.ExecuteNonQuery();
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
 
-            await sqlConnection.CloseAsync();
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+
+            #endregion SQL
+
+            return retorno;
         }
     }
 }

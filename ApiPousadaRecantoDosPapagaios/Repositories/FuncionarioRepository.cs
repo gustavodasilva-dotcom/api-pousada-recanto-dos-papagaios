@@ -1,8 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Entities;
-using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,13 +12,9 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         private readonly SqlConnection sqlConnection;
 
-        private readonly Json _json;
-
         public FuncionarioRepository(IConfiguration configuration)
         {
             sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
-
-            _json = new Json();
         }
 
         public void Dispose()
@@ -32,6 +25,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         public async Task<List<Funcionario>> Obter(int pagina, int quantidade)
         {
+            #region SQL
+
             var funcionarios = new List<Funcionario>();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFuncionarios]";
@@ -44,65 +39,78 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Pagina", SqlDbType.Int).Value = pagina;
             sqlCommand.Parameters.Add("@Quantidade", SqlDbType.Int).Value = quantidade;
 
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                funcionarios.Add(new Funcionario
+                await sqlConnection.OpenAsync();
+
+                SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+                while (sqlDataReader.Read())
                 {
-                    Id = (int)sqlDataReader["FUNC_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
-                    Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
-                    Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
-                    Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
-                    Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
-                    Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
-                    Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
-                    Usuario = new Usuario
+                    funcionarios.Add(new Funcionario
                     {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
-                    },
-                    CategoriaAcesso = new CategoriaAcesso
-                    {
-                        Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    },
-                    DadosBancarios = new DadosBancarios
-                    {
-                        Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
-                        Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
-                        NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
-                    }
-                });
+                        Id = (int)sqlDataReader["FUNC_ID_INT"],
+                        NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
+                        Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
+                        Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
+                        DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
+                        Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
+                        Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
+                        Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
+                        Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
+                        Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
+                        Usuario = new Usuario
+                        {
+                            NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
+                        },
+                        CategoriaAcesso = new CategoriaAcesso
+                        {
+                            Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
+                        },
+                        Contatos = new Contatos
+                        {
+                            Email = (string)sqlDataReader["CONT_EMAIL_STR"],
+                            Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
+                            Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
+                        },
+                        Endereco = new Endereco
+                        {
+                            Cep = (string)sqlDataReader["END_CEP_CHAR"],
+                            Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+                            Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+                            Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+                            Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+                            Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+                            Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+                            Pais = (string)sqlDataReader["END_PAIS_STR"]
+                        },
+                        DadosBancarios = new DadosBancarios
+                        {
+                            Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
+                            Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
+                            NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
+                        }
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
             return funcionarios;
         }
 
         public async Task<Funcionario> Obter(int idFuncionario)
         {
+            #region SQL
+
             Funcionario funcionario = null;
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFuncionarios]";
@@ -114,70 +122,83 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
             sqlCommand.Parameters.Add("@IdFuncionario", SqlDbType.Int).Value = idFuncionario;
 
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                funcionario = new Funcionario
+                await sqlConnection.OpenAsync();
+
+                SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
+
+                while (sqlDataReader.Read())
                 {
-                    Id = (int)sqlDataReader["FUNC_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
-                    Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
-                    Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
-                    Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
-                    Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
-                    Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
-                    Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
-                    Usuario = new Usuario
+                    funcionario = new Funcionario
                     {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
-                    },
-                    CategoriaAcesso = new CategoriaAcesso
-                    {
-                        Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    },
-                    DadosBancarios = new DadosBancarios
-                    {
-                        Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
-                        Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
-                        NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
-                    }
-                };
+                        Id = (int)sqlDataReader["FUNC_ID_INT"],
+                        NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
+                        Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
+                        Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
+                        DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
+                        Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
+                        Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
+                        Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
+                        Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
+                        Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
+                        Usuario = new Usuario
+                        {
+                            NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
+                        },
+                        CategoriaAcesso = new CategoriaAcesso
+                        {
+                            Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
+                        },
+                        Contatos = new Contatos
+                        {
+                            Email = (string)sqlDataReader["CONT_EMAIL_STR"],
+                            Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
+                            Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
+                        },
+                        Endereco = new Endereco
+                        {
+                            Cep = (string)sqlDataReader["END_CEP_CHAR"],
+                            Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
+                            Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
+                            Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
+                            Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
+                            Cidade = (string)sqlDataReader["END_CIDADE_STR"],
+                            Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
+                            Pais = (string)sqlDataReader["END_PAIS_STR"]
+                        },
+                        DadosBancarios = new DadosBancarios
+                        {
+                            Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
+                            Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
+                            NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
+                        }
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
             return funcionario;
         }
 
-        public async Task<Funcionario> Inserir(Funcionario funcionario, FuncionarioInputModel funcionarioJson)
+        public async Task<Retorno> Inserir(Funcionario funcionario, string json)
         {
-            Funcionario f = null;
-            
-            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarNovoFuncionario]";
+            #region SQL
 
-            var json = _json.ConverterModelParaJson(funcionarioJson);
+            var retorno = new Retorno();
+
+            var dataTable = new DataTable();
+            
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspCadastrarFuncionario]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -209,87 +230,44 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.Banco;
             sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.Agencia;
             sqlCommand.Parameters.Add("@NumeroConta", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.NumeroDaConta;
-            sqlCommand.Parameters.Add("@FuncionarioJson", SqlDbType.NVarChar).Value = json;
+            sqlCommand.Parameters.Add("@PerguntaSeguranca", SqlDbType.NVarChar).Value = funcionario.PerguntaDeSeguranca.PerguntaSeguranca;
+            sqlCommand.Parameters.Add("@RespostaSeguranca", SqlDbType.NVarChar).Value = funcionario.PerguntaDeSeguranca.RespostaSeguranca;
+            sqlCommand.Parameters.Add("@Json", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFuncionarios]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 2;
-            sqlCommand.Parameters.Add("@Cpf", SqlDbType.Char).Value = funcionario.Cpf;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                f = new Funcionario
-                {
-                    Id = (int)sqlDataReader["FUNC_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
-                    Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
-                    Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
-                    Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
-                    Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
-                    Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
-                    Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
-                    Usuario = new Usuario
-                    {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
-                    },
-                    CategoriaAcesso = new CategoriaAcesso
-                    {
-                        Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    },
-                    DadosBancarios = new DadosBancarios
-                    {
-                        Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
-                        Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
-                        NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
-                    }
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
             }
 
-            await sqlConnection.CloseAsync();
+            #endregion SQL
 
-            return f;
+            return retorno;
         }
 
-        public async Task<Funcionario> Atualizar(int idFuncionario, Funcionario funcionario, FuncionarioInputModel funcionarioJson)
+        public async Task<Retorno> Atualizar(int idFuncionario, Funcionario funcionario, string json)
         {
-            Funcionario f = null;
+            #region SQL
+
+            var retorno = new Retorno();
+
+            var dataTable = new DataTable();
 
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarFuncionario]";
-
-            var json = _json.ConverterModelParaJson(funcionarioJson);
 
             SqlCommand sqlCommand = new SqlCommand(procedure, sqlConnection);
 
@@ -322,78 +300,33 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             sqlCommand.Parameters.Add("@Banco", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.Banco;
             sqlCommand.Parameters.Add("@Agencia", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.Agencia;
             sqlCommand.Parameters.Add("@NumeroConta", SqlDbType.NVarChar).Value = funcionario.DadosBancarios.NumeroDaConta;
-            sqlCommand.Parameters.Add("@FuncionarioJson", SqlDbType.NVarChar).Value = json;
+            sqlCommand.Parameters.Add("@PerguntaSeguranca", SqlDbType.NVarChar).Value = funcionario.PerguntaDeSeguranca.PerguntaSeguranca;
+            sqlCommand.Parameters.Add("@RespostaSeguranca", SqlDbType.NVarChar).Value = funcionario.PerguntaDeSeguranca.RespostaSeguranca;
+            sqlCommand.Parameters.Add("@Json", SqlDbType.NVarChar).Value = json;
 
-            await sqlConnection.OpenAsync();
-
-            sqlCommand.ExecuteNonQuery();
-
-            await sqlConnection.CloseAsync();
-
-            procedure = @"[RECPAPAGAIOS].[dbo].[uspObterFuncionarios]";
-
-            sqlCommand = new SqlCommand(procedure, sqlConnection);
-
-            sqlCommand.CommandType = CommandType.StoredProcedure;
-
-            sqlCommand.Parameters.Add("@IdFuncionario", SqlDbType.Int).Value = idFuncionario;
-            sqlCommand.Parameters.Add("@Tipo", SqlDbType.Int).Value = 1;
-
-            await sqlConnection.OpenAsync();
-
-            SqlDataReader sqlDataReader = await sqlCommand.ExecuteReaderAsync();
-
-            while (sqlDataReader.Read())
+            try
             {
-                f = new Funcionario
-                {
-                    Id = (int)sqlDataReader["FUNC_ID_INT"],
-                    NomeCompleto = (string)sqlDataReader["FUNC_NOME_STR"],
-                    Cpf = (string)sqlDataReader["FUNC_CPF_CHAR"],
-                    Nacionalidade = (string)sqlDataReader["FUNC_NACIONALIDADE_STR"],
-                    DataDeNascimento = (DateTime)sqlDataReader["FUNC_DTNASC_DATE"],
-                    Sexo = (string)sqlDataReader["FUNC_SEXO_CHAR"],
-                    Rg = (string)sqlDataReader["FUNC_RG_CHAR"],
-                    Cargo = (string)sqlDataReader["FUNC_CARGO_STR"],
-                    Setor = (string)sqlDataReader["FUNC_SETOR_STR"],
-                    Salario = (float)sqlDataReader["FUNC_SALARIO_FLOAT"],
-                    Usuario = new Usuario
-                    {
-                        NomeUsuario = (string)sqlDataReader["USU_NOME_USUARIO_STR"]
-                    },
-                    CategoriaAcesso = new CategoriaAcesso
-                    {
-                        Descricao = (string)sqlDataReader["CATACESSO_DESCRICAO_STR"]
-                    },
-                    Contatos = new Contatos
-                    {
-                        Email = (string)sqlDataReader["CONT_EMAIL_STR"],
-                        Celular = (string)sqlDataReader["CONT_CELULAR_CHAR"],
-                        Telefone = (string)sqlDataReader["CONT_TELEFONE_CHAR"]
-                    },
-                    Endereco = new Endereco
-                    {
-                        Cep = (string)sqlDataReader["END_CEP_CHAR"],
-                        Logradouro = (string)sqlDataReader["END_LOGRADOURO_STR"],
-                        Numero = (string)sqlDataReader["END_NUMERO_CHAR"],
-                        Complemento = (string)sqlDataReader["END_COMPLEMENTO_STR"],
-                        Bairro = (string)sqlDataReader["END_BAIRRO_STR"],
-                        Cidade = (string)sqlDataReader["END_CIDADE_STR"],
-                        Estado = (string)sqlDataReader["END_ESTADO_CHAR"],
-                        Pais = (string)sqlDataReader["END_PAIS_STR"]
-                    },
-                    DadosBancarios = new DadosBancarios
-                    {
-                        Banco = (string)sqlDataReader["DADOSBC_BANCO_STR"],
-                        Agencia = (string)sqlDataReader["DADOSBC_AGENCIA_STR"],
-                        NumeroDaConta = (string)sqlDataReader["DADOSBC_NUMERO_CONTA_STR"]
-                    }
-                };
+                await sqlConnection.OpenAsync();
+
+                var sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+                sqlDataAdapter.Fill(dataTable);
+
+                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
+                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
             }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+            
+            #endregion SQL
 
-            await sqlConnection.CloseAsync();
-
-            return f;
+            return retorno;
         }
     }
 }
