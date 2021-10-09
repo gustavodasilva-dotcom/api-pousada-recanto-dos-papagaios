@@ -1,4 +1,5 @@
-﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,50 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<ActionResult<RetornoViewModel>> FazerLogin([FromBody] LoginInputModel login) 
+        public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] LoginInputModel login) 
         {
             try
             {
                 var retorno = await _loginService.FazerLogin(login);
 
                 return StatusCode(retorno.StatusCode, retorno);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<RetornoViewModel>> Atualizar([FromBody] DefinicaoSenhaInputModel definicaoSenha)
+        {
+            try
+            {
+                var retorno = await _loginService.DenificaoSenha(definicaoSenha);
+
+                return StatusCode(retorno.StatusCode, retorno);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
+        }
+
+        [HttpGet("{cpf}")]
+        public async Task<ActionResult<PerguntaDeSegurancaViewModel>> Obter([FromRoute] string cpf)
+        {
+            if (cpf.Length != 11)
+                return BadRequest();
+
+            try
+            {
+                var retorno = await _loginService.PerguntaSeguranca(cpf);
+
+                return Ok(retorno);
+            }
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
             }
             catch (Exception)
             {

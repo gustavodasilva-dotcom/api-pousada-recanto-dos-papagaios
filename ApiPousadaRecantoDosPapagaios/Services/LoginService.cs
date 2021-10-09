@@ -1,5 +1,6 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Business;
 using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
@@ -46,6 +47,59 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             {
                 StatusCode = retorno.StatusCode,
                 Mensagem = retorno.Mensagem
+            };
+        }
+
+        public async Task<RetornoViewModel> DenificaoSenha(DefinicaoSenhaInputModel definicaoSenha)
+        {
+            Retorno retorno;
+
+            try
+            {
+                var definicao = new DefinicaoSenha
+                {
+                    Cpf = definicaoSenha.Cpf,
+                    NovaSenha = definicaoSenha.NovaSenha,
+                    RepeticaoSenha = definicaoSenha.RepeticaoSenha
+                };
+
+                var json = _json.ConverterModelParaJson(definicaoSenha);
+
+                retorno = await _loginRepository.DenificaoSenha(definicao, json);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return new RetornoViewModel
+            {
+                StatusCode = retorno.StatusCode,
+                Mensagem = retorno.Mensagem
+            };
+        }
+
+        public async Task<PerguntaDeSegurancaViewModel> PerguntaSeguranca(string cpf)
+        {
+            PerguntaDeSeguranca retorno;
+
+            try
+            {
+                retorno = await _loginRepository.PerguntaSeguranca(cpf);
+
+                if (retorno == null)
+                    throw new NaoEncontradoException();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return new PerguntaDeSegurancaViewModel
+            {
+                Cpf = retorno.Cpf,
+                PerguntaSeguranca = retorno.PerguntaSeguranca,
+                RespostaSeguranca = retorno.RespostaSeguranca
             };
         }
     }

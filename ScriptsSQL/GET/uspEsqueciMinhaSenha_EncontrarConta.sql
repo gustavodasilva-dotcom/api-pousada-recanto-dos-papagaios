@@ -3,8 +3,6 @@ GO
 
 ALTER PROCEDURE [dbo].[uspEsqueciMinhaSenha_EncontrarConta]
 	@Cpf	nchar(11)
-
-	--[uspEsqueciMinhaSenha_EncontrarConta] 29512324628
 AS
 	BEGIN
 /*************************************************************************************************************************************
@@ -16,41 +14,46 @@ Data.....: 22/09/2021
 /*************************************************************************************************************************************
 Declaração de variáveis:
 *************************************************************************************************************************************/
+		DECLARE @IdUsuario	int;
 		DECLARE @Codigo		int;
 		DECLARE @Mensagem	nvarchar(255);
 
 /*************************************************************************************************************************************
 INÍCIO: Validação dos dados de entrada:
 *************************************************************************************************************************************/
-		IF  (
-				SELECT		1
-				FROM		USUARIO		AS U
-				INNER JOIN	FUNCIONARIO AS F ON F.FUNC_USU_ID_INT = U.USU_ID_INT
-				WHERE		F.FUNC_CPF_CHAR = @Cpf
-			)
-		IS NULL
+		SELECT		@IdUsuario = U.USU_ID_INT
+		FROM		HOSPEDE	AS H
+		INNER JOIN	USUARIO AS U ON H.HSP_USU_ID_INT = U.USU_ID_INT
+		WHERE		H.HSP_CPF_CHAR = @Cpf;
+
+		IF @IdUsuario IS NOT NULL
 			BEGIN
-
-				SET @Mensagem = 'Usuário não encontrado com o CPF ' + @Cpf;
-
-				SET @Codigo = 404;
-
+				SELECT	@Cpf AS CPF
+						,PERG_SEG_PERGUNTA_STR
+						,PERG_SEG_RESPOSTA_STR
+				FROM	PERGUNTA_SEGURANCA
+				WHERE	PERG_SEG_USU_ID_INT = @IdUsuario;
 			END;
-
 		ELSE
-
 			BEGIN
+				SELECT		@IdUsuario = U.USU_ID_INT
+				FROM		FUNCIONARIO	AS F
+				INNER JOIN	USUARIO		AS U ON F.FUNC_USU_ID_INT = U.USU_ID_INT
+				WHERE		F.FUNC_CPF_CHAR = @Cpf;
 
-				SET @Mensagem = 'Usuário encontrado.'
-
-				SET @Codigo = 200;
-
+				IF @IdUsuario IS NOT NULL
+				BEGIN
+					SELECT	 @Cpf AS CPF
+							,PERG_SEG_PERGUNTA_STR
+							,PERG_SEG_RESPOSTA_STR
+					FROM	PERGUNTA_SEGURANCA
+					WHERE	PERG_SEG_USU_ID_INT = @IdUsuario;
+				END;
 			END;
+
 /*************************************************************************************************************************************
 FIM: Validação dos dados de entrada.
 *************************************************************************************************************************************/
-
-		SELECT @Codigo AS Codigo, @Mensagem AS Mensagem;
 
 	END;
 GO

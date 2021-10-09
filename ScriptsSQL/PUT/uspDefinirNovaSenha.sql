@@ -5,6 +5,7 @@ ALTER PROCEDURE [dbo].[uspDefinirNovaSenha]
 	 @Cpf				nchar(11)
 	,@NovaSenha			nvarchar(200)
 	,@RepeticaoSenha	nvarchar(200)
+	,@Json				nvarchar(max)
 AS
 	BEGIN
 /*************************************************************************************************************************************
@@ -16,8 +17,35 @@ Data.....: 23/09/2021
 Declaração de variáveis:
 *************************************************************************************************************************************/
 		DECLARE @Mensagem	nvarchar(max);
+		DECLARE @Entidade	nvarchar(50);
+		DECLARE @Acao		nvarchar(50);
 		DECLARE @Codigo		int;
 		DECLARE @IdUsuario	int;
+
+
+/*************************************************************************************************************************************
+INÍCIO: Gravando log de início de análise:
+*************************************************************************************************************************************/
+		SET @Codigo	  = 0;
+		
+		SET @Mensagem = 'Início da análise para atualização de senha.';
+		
+		SET @Entidade = 'Usuário';
+
+		SET @Acao	  = 'Atualizar';
+
+		EXEC [dbo].[uspGravarLog]
+		@Json		= @Json,
+		@Entidade	= @Entidade,
+		@Mensagem	= @Mensagem,
+		@Acao		= @Acao,
+		@StatusCode	= @Codigo;
+
+		SET @Mensagem = NULL;
+/*************************************************************************************************************************************
+FIM: Gravando log de início de análise.
+*************************************************************************************************************************************/
+
 
 /*************************************************************************************************************************************
 SELECT principal que atribui valor às variáveis:
@@ -77,15 +105,27 @@ INÍCIO: Validação dos dados de entrada:
 
 								SELECT @Codigo = ERROR_NUMBER(), @Mensagem = ERROR_MESSAGE();
 
+								EXEC [dbo].[uspGravarLog]
+								@Json		= @Json,
+								@Entidade	= @Entidade,
+								@Mensagem	= @Mensagem,
+								@Acao		= @Acao,
+								@StatusCode	= @Codigo;
+
 							END CATCH;
 
 						IF @@TRANCOUNT > 0
 							COMMIT TRANSACTION;
 
-
 						SET @Mensagem = 'Senha atualizada com sucesso.';
-
 						SET @Codigo = 200;
+
+						EXEC [dbo].[uspGravarLog]
+						@Json		= @Json,
+						@Entidade	= @Entidade,
+						@Mensagem	= @Mensagem,
+						@Acao		= @Acao,
+						@StatusCode	= @Codigo;
 
 					END;
 					/*****************************************************************************************************************
@@ -97,8 +137,14 @@ INÍCIO: Validação dos dados de entrada:
 					BEGIN
 
 						SET @Mensagem = 'As senhas informadas não correspondem.';
-
 						SET @Codigo = 422;
+
+						EXEC [dbo].[uspGravarLog]
+						@Json		= @Json,
+						@Entidade	= @Entidade,
+						@Mensagem	= @Mensagem,
+						@Acao		= @Acao,
+						@StatusCode	= @Codigo;
 
 					END;
 
@@ -109,8 +155,14 @@ INÍCIO: Validação dos dados de entrada:
 			BEGIN
 
 				SET @Mensagem = 'Usuário não encontrado no sistema. Por favor, contatar o Suporte.'
-
 				SET @Codigo = 404;
+
+				EXEC [dbo].[uspGravarLog]
+				@Json		= @Json,
+				@Entidade	= @Entidade,
+				@Mensagem	= @Mensagem,
+				@Acao		= @Acao,
+				@StatusCode	= @Codigo;
 
 			END;
 /*************************************************************************************************************************************
