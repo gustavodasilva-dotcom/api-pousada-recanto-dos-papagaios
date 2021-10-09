@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 {
-    public class RequiredIfAttribute : ValidationAttribute
+    public class SenhaValidacaoAttribute : ValidationAttribute
     {
-        public RequiredIfAttribute() { }
+        public SenhaValidacaoAttribute () { }
 
         public override bool IsValid(object value)
         {
@@ -12,8 +13,10 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 
             if (input != "")
             {
-                if ((input.Length < 10) || (input.Length > 12))
+                if (!Regex.IsMatch(input, "'%[a-z][A-Z][0-9]%'"))
+                {
                     return false;
+                }
             }
 
             return true;

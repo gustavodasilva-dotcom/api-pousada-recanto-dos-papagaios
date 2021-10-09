@@ -1,5 +1,4 @@
 ﻿using ApiPousadaRecantoDosPapagaios.CustomDataAnnotations;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
@@ -15,9 +14,9 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         public string Cpf { get; set; }
 
         [Required]
-        [DataType(DataType.Date, ErrorMessage = "O dado inserido não corresponde a uma data.")]
+        [DataValidacao(ErrorMessage = "O dado informado não procede como uma data.")]
         [MaiorDeIdade(ErrorMessage = "O hóspede deve ser maior de idade.")]
-        public DateTime DataDeNascimento { get; set; }
+        public string DataDeNascimento { get; set; }
 
         public UsuarioInputModel Usuario { get; set; }
 

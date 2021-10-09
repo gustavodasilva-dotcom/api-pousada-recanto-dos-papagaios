@@ -4,6 +4,7 @@ using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -97,13 +98,50 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
+        public async Task<HospedeViewModel> Obter(string cpf)
+        {
+            var hospede = await _hospedeRepository.Obter(cpf);
+
+            if (hospede == null)
+                throw new NaoEncontradoException();
+
+            return new HospedeViewModel
+            {
+                Id = hospede.Id,
+                NomeCompleto = hospede.NomeCompleto,
+                Cpf = hospede.Cpf,
+                DataDeNascimento = hospede.DataDeNascimento,
+                Usuario = new UsuarioViewModel
+                {
+                    NomeUsuario = hospede.Usuario.NomeUsuario
+                },
+                Contatos = new ContatosViewModel
+                {
+                    Email = hospede.Contatos.Email,
+                    Celular = hospede.Contatos.Celular,
+                    Telefone = hospede.Contatos.Telefone
+                },
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = hospede.Endereco.Cep,
+                    Logradouro = hospede.Endereco.Logradouro,
+                    Numero = hospede.Endereco.Numero,
+                    Complemento = hospede.Endereco.Complemento,
+                    Bairro = hospede.Endereco.Bairro,
+                    Cidade = hospede.Endereco.Cidade,
+                    Estado = hospede.Endereco.Estado,
+                    Pais = hospede.Endereco.Pais
+                }
+            };
+        }
+
         public async Task<RetornoViewModel> Inserir(HospedeInputModel hospede)
         {
             var hospedeInsert = new Hospede
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = hospede.DataDeNascimento,
+                DataDeNascimento = Convert.ToDateTime(hospede.DataDeNascimento),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,
@@ -145,7 +183,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = hospede.DataDeNascimento,
+                DataDeNascimento = Convert.ToDateTime(hospede.DataDeNascimento),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,

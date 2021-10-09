@@ -11,6 +11,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Hospede> Obter(int idHospede);
 
+        Task<Hospede> Obter(string cpf);
+
         Task<Retorno> Inserir(Hospede hospede, string json);
 
         Task<Retorno> Atualizar(int idHospede, Hospede hospede, string json);

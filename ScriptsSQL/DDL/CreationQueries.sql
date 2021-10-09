@@ -106,7 +106,7 @@ CREATE TABLE CONTATOS
 (
 	CONT_ID_INT					INT				NOT NULL IDENTITY(10000001, 1),
 	CONT_EMAIL_STR				VARCHAR(50)		NOT NULL,
-	CONT_CELULAR_CHAR			CHAR(13)		NOT NULL,
+	CONT_CELULAR_CHAR			CHAR(13),
 	CONT_TELEFONE_CHAR			CHAR(12),
 	CONT_EXCLUIDO_BIT			BIT				NOT NULL,
 	CONT_DATA_CADASTRO_DATETIME	DATETIME		NOT NULL
@@ -114,7 +114,6 @@ CREATE TABLE CONTATOS
 	--PK
 	CONSTRAINT PK_CONT_ID_INT PRIMARY KEY (CONT_ID_INT)
 )
-
 
 
 /****************************************************************************************************************************************
