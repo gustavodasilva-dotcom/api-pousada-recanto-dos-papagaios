@@ -4,6 +4,8 @@ using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -38,6 +40,32 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             catch (Exception)
             {
                 return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
+        }
+
+        [HttpGet("{cpf}")]
+        public async Task<ActionResult<IEnumerable<ReservaViewModel>>> Obter([FromRoute] string cpf)
+        {
+            if (cpf.Length != 11)
+                return BadRequest();
+
+            if (!Regex.IsMatch(cpf, @"^\d+$"))
+                return BadRequest();
+
+            try
+            {
+                var reserva = await _reservaService.Obter(cpf);
+
+                return Ok(reserva);
+            }
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
+                //return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 

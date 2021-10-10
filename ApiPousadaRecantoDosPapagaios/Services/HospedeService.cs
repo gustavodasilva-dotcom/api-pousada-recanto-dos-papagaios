@@ -141,7 +141,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = Convert.ToDateTime(hospede.DataDeNascimento),
+                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-ddTHH:mm:ss", null),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,
@@ -183,7 +183,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = Convert.ToDateTime(hospede.DataDeNascimento),
+                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,

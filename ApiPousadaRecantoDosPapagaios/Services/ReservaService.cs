@@ -6,6 +6,8 @@ using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Services
@@ -86,6 +88,71 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     }
                 }
             };
+        }
+
+        public async Task<List<ReservaViewModel>> Obter(string cpf)
+        {
+            var reserva = await _reservaRepository.Obter(cpf);
+
+            if (reserva.Count == 0)
+                throw new NaoEncontradoException();
+
+            return reserva.Select(r => new ReservaViewModel
+            {
+                Id = r.Id,
+                DataReserva = r.DataReserva,
+                DataCheckIn = r.DataCheckIn,
+                DataCheckOut = r.DataCheckOut,
+                Acompanhantes = r.Acompanhantes,
+                PrecoUnitario = r.PrecoUnitario,
+                PrecoTotal = r.PrecoTotal,
+                StatusReserva = new StatusReservaViewModel
+                {
+                    Id = r.StatusReserva.Id,
+                    Descricao = r.StatusReserva.Descricao
+                },
+                Hospede = new HospedeReservaViewModel
+                {
+                    Id = r.Hospede.Id,
+                    NomeCompleto = r.Hospede.NomeCompleto,
+                    Cpf = r.Hospede.Cpf
+                },
+                Acomodacao = new AcomodacaoViewModel
+                {
+                    Id = r.Acomodacao.Id,
+                    Nome = r.Acomodacao.Nome,
+                    StatusAcomodacao = new StatusAcomodacaoViewModel
+                    {
+                        Id = r.Acomodacao.StatusAcomodacao.Id,
+                        Descricao = r.Acomodacao.StatusAcomodacao.Descricao
+                    },
+                    InformacoesAcomodacao = new InformacoesAcomodacaoViewModel
+                    {
+                        MetrosQuadrados = r.Acomodacao.InformacoesAcomodacao.MetrosQuadrados,
+                        Capacidade = r.Acomodacao.InformacoesAcomodacao.Capacidade,
+                        TipoDeCama = r.Acomodacao.InformacoesAcomodacao.TipoDeCama,
+                        Preco = r.Acomodacao.InformacoesAcomodacao.Preco
+                    },
+                    CategoriaAcomodacao = new CategoriaAcomodacaoViewModel
+                    {
+                        Id = r.Acomodacao.CategoriaAcomodacao.Id,
+                        Descricao = r.Acomodacao.CategoriaAcomodacao.Descricao
+                    }
+                },
+                Pagamento = new PagamentoViewModel
+                {
+                    TipoPagamento = new TipoPagamentoViewModel
+                    {
+                        Id = r.Pagamento.TipoPagamento.Id,
+                        Descricao = r.Pagamento.TipoPagamento.Descricao
+                    },
+                    StatusPagamento = new StatusPagamentoViewModel
+                    {
+                        Id = r.Pagamento.StatusPagamento.Id,
+                        Descricao = r.Pagamento.StatusPagamento.Descricao
+                    }
+                }
+            }).ToList();
         }
 
         public async Task<RetornoViewModel> Inserir(ReservaInputModel reservaInputModel)

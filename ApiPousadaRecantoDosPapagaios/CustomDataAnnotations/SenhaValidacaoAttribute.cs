@@ -11,7 +11,7 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
         {
             var input = (string)value;
 
-            if (input != "")
+            if (input != "" || input == null)
             {
                 if (!Regex.IsMatch(input, "'%[a-z][A-Z][0-9]%'"))
                 {
