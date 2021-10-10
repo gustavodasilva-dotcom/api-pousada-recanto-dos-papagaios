@@ -20,13 +20,13 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
-        public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] LoginInputModel login) 
+        public async Task<ActionResult<LoginViewModel>> Inserir([FromBody] LoginInputModel login) 
         {
             try
             {
                 var retorno = await _loginService.FazerLogin(login);
 
-                return StatusCode(retorno.StatusCode, retorno);
+                return StatusCode(retorno.Retorno.StatusCode, retorno);
             }
             catch (Exception)
             {

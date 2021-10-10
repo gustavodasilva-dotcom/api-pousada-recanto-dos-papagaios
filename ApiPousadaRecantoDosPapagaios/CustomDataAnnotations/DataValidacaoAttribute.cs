@@ -16,6 +16,15 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
                 return false;
             }
 
+            try
+            {
+                var dataValida = DateTime.ParseExact(dtEntrada, "yyyy-MM-dd HH:mm:ssZ", null);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
             return true;
         }
     }

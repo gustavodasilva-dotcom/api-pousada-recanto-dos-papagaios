@@ -5,7 +5,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 {
     public interface ILoginRepository
     {
-        Task<Retorno> FazerLogin(Login login, string json);
+        Task<Login> FazerLogin(Login login, string json);
 
         Task<PerguntaDeSeguranca> PerguntaSeguranca(string cpf);
 

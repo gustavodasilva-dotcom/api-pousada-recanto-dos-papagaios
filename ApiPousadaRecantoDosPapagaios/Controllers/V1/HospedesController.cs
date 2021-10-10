@@ -117,10 +117,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
 
                 return StatusCode(hospede.StatusCode, hospede);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, e.Message);
-                //return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
             }
         }
 

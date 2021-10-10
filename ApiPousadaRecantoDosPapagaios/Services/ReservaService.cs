@@ -159,8 +159,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             var reservaInsert = new Reserva
             {
-                DataCheckIn = reservaInputModel.DataCheckIn,
-                DataCheckOut = reservaInputModel.DataCheckOut,
+                DataCheckIn = DateTime.ParseExact(reservaInputModel.DataCheckIn, "yyyy-MM-dd HH:mm:ssZ", null),
+                DataCheckOut = DateTime.ParseExact(reservaInputModel.DataCheckOut, "yyyy-MM-dd HH:mm:ssZ", null),
                 Hospede = new Hospede
                 {
                     Id = reservaInputModel.IdHospede

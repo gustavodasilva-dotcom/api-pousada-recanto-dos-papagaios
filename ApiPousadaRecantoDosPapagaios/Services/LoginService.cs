@@ -22,9 +22,9 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             _json = new Json();
         }
 
-        public async Task<RetornoViewModel> FazerLogin(LoginInputModel loginInput)
+        public async Task<LoginViewModel> FazerLogin(LoginInputModel loginInput)
         {
-            Retorno retorno;
+            Login loginRetorno;
 
             try
             {
@@ -36,17 +36,23 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
                 var json = _json.ConverterModelParaJson(loginInput);
 
-                retorno = await _loginRepository.FazerLogin(login, json);
+                loginRetorno = await _loginRepository.FazerLogin(login, json);
             }
             catch (Exception)
             {
                 throw;
             }
 
-            return new RetornoViewModel
+            return new LoginViewModel
             {
-                StatusCode = retorno.StatusCode,
-                Mensagem = retorno.Mensagem
+                Retorno = new RetornoViewModel
+                {
+                    StatusCode = loginRetorno.Retorno.StatusCode,
+                    Mensagem = loginRetorno.Retorno.Mensagem
+                },
+                IdUsuario = loginRetorno.Id,
+                NomeDeUsuario = loginRetorno.NomeUsuario,
+                Cpf = loginRetorno.Cpf
             };
         }
 

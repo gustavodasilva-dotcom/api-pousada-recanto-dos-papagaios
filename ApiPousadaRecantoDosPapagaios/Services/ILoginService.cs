@@ -6,7 +6,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 {
     public interface ILoginService
     {
-        Task<RetornoViewModel> FazerLogin(LoginInputModel loginInput);
+        Task<LoginViewModel> FazerLogin(LoginInputModel loginInput);
 
         Task<PerguntaDeSegurancaViewModel> PerguntaSeguranca(string cpf);
 

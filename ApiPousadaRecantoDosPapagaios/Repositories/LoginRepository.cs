@@ -16,14 +16,12 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             _sqlConnection = new SqlConnection(configuration.GetConnectionString("Default"));
         }
 
-        public async Task<Retorno> FazerLogin(Login login, string json)
+        public async Task<Login> FazerLogin(Login login, string json)
         {
             #region SQL
 
-            var dataTable = new DataTable();
-
-            var retorno = new Retorno();
-
+            var loginRetorno = new Login();
+            
             var procedure = @"[RECPAPAGAIOS].[dbo].[uspFazerLogin]";
 
             SqlCommand sqlCommand = new SqlCommand(procedure, _sqlConnection);
@@ -38,12 +36,22 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             {
                 await _sqlConnection.OpenAsync();
 
-                var adapter = new SqlDataAdapter(sqlCommand);
+                SqlDataReader reader = await sqlCommand.ExecuteReaderAsync();
 
-                adapter.Fill(dataTable);
-
-                retorno.StatusCode = (int)dataTable.Rows[0]["Codigo"];
-                retorno.Mensagem = dataTable.Rows[0]["Mensagem"].ToString();
+                while (reader.Read())
+                {
+                    loginRetorno = new Login()
+                    {
+                        Retorno = new Retorno
+                        {
+                            StatusCode = (int)reader["Codigo"],
+                            Mensagem = (string)reader["Mensagem"]
+                        },
+                        Id = (int)reader["Id"],
+                        NomeUsuario = (string)reader["Usuario"],
+                        Cpf = (string)reader["Cpf"]
+                    };
+                }
             }
             catch (Exception)
             {
@@ -56,7 +64,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
             #endregion SQL
 
-            return retorno;
+            return loginRetorno;
         }
 
         public async Task<Retorno> DenificaoSenha(DefinicaoSenha definicaoSenha, string json)

@@ -16,6 +16,8 @@ Data.....: 22/09/2021
 Declaração de variáveis:
 *************************************************************************************************************************************/
 		DECLARE	@Codigo					int;
+		DECLARE @IdCadastrado			int;
+		DECLARE @CpfCadastrado			nchar(11);
 		DECLARE @NomeUsuarioCadastrado	nvarchar(45);
 		DECLARE @Mensagem				nvarchar(255);
 		DECLARE @SenhaCadastrada		nvarchar(200);
@@ -50,7 +52,9 @@ Atribuindo valores às variáveis:
 *************************************************************************************************************************************/
 		SET @Codigo = 0
 
-		SELECT		 @NomeUsuarioCadastrado = USU_NOME_USUARIO_STR
+		SELECT		 @IdCadastrado			= F.FUNC_ID_INT
+					,@NomeUsuarioCadastrado = USU_NOME_USUARIO_STR
+					,@CpfCadastrado			= F.FUNC_CPF_CHAR
 					,@SenhaCadastrada		= CAST(DECRYPTBYPASSPHRASE('key', USU_SENHA_STR) AS NVARCHAR)
 		FROM		USUARIO		AS U
 		INNER JOIN	FUNCIONARIO AS F ON U.USU_ID_INT = F.FUNC_USU_ID_INT
@@ -59,7 +63,9 @@ Atribuindo valores às variáveis:
 
 		IF @NomeUsuarioCadastrado IS NULL
 		BEGIN
-			SELECT		 @NomeUsuarioCadastrado = USU_NOME_USUARIO_STR
+			SELECT		 @IdCadastrado			= F.HSP_ID_INT
+						,@NomeUsuarioCadastrado = USU_NOME_USUARIO_STR
+						,@CpfCadastrado			= F.HSP_CPF_CHAR
 						,@SenhaCadastrada		= CAST(DECRYPTBYPASSPHRASE('key', USU_SENHA_STR) AS NVARCHAR)
 			FROM		USUARIO	AS U
 			INNER JOIN	HOSPEDE AS F ON U.USU_ID_INT = F.HSP_USU_ID_INT
@@ -116,7 +122,20 @@ INÍCIO: Validando os dados para liberar acesso:
 			@StatusCode	= @Codigo;
 		END;
 
-		SELECT @Codigo AS Codigo, @Mensagem AS Mensagem;
+		SELECT	@Codigo					AS Codigo,
+				@Mensagem				AS Mensagem,
+				CASE
+					WHEN @IdCadastrado IS NULL THEN 0
+					ELSE @IdCadastrado
+				END AS Id,
+				CASE
+					WHEN @NomeUsuarioCadastrado IS NULL THEN 'Não encontrado'
+					ELSE @NomeUsuarioCadastrado
+				END AS Usuario,
+				CASE
+					WHEN @CpfCadastrado IS NULL THEN 'Não encontrado'
+					ELSE @CpfCadastrado
+				END AS Cpf;
 /*************************************************************************************************************************************
 FIM: Validando os dados para liberar acesso.
 *************************************************************************************************************************************/

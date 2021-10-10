@@ -141,7 +141,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-ddTHH:mm:ss", null),
+                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,
