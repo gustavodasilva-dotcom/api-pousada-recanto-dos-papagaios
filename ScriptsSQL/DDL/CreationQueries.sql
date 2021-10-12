@@ -1,4 +1,11 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------- CRIAÇÃO DO BANCO DE DADOS ---------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE DATABASE RECPAPAGAIOS;
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- CRIAÇÃO DAS TABELAS ------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -106,7 +113,7 @@ CREATE TABLE CONTATOS
 (
 	CONT_ID_INT					INT				NOT NULL IDENTITY(10000001, 1),
 	CONT_EMAIL_STR				VARCHAR(50)		NOT NULL,
-	CONT_CELULAR_CHAR			CHAR(13)		NOT NULL,
+	CONT_CELULAR_CHAR			CHAR(13),
 	CONT_TELEFONE_CHAR			CHAR(12),
 	CONT_EXCLUIDO_BIT			BIT				NOT NULL,
 	CONT_DATA_CADASTRO_DATETIME	DATETIME		NOT NULL
@@ -114,7 +121,6 @@ CREATE TABLE CONTATOS
 	--PK
 	CONSTRAINT PK_CONT_ID_INT PRIMARY KEY (CONT_ID_INT)
 )
-
 
 
 /****************************************************************************************************************************************
@@ -379,16 +385,16 @@ CREATE TABLE ACOMODACAO
 	REFERENCES STATUS_ACOMODACAO(ST_ACOMOD_ID_INT)
 );
 
-EXEC uspCriarAcomodacao 'Chale 1'	, 1;
-EXEC uspCriarAcomodacao 'Chale 2'	, 1;
-EXEC uspCriarAcomodacao 'Chale 3'	, 1;
-EXEC uspCriarAcomodacao 'Chale 4'	, 1;
-EXEC uspCriarAcomodacao 'Chale 5'	, 1;
-EXEC uspCriarAcomodacao 'Chale 6'	, 1;
-EXEC uspCriarAcomodacao 'Chale 7'	, 2;
-EXEC uspCriarAcomodacao 'Chale 8'	, 2;
-EXEC uspCriarAcomodacao 'Chale 9'	, 3;
-EXEC uspCriarAcomodacao 'Chale 10'	, 3;
+EXEC uspCriarAcomodacao 'Chalé 1'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 2'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 3'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 4'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 5'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 6'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 7'	, 2;
+EXEC uspCriarAcomodacao 'Chalé 8'	, 2;
+EXEC uspCriarAcomodacao 'Chalé 9'	, 3;
+EXEC uspCriarAcomodacao 'Chalé 10'	, 3;
 
 
 
@@ -668,7 +674,7 @@ CREATE TABLE LOGSINTEGRACOES
 (
 	 LOG_INTE_ID_INT			INT				NOT NULL IDENTITY(10000001, 1)
 	,LOG_INTE_ENTIDADE_STR		VARCHAR(50)		NOT NULL
-	,LOG_INTE_JSON_STR			VARCHAR(600)	NOT NULL
+	,LOG_INTE_JSON_STR			VARCHAR(MAX)	NOT NULL
 	,LOG_INTE_MENSAGEM_STR		VARCHAR(600)	NOT NULL
 	,LOG_INTE_ACAO_STR			VARCHAR(50)		NOT NULL
 	,LOG_INTE_STATUSCODE_INT	INT				NOT NULL

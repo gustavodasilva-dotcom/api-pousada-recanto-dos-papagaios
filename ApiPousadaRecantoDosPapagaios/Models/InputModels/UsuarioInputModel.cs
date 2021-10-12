@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ApiPousadaRecantoDosPapagaios.CustomDataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
 {
@@ -6,7 +6,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
     {
         public string NomeUsuario { get; set; }
 
-        [DataType(DataType.Password)]
+        [SenhaValidacao(ErrorMessage = "A senha deve conter, no mínimo, um caracter maiúsculo, um minusculo e um número.")]
         public string SenhaUsuario { get; set; }
     }
 }

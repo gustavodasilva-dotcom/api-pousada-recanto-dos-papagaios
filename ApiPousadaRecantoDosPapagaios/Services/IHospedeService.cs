@@ -11,9 +11,12 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         Task<HospedeViewModel> Obter(int idHospede);
 
+        Task<HospedeViewModel> Obter(string cpf);
+
         Task<RetornoViewModel> Inserir(HospedeInputModel hospede);
 
         Task<RetornoViewModel> Atualizar(int idHospede, HospedeInputModel hospede);
+
         Task<RetornoViewModel> Remover(int idHospede);
     }
 }

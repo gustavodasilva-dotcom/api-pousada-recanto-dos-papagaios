@@ -1,4 +1,6 @@
-﻿namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
+﻿using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
+
+namespace ApiPousadaRecantoDosPapagaios.Models.ViewModels
 {
     public class AcomodacaoViewModel
     {

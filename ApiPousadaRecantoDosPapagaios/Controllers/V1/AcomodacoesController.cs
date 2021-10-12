@@ -40,7 +40,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{idAcomodacao:int}")]
-        public async Task<ActionResult<AcomodacaoViewModel>> Obter([FromRoute] int idAcomodacao)
+        public async Task<ActionResult<AcomodacaoUnitariaViewModel>> Obter([FromRoute] int idAcomodacao)
         {
             try
             {

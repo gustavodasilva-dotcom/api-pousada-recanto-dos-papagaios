@@ -5,6 +5,7 @@ using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers
@@ -51,6 +52,31 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers
             try
             {
                 var hospede = await _hospedeService.Obter(idHospede);
+
+                return Ok(hospede);
+            }
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
+        }
+
+        [HttpGet("{cpf}")]
+        public async Task<ActionResult<HospedeViewModel>> Obter([FromRoute] string cpf)
+        {
+            if (cpf.Length != 11)
+                return BadRequest();
+
+            if (!Regex.IsMatch(cpf, @"^\d+$"))
+                return BadRequest();
+
+            try
+            {
+                var hospede = await _hospedeService.Obter(cpf);
 
                 return Ok(hospede);
             }

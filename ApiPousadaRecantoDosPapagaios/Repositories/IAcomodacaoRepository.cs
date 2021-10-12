@@ -9,6 +9,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
     {
         Task<List<Acomodacao>> Obter();
 
-        Task<Acomodacao> Obter(int idAcomodacao);
+        Task<AcomodacaoUnitaria> Obter(int idAcomodacao);
+
+        Task<List<ReservaResumida>> ObterProximasReservas(int idAcomodacao);
     }
 }

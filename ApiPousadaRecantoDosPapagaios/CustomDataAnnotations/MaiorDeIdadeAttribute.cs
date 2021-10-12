@@ -9,9 +9,18 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 
         public override bool IsValid(object value)
         {
-            var dt = (DateTime)value;
+            var dtEntrada = (string)value;
 
-            if (dt >= DateTime.Now.AddYears(-18))
+            if (DateTime.TryParse(dtEntrada, out _))
+            {
+                var dtAniversario = Convert.ToDateTime(dtEntrada);
+
+                if (dtAniversario >= DateTime.Now.AddYears(-18))
+                {
+                    return false;
+                }
+            }
+            else
             {
                 return false;
             }

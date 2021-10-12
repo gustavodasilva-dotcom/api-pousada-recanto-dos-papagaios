@@ -57,10 +57,19 @@ INÍCIO: Obter lista de hóspedes, com base na quantidade e páginas providas pela 
 									,H.HSP_NOME_STR
 									,H.HSP_CPF_CHAR
 									,H.HSP_DTNASC_DATE
-									,U.USU_NOME_USUARIO_STR
+
+									,CASE
+										WHEN U.USU_NOME_USUARIO_STR IS NULL OR U.USU_NOME_USUARIO_STR = ''
+											THEN 'Sem nome de usuário'
+										ELSE U.USU_NOME_USUARIO_STR
+									 END AS USU_NOME_USUARIO_STR
+									
+									
 									,C.CONT_EMAIL_STR
 							
 									,CASE
+										WHEN (C.CONT_TELEFONE_CHAR IS NULL OR C.CONT_TELEFONE_CHAR = '')
+											THEN 'Sem celular'
 										WHEN LEN(C.CONT_CELULAR_CHAR) = 13
 											THEN '+'									+
 												 SUBSTRING(C.CONT_CELULAR_CHAR, 1, 2)	+
@@ -105,7 +114,7 @@ INÍCIO: Obter lista de hóspedes, com base na quantidade e páginas providas pela 
 									,E.END_ESTADO_CHAR
 									,E.END_PAIS_STR
 						FROM		HOSPEDE		AS H
-						INNER JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
+						LEFT JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
 						INNER JOIN	CONTATOS	AS C ON H.HSP_CONT_ID_INT	= C.CONT_ID_INT
 						INNER JOIN	ENDERECO	AS E ON H.HSP_END_ID_INT	= E.END_ID_INT
 						WHERE		H.HSP_EXCLUIDO_BIT = 0
@@ -152,10 +161,18 @@ INÍCIO: Obter lista de hóspedes, com base na quantidade e páginas providas pela 
 									,H.HSP_NOME_STR
 									,H.HSP_CPF_CHAR
 									,H.HSP_DTNASC_DATE
-									,U.USU_NOME_USUARIO_STR
+
+									,CASE
+										WHEN U.USU_NOME_USUARIO_STR IS NULL OR U.USU_NOME_USUARIO_STR = ''
+											THEN 'Sem nome de usuário'
+										ELSE U.USU_NOME_USUARIO_STR
+									 END AS USU_NOME_USUARIO_STR
+									
 									,C.CONT_EMAIL_STR
 							
 									,CASE
+										WHEN (C.CONT_TELEFONE_CHAR IS NULL OR C.CONT_TELEFONE_CHAR = '')
+											THEN 'Sem telefone'
 										WHEN LEN(C.CONT_CELULAR_CHAR) = 13
 											THEN '+'									+
 												 SUBSTRING(C.CONT_CELULAR_CHAR, 1, 2)	+
@@ -200,7 +217,7 @@ INÍCIO: Obter lista de hóspedes, com base na quantidade e páginas providas pela 
 									,E.END_ESTADO_CHAR
 									,E.END_PAIS_STR
 						FROM		HOSPEDE		AS H
-						INNER JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
+						LEFT JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
 						INNER JOIN	CONTATOS	AS C ON H.HSP_CONT_ID_INT	= C.CONT_ID_INT
 						INNER JOIN	ENDERECO	AS E ON H.HSP_END_ID_INT	= E.END_ID_INT
 						WHERE		H.HSP_EXCLUIDO_BIT = 0
@@ -256,10 +273,18 @@ INÍCIO: Obter um hóspedes através do CPF:
 							,H.HSP_NOME_STR
 							,H.HSP_CPF_CHAR
 							,H.HSP_DTNASC_DATE
-							,U.USU_NOME_USUARIO_STR
+
+							,CASE
+								WHEN U.USU_NOME_USUARIO_STR IS NULL OR U.USU_NOME_USUARIO_STR = ''
+									THEN 'Sem nome de usuário'
+								ELSE U.USU_NOME_USUARIO_STR
+							 END AS USU_NOME_USUARIO_STR
+							
 							,C.CONT_EMAIL_STR
 							
 							,CASE
+								WHEN (C.CONT_TELEFONE_CHAR IS NULL OR C.CONT_TELEFONE_CHAR = '')
+									THEN 'Sem telefone'
 								WHEN LEN(C.CONT_CELULAR_CHAR) = 13
 									THEN '+'									+
 										 SUBSTRING(C.CONT_CELULAR_CHAR, 1, 2)	+
@@ -304,7 +329,7 @@ INÍCIO: Obter um hóspedes através do CPF:
 							,E.END_ESTADO_CHAR
 							,E.END_PAIS_STR
 				FROM		HOSPEDE		AS H
-				INNER JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
+				LEFT JOIN	USUARIO		AS U ON H.HSP_USU_ID_INT	= U.USU_ID_INT
 				INNER JOIN	CONTATOS	AS C ON H.HSP_CONT_ID_INT	= C.CONT_ID_INT
 				INNER JOIN	ENDERECO	AS E ON H.HSP_END_ID_INT	= E.END_ID_INT
 				WHERE		H.HSP_EXCLUIDO_BIT = 0

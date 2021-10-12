@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiPousadaRecantoDosPapagaios.CustomDataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
@@ -15,13 +16,13 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         [Range(1, 6, ErrorMessage = "O id do pagamento deve estar entre 1 e 6.")]
         public int IdPagamento { get; set; }
 
-        [DataType(DataType.Date, ErrorMessage = "O dado inserido não corresponde a uma data.")]
-        public DateTime DataCheckIn { get; set; }
+        [DataValidacao(ErrorMessage = "O dado informado não corresponde a uma data.")]
+        public string DataCheckIn { get; set; }
 
-        [DataType(DataType.Date, ErrorMessage = "O dado inserido não corresponde a uma data.")]
-        public DateTime DataCheckOut { get; set; }        
+        [DataValidacao(ErrorMessage = "O dado informado não corresponde a uma data.")]
+        public string DataCheckOut { get; set; }        
 
-        [Range(0, 3, ErrorMessage = "O id do pagamento deve estar entre 1 e 6.")]
+        //[Range(0, 3, ErrorMessage = "O id do pagamento deve estar entre 1 e 6.")]
         public int Acompanhantes { get; set; }
     }
 }

@@ -1,7 +1,8 @@
-﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
+﻿using ApiPousadaRecantoDosPapagaios.Entities;
+using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
+using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,14 +46,14 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             }).ToList();
         }
 
-        public async Task<AcomodacaoViewModel> Obter(int idAcomodacao)
+        public async Task<AcomodacaoUnitariaViewModel> Obter(int idAcomodacao)
         {
             var acomodacao = await _acomodacaoRepository.Obter(idAcomodacao);
 
             if (acomodacao == null)
                 throw new NaoEncontradoException();
 
-            return new AcomodacaoViewModel
+            var retorno = new AcomodacaoUnitariaViewModel
             {
                 Id = acomodacao.Id,
                 Nome = acomodacao.Nome,
@@ -72,8 +73,35 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                 {
                     Id = acomodacao.CategoriaAcomodacao.Id,
                     Descricao = acomodacao.CategoriaAcomodacao.Descricao
-                }
+                },
             };
+
+            var r = await _acomodacaoRepository.ObterProximasReservas(acomodacao.Id);
+
+            if (r.Count > 0)
+            {
+                var proximasReservas = new List<ReservaResumidaViewModel>();
+
+                foreach (ReservaResumida reserva in r)
+                {
+                    proximasReservas.Add(new ReservaResumidaViewModel
+                    {
+                        idReserva = reserva.idReserva,
+                        DataCheckIn = reserva.DataCheckIn,
+                        DataCheckOut = reserva.DataCheckOut,
+                        Hospede = new HospedeReservaViewModel
+                        {
+                            Id = reserva.Hospede.Id,
+                            NomeCompleto = reserva.Hospede.NomeCompleto,
+                            Cpf = reserva.Hospede.Cpf
+                        }
+                    });
+                }
+
+                retorno.ProximasReservas = proximasReservas;
+            }
+
+            return retorno;
         }
     }
 }

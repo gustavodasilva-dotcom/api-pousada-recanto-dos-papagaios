@@ -150,19 +150,19 @@ Verificando se é possível encontrar registros com as chaves-estrangeiras obtidas
 				@StatusCode	= @Codigo;
 			END
 
-			IF (SELECT 1 FROM USUARIO WHERE USU_ID_INT = @IdUsuarios AND USU_EXCLUIDO_BIT = 0) IS NULL
-			BEGIN
-				SET @Codigo = 404;
-				SET @Mensagem = 'Não existe nenhum registro de dados de usuário cadastrados para o hóspede informado.';
+			--IF (SELECT 1 FROM USUARIO WHERE USU_ID_INT = @IdUsuarios AND USU_EXCLUIDO_BIT = 0) IS NULL
+			--BEGIN
+			--	SET @Codigo = 404;
+			--	SET @Mensagem = 'Não existe nenhum registro de dados de usuário cadastrados para o hóspede informado.';
 				
-				EXEC [dbo].[uspGravarLog]
-				@Json		= @HospedeJson,
-				@Entidade	= @Entidade,
-				@Mensagem	= @Mensagem,
-				@Acao		= @Acao,
-				@IdCadastro	= @IdHospedeRota,
-				@StatusCode	= @Codigo;
-			END
+			--	EXEC [dbo].[uspGravarLog]
+			--	@Json		= @HospedeJson,
+			--	@Entidade	= @Entidade,
+			--	@Mensagem	= @Mensagem,
+			--	@Acao		= @Acao,
+			--	@IdCadastro	= @IdHospedeRota,
+			--	@StatusCode	= @Codigo;
+			--END
 
 			IF (SELECT 1 FROM CONTATOS WHERE CONT_ID_INT = @IdContatos AND CONT_EXCLUIDO_BIT = 0) IS NULL
 			BEGIN
@@ -315,61 +315,66 @@ FIM: Atualizando na tabela ENDERECO.
 /*************************************************************************************************************************************
 INÍCIO: Atualizando na tabela USUARIO.
 *************************************************************************************************************************************/
-			IF @Mensagem IS NULL
+			IF @Mensagem IS NULL AND @IdUsuarios IS NOT NULL
 			BEGIN
 
-				BEGIN TRANSACTION;
+				IF @NomeUsuario <> '' AND @Senha <> ''
+				BEGIN
+
+					BEGIN TRANSACTION;
 		
-				BEGIN TRY
+						BEGIN TRY
 
-					UPDATE	USUARIO
-					SET
-							USU_LOGIN_CPF_CHAR	 = @Cpf,
-							USU_NOME_USUARIO_STR = @NomeUsuario,
-							USU_SENHA_STR		 = ENCRYPTBYPASSPHRASE('key', @Senha)
-					WHERE	USU_ID_INT = @IdUsuarios;
+							UPDATE	USUARIO
+							SET
+									USU_LOGIN_CPF_CHAR	 = @Cpf,
+									USU_NOME_USUARIO_STR = @NomeUsuario,
+									USU_SENHA_STR		 = ENCRYPTBYPASSPHRASE('key', @Senha)
+							WHERE	USU_ID_INT = @IdUsuarios;
 
-				END TRY
+						END TRY
 
-				BEGIN CATCH
+						BEGIN CATCH
 
-					INSERT INTO LOGSERROS
-					(
-						 LOG_ERR_ERRORNUMBER_INT
-						,LOG_ERR_ERRORSEVERITY_INT
-						,LOG_ERR_ERRORSTATE_INT
-						,LOG_ERR_ERRORPROCEDURE_VARCHAR
-						,LOG_ERR_ERRORLINE_INT
-						,LOG_ERR_ERRORMESSAGE_VARCHAR
-						,LOG_ERR_DATE
-					)
-					SELECT
-						 ERROR_NUMBER()
-						,ERROR_SEVERITY()
-						,ERROR_STATE()
-						,ERROR_PROCEDURE()
-						,ERROR_LINE()
-						,ERROR_MESSAGE()
-						,GETDATE();
-					
+							INSERT INTO LOGSERROS
+							(
+								 LOG_ERR_ERRORNUMBER_INT
+								,LOG_ERR_ERRORSEVERITY_INT
+								,LOG_ERR_ERRORSTATE_INT
+								,LOG_ERR_ERRORPROCEDURE_VARCHAR
+								,LOG_ERR_ERRORLINE_INT
+								,LOG_ERR_ERRORMESSAGE_VARCHAR
+								,LOG_ERR_DATE
+							)
+							SELECT
+								 ERROR_NUMBER()
+								,ERROR_SEVERITY()
+								,ERROR_STATE()
+								,ERROR_PROCEDURE()
+								,ERROR_LINE()
+								,ERROR_MESSAGE()
+								,GETDATE();
+							
+							IF @@TRANCOUNT > 0
+								ROLLBACK TRANSACTION;
+							
+							SELECT @Codigo = ERROR_NUMBER();
+							SELECT @Mensagem = ERROR_MESSAGE();
+
+							EXEC [dbo].[uspGravarLog]
+							@Json		= @HospedeJson,
+							@Entidade	= @Entidade,
+							@Mensagem	= @Mensagem,
+							@Acao		= @Acao,
+							@IdCadastro	= @IdHospedeRota,
+							@StatusCode	= @Codigo;
+
+						END CATCH;
+
 					IF @@TRANCOUNT > 0
-						ROLLBACK TRANSACTION;
+						COMMIT TRANSACTION;
 					
-					SELECT @Codigo = ERROR_NUMBER();
-					SELECT @Mensagem = ERROR_MESSAGE();
-
-					EXEC [dbo].[uspGravarLog]
-					@Json		= @HospedeJson,
-					@Entidade	= @Entidade,
-					@Mensagem	= @Mensagem,
-					@Acao		= @Acao,
-					@IdCadastro	= @IdHospedeRota,
-					@StatusCode	= @Codigo;
-
-				END CATCH;
-
-				IF @@TRANCOUNT > 0
-					COMMIT TRANSACTION;
+				END;
 
 			END;
 /*************************************************************************************************************************************
@@ -384,6 +389,8 @@ INÍCIO: Atualizando na tabela CONTATOS.
 
 				IF (@Telefone IS NULL) OR (@Telefone = '') OR (@Telefone = 'string')
 					BEGIN
+
+
 						BEGIN TRANSACTION
 
 							BEGIN TRY
