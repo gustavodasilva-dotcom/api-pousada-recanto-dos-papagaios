@@ -1,4 +1,11 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------- CRIAÇÃO DO BANCO DE DADOS ---------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE DATABASE RECPAPAGAIOS;
+GO
+
+-----------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------- CRIAÇÃO DAS TABELAS ------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -378,16 +385,16 @@ CREATE TABLE ACOMODACAO
 	REFERENCES STATUS_ACOMODACAO(ST_ACOMOD_ID_INT)
 );
 
-EXEC uspCriarAcomodacao 'Chale 1'	, 1;
-EXEC uspCriarAcomodacao 'Chale 2'	, 1;
-EXEC uspCriarAcomodacao 'Chale 3'	, 1;
-EXEC uspCriarAcomodacao 'Chale 4'	, 1;
-EXEC uspCriarAcomodacao 'Chale 5'	, 1;
-EXEC uspCriarAcomodacao 'Chale 6'	, 1;
-EXEC uspCriarAcomodacao 'Chale 7'	, 2;
-EXEC uspCriarAcomodacao 'Chale 8'	, 2;
-EXEC uspCriarAcomodacao 'Chale 9'	, 3;
-EXEC uspCriarAcomodacao 'Chale 10'	, 3;
+EXEC uspCriarAcomodacao 'Chalé 1'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 2'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 3'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 4'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 5'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 6'	, 1;
+EXEC uspCriarAcomodacao 'Chalé 7'	, 2;
+EXEC uspCriarAcomodacao 'Chalé 8'	, 2;
+EXEC uspCriarAcomodacao 'Chalé 9'	, 3;
+EXEC uspCriarAcomodacao 'Chalé 10'	, 3;
 
 
 
