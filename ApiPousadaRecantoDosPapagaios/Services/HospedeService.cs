@@ -137,11 +137,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Inserir(HospedeInputModel hospede)
         {
+            #region InstanciandoObjeto
+
             var hospedeInsert = new Hospede
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null),
+                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,
@@ -165,6 +167,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Pais = hospede.Endereco.Pais
                 }
             };
+
+            #endregion InstanciandoObjeto
 
             var json = _json.ConverterModelParaJson(hospede);
 
@@ -179,11 +183,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Atualizar(int idHospede, HospedeInputModel hospede)
         {
+            #region InstanciandoObjeto
+
             var hospedeUpdate = new Hospede
             {
                 NomeCompleto = hospede.NomeCompleto,
                 Cpf = hospede.Cpf,
-                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null),
+                DataDeNascimento = DateTime.ParseExact(hospede.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
                 Usuario = new Usuario
                 {
                     NomeUsuario = hospede.Usuario.NomeUsuario,
@@ -207,6 +213,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Pais = hospede.Endereco.Pais
                 }
             };
+
+            #endregion InstanciandoObjeto
 
             var json = _json.ConverterModelParaJson(hospede);
 

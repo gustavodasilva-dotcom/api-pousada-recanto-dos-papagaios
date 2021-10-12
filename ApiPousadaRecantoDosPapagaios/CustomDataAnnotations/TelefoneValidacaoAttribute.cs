@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 {
@@ -12,8 +13,17 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 
             if (input != "")
             {
-                if ((input.Length < 10) || (input.Length > 12))
+                if ((input.Trim().Length < 10) || (input.Trim().Length > 12))
                     return false;
+
+                try
+                {
+                    var isNumeric = Convert.ToInt64(input.Trim());
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
 
             return true;

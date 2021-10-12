@@ -4,6 +4,7 @@ using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -131,12 +132,14 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
         {
+            #region InstanciandoObjeto
+
             var funcionarioInsert = new Funcionario
             {
                 NomeCompleto = funcionarioInputModel.NomeCompleto,
                 Cpf = funcionarioInputModel.Cpf,
                 Nacionalidade = funcionarioInputModel.Nacionalidade,
-                DataDeNascimento = funcionarioInputModel.DataDeNascimento,
+                DataDeNascimento = DateTime.ParseExact(funcionarioInputModel.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
                 Sexo = funcionarioInputModel.Sexo,
                 Rg = funcionarioInputModel.Rg,
                 Cargo = funcionarioInputModel.Cargo,
@@ -163,7 +166,7 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     Email = funcionarioInputModel.Contatos.Email,
                     Celular = funcionarioInputModel.Contatos.Celular,
                     Telefone = funcionarioInputModel.Contatos.Telefone
-                },                
+                },
                 CategoriaAcesso = new CategoriaAcesso
                 {
                     Id = funcionarioInputModel.CategoriaAcesso.Id
@@ -180,6 +183,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     RespostaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.RespostaSeguranca
                 }
             };
+
+            #endregion InstanciandoObjeto
 
             var json = _json.ConverterModelParaJson(funcionarioInputModel);
 
@@ -194,12 +199,14 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Atualizar(int idFuncionario, FuncionarioInputModel funcionarioInputModel)
         {
+            #region InstanciandoObjeto
+
             var funcionarioUpdate = new Funcionario
             {
                 NomeCompleto = funcionarioInputModel.NomeCompleto,
                 Cpf = funcionarioInputModel.Cpf,
                 Nacionalidade = funcionarioInputModel.Nacionalidade,
-                DataDeNascimento = funcionarioInputModel.DataDeNascimento,
+                DataDeNascimento = DateTime.ParseExact(funcionarioInputModel.DataDeNascimento, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
                 Sexo = funcionarioInputModel.Sexo,
                 Rg = funcionarioInputModel.Rg,
                 Cargo = funcionarioInputModel.Cargo,
@@ -243,6 +250,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
                     RespostaSeguranca = funcionarioInputModel.PerguntaDeSeguranca.RespostaSeguranca
                 }
             };
+
+            #endregion InstanciandoObjeto
 
             var json = _json.ConverterModelParaJson(funcionarioInputModel);
 

@@ -13,10 +13,13 @@ namespace ApiPousadaRecantoDosPapagaios.CustomDataAnnotations
 
             if (input != "" || input == null)
             {
+                /* 
+                 * TODO: Corrigir este Regex:
                 if (!Regex.IsMatch(input, "'%[a-z][A-Z][0-9]%'"))
                 {
                     return false;
                 }
+                */
             }
 
             return true;
