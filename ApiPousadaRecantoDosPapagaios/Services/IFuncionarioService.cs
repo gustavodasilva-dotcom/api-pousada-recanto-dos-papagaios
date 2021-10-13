@@ -11,6 +11,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         Task<FuncionarioViewModel> Obter(int idFuncionario);
 
+        Task<FuncionarioViewModel> Obter(string cpf);
+
         Task<RetornoViewModel> Inserir(FuncionarioInputModel funcionarioInputModel);
 
         Task<RetornoViewModel> Atualizar(int idFuncionario, FuncionarioInputModel funcionarioInputModel);

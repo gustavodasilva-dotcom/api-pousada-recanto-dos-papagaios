@@ -130,6 +130,59 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             };
         }
 
+        public async Task<FuncionarioViewModel> Obter(string cpf)
+        {
+            var f = await _funcionarioRepository.Obter(cpf);
+
+            if (f == null)
+                throw new NaoEncontradoException();
+
+            return new FuncionarioViewModel
+            {
+                Id = f.Id,
+                NomeCompleto = f.NomeCompleto,
+                Cpf = f.Cpf,
+                Nacionalidade = f.Nacionalidade,
+                DataDeNascimento = f.DataDeNascimento,
+                Sexo = f.Sexo,
+                Rg = f.Rg,
+                Cargo = f.Cargo,
+                Setor = f.Setor,
+                Salario = f.Salario,
+                Usuario = new UsuarioViewModel
+                {
+                    NomeUsuario = f.Usuario.NomeUsuario
+                },
+                Contatos = new ContatosViewModel
+                {
+                    Email = f.Contatos.Email,
+                    Celular = f.Contatos.Celular,
+                    Telefone = f.Contatos.Telefone
+                },
+                Endereco = new EnderecoViewModel
+                {
+                    Cep = f.Endereco.Cep,
+                    Logradouro = f.Endereco.Logradouro,
+                    Numero = f.Endereco.Numero,
+                    Complemento = f.Endereco.Complemento,
+                    Bairro = f.Endereco.Bairro,
+                    Cidade = f.Endereco.Cidade,
+                    Estado = f.Endereco.Estado,
+                    Pais = f.Endereco.Pais
+                },
+                DadosBancarios = new DadosBancariosViewModel
+                {
+                    Banco = f.DadosBancarios.Banco,
+                    Agencia = f.DadosBancarios.Agencia,
+                    NumeroDaConta = f.DadosBancarios.NumeroDaConta
+                },
+                CategoriaAcesso = new CategoriaAcessoViewModel
+                {
+                    Descricao = f.CategoriaAcesso.Descricao
+                }
+            };
+        }
+
         public async Task<RetornoViewModel> Inserir(FuncionarioInputModel funcionarioInputModel)
         {
             #region InstanciandoObjeto
