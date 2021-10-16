@@ -29,6 +29,7 @@ Declaração de variáveis:
 		DECLARE @IdCheckIn				int;
 		DECLARE @IdCheckOut				int;
 		DECLARE @IdPagamento			int;
+		DECLARE @IdAcomodacao			int;
 
 /*************************************************************************************************************************************
 INÍCIO: Gravando log de início de análise.
@@ -60,6 +61,7 @@ SELECT prinicpal que atribui valor às variáveis:
 					,@IdCheckIn				= CI.CHECKIN_ID_INT
 					,@IdCheckOut			= CO.CHECKOUT_ID_INT
 					,@IdPagamento			= PR.PGTO_RES_ID_INT
+					,@IdAcomodacao			= R.RES_ACO_ID_INT
 					,@DataCheckIn			= R.RES_DATA_CHECKIN_DATE
 					,@DescricaoPagamento	= TP.TPPGTO_TIPO_PAGAMENTO_STR
 					,@IdStatusPagamento		= PR.PGTO_RES_ST_PGTO_ID_INT
@@ -291,7 +293,6 @@ INÍCIO: Inserindo na tabela CHECKIN:
 FIM: Inserindo na tabela CHECKIN.
 *************************************************************************************************************************************/
 
-
 /*************************************************************************************************************************************
 INÍCIO: Atualizando na tabela RESERVA:
 *************************************************************************************************************************************/
@@ -348,6 +349,63 @@ INÍCIO: Atualizando na tabela RESERVA:
 			SELECT @IdCheckIn = CHECKIN_ID_INT FROM CHECKIN WHERE CHECKIN_RES_ID_INT = @IdReserva
 /*************************************************************************************************************************************
 FIM: Atualizando na tabela RESERVA.
+*************************************************************************************************************************************/
+
+/*************************************************************************************************************************************
+INÍCIO: Atualizando na tabela ACOMODACAO:
+*************************************************************************************************************************************/
+			BEGIN TRANSACTION;
+
+				BEGIN TRY
+
+					UPDATE	ACOMODACAO
+					SET
+							ACO_ST_ACOMOD_INT = 2
+					WHERE	ACO_ID_INT = @IdAcomodacao;
+
+				END TRY
+
+				BEGIN CATCH
+
+					INSERT INTO LOGSERROS
+					(
+						 LOG_ERR_ERRORNUMBER_INT
+						,LOG_ERR_ERRORSEVERITY_INT
+						,LOG_ERR_ERRORSTATE_INT
+						,LOG_ERR_ERRORPROCEDURE_VARCHAR
+						,LOG_ERR_ERRORLINE_INT
+						,LOG_ERR_ERRORMESSAGE_VARCHAR
+						,LOG_ERR_DATE
+					)
+					SELECT
+						 ERROR_NUMBER()
+						,ERROR_SEVERITY()
+						,ERROR_STATE()
+						,ERROR_PROCEDURE()
+						,ERROR_LINE()
+						,ERROR_MESSAGE()
+						,GETDATE();
+
+					IF @@TRANCOUNT > 0
+						ROLLBACK TRANSACTION;
+
+					SELECT @Codigo = ERROR_NUMBER();
+					SELECT @Mensagem = ERROR_MESSAGE();
+
+					EXEC [dbo].[uspGravarLog]
+					@Json		= @CheckOutJson,
+					@Entidade	= @Entidade,
+					@Mensagem	= @Mensagem,
+					@Acao		= @Acao,
+					@StatusCode	= @Codigo;
+
+				END CATCH;
+
+			IF @@TRANCOUNT > 0
+				COMMIT TRANSACTION;
+
+/*************************************************************************************************************************************
+FIM: Atualizando na tabela ACOMODACAO.
 *************************************************************************************************************************************/
 		END;
 /*************************************************************************************************************************************

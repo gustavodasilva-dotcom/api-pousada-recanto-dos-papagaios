@@ -36,7 +36,7 @@ chamada #DATAS_DE_CHECKOUT. Atibruíndo à variável @IdAcomodacao o id do primeiro
 		FROM		RESERVA		R
 		INNER JOIN	ACOMODACAO	A ON R.RES_ACO_ID_INT = A.ACO_ID_INT
 		WHERE		RES_ST_RES_INT		= 3	-- (Reservas concluídas.)
-		  AND		A.ACO_ST_ACOMOD_INT = 1	-- (Chalé como "Ocupado".)
+		  AND		A.ACO_ST_ACOMOD_INT = 2	-- (Chalé como "Ocupado".)
 		  AND		RES_DATA_CHECKOUT_DATE > GETDATE();
 		
 		--SELECT RES_DATA_CHECKOUT_DATE FROM #DATAS_DE_CHECKOUT;
