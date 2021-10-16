@@ -148,21 +148,7 @@ Verificando se é possível encontrar registros com as chaves-estrangeiras obtidas
 				@Acao		= @Acao,
 				@IdCadastro	= @IdHospedeRota,
 				@StatusCode	= @Codigo;
-			END
-
-			--IF (SELECT 1 FROM USUARIO WHERE USU_ID_INT = @IdUsuarios AND USU_EXCLUIDO_BIT = 0) IS NULL
-			--BEGIN
-			--	SET @Codigo = 404;
-			--	SET @Mensagem = 'Não existe nenhum registro de dados de usuário cadastrados para o hóspede informado.';
-				
-			--	EXEC [dbo].[uspGravarLog]
-			--	@Json		= @HospedeJson,
-			--	@Entidade	= @Entidade,
-			--	@Mensagem	= @Mensagem,
-			--	@Acao		= @Acao,
-			--	@IdCadastro	= @IdHospedeRota,
-			--	@StatusCode	= @Codigo;
-			--END
+			END;
 
 			IF (SELECT 1 FROM CONTATOS WHERE CONT_ID_INT = @IdContatos AND CONT_EXCLUIDO_BIT = 0) IS NULL
 			BEGIN
@@ -176,7 +162,7 @@ Verificando se é possível encontrar registros com as chaves-estrangeiras obtidas
 				@Acao		= @Acao,
 				@IdCadastro	= @IdHospedeRota,
 				@StatusCode	= @Codigo;
-			END
+			END;
 		END;
 
 /*************************************************************************************************************************************
@@ -318,7 +304,7 @@ INÍCIO: Atualizando na tabela USUARIO.
 			IF @Mensagem IS NULL AND @IdUsuarios IS NOT NULL
 			BEGIN
 
-				IF @NomeUsuario <> '' AND @Senha <> ''
+				IF LEN(@NomeUsuario) > 0 AND LEN(@Senha) > 0
 				BEGIN
 
 					BEGIN TRANSACTION;

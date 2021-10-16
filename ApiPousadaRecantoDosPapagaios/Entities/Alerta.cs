@@ -8,6 +8,6 @@
 
         public string Mensagem { get; set; }
 
-        public int IdFuncionario { get; set; }
+        public Funcionario Funcionario { get; set; }
     }
 }

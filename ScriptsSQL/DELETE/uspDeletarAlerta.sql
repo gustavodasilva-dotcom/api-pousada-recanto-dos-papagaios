@@ -1,36 +1,34 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarAlerta]
-	 @Titulo		varchar(50)
-	,@Corpo			varchar(200)
-	,@IdFuncionario	int
-	,@Json			varchar(500)
+ALTER PROCEDURE [dbo].[uspDeletarAlerta]
+	 @IdAlerta	int
 AS
-/*************************************************************************************************************************************
-Descrição: Procedure utilizada para cadastrar novos alertas.
-Data.....: 13/10/2021
-*************************************************************************************************************************************/
 	BEGIN
-		
+/*************************************************************************************************************************************
+Descrição: Procedure utilizada para excluir alertas.
+Data.....: 15/10/2021
+*************************************************************************************************************************************/
 		SET NOCOUNT ON;
 
 /*************************************************************************************************************************************
 Declaração de variáveis:
 *************************************************************************************************************************************/
 		DECLARE @Mensagem	varchar(200);
+		DECLARE @Json		varchar(200);
 		DECLARE @Entidade	varchar(50);
 		DECLARE @Acao		varchar(50);
 		DECLARE @Codigo		int;
-		DECLARE @IdAlerta	int;
 
 /*************************************************************************************************************************************
 INÍCIO: Gravando log de início de análise.
 *************************************************************************************************************************************/
 		SET @Codigo		= 0;
 		
-		SET @Mensagem	= 'Início da análise para cadastro de alertas.'
+		SET @Mensagem	= 'Início da análise para deleção de alertas.';
 		
+		SET @Json		= 'Solicitação de deleção do alerta ' + CAST(@IdAlerta AS VARCHAR) + '.';
+
 		SET @Entidade	= 'Alertas';
 
 		SET @Acao		= 'Cadastrar';
@@ -40,6 +38,7 @@ INÍCIO: Gravando log de início de análise.
 		@Entidade	= @Entidade,
 		@Mensagem	= @Mensagem,
 		@Acao		= @Acao,
+		@IdCadastro = @IdAlerta,
 		@StatusCode	= @Codigo;
 
 		SET @Mensagem = NULL;
@@ -48,23 +47,24 @@ FIM: Gravando log de início de análise.
 *************************************************************************************************************************************/
 
 /*************************************************************************************************************************************
-Verificando se o id do funcionário corresponde a um funcionário na base de dados:
+Verificando se o id corresponde a um alerta na base de dados:
 *************************************************************************************************************************************/
-		IF (SELECT 1 FROM FUNCIONARIO WHERE FUNC_ID_INT = @IdFuncionario AND FUNC_EXCLUIDO_BIT = 0) IS NULL
+		IF (SELECT 1 FROM ALERTAS WHERE ALERTAS_ID_INT = @IdAlerta AND ALERTAS_EXCLUIDO_BIT = 0) IS NULL
 		BEGIN
 			SET @Codigo = 404;
-			SET @Mensagem = 'Não foi encontrado funcionário para o id ' + CAST(@IdFuncionario AS VARCHAR) + '.';
+			SET @Mensagem = 'O alerta ' + CAST(@IdAlerta AS VARCHAR) + ' não foi encontrado.';
 
 			EXEC [dbo].[uspGravarLog]
 			@Json		= @Json,
 			@Entidade	= @Entidade,
 			@Mensagem	= @Mensagem,
 			@Acao		= @Acao,
+			@IdCadastro = @IdAlerta,
 			@StatusCode	= @Codigo;
 		END;
 
 /*************************************************************************************************************************************
-INÍCIO: Inserindo na tabela ALERTAS.
+INÍCIO: Atualizando a tabela ALERTAS:
 *************************************************************************************************************************************/
 		IF @Mensagem IS NULL
 		BEGIN
@@ -73,15 +73,10 @@ INÍCIO: Inserindo na tabela ALERTAS.
 
 				BEGIN TRY
 				
-					INSERT INTO ALERTAS
-					VALUES
-					(
-						 @Titulo
-						,@Corpo
-						,@IdFuncionario
-						,0
-						,GETDATE()
-					);
+					UPDATE ALERTAS
+					SET
+						ALERTAS_EXCLUIDO_BIT = 1
+					WHERE ALERTAS_ID_INT = @IdAlerta;
 
 				END TRY
 
@@ -117,6 +112,7 @@ INÍCIO: Inserindo na tabela ALERTAS.
 					@Entidade	= @Entidade,
 					@Mensagem	= @Mensagem,
 					@Acao		= @Acao,
+					@IdCadastro = @IdAlerta,
 					@StatusCode	= @Codigo;
 
 				END CATCH;
@@ -124,24 +120,22 @@ INÍCIO: Inserindo na tabela ALERTAS.
 			IF @@TRANCOUNT > 0
 				COMMIT TRANSACTION;
 
-			SET @IdAlerta = @@IDENTITY;
-
 		END;
 /*************************************************************************************************************************************
-FIM: Inserindo na tabela ALERTAS.
+FIM: Atualizando a tabela ALERTAS.
 *************************************************************************************************************************************/
 
 		IF @Mensagem IS NULL
 		BEGIN
-			SET @Codigo = 201;
-			SET @Mensagem = 'Alerta cadastrado com sucesso no id ' + CAST(@IdAlerta AS VARCHAR) + '.';
+			SET @Codigo = 200;
+			SET @Mensagem = 'Alerta ' + CAST(@IdAlerta AS VARCHAR) + ' deletado com sucesso.';
 
 			EXEC [dbo].[uspGravarLog]
 			@Json		= @Json,
 			@Entidade	= @Entidade,
 			@Mensagem	= @Mensagem,
 			@Acao		= @Acao,
-			@IdCadastro	= @IdAlerta,
+			@IdCadastro = @IdAlerta,
 			@StatusCode	= @Codigo;
 		END;
 
