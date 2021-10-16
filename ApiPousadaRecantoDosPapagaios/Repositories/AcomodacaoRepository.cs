@@ -152,7 +152,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             			,H.HSP_CPF_CHAR
             FROM		RESERVA AS R
             INNER JOIN	HOSPEDE AS H ON R.RES_HSP_ID_INT = H.HSP_ID_INT
-            WHERE		RES_DATA_RESERVA_DATE > GETDATE() - 1
+            WHERE		RES_DATA_CHECKIN_DATE > GETDATE() - 1
               AND		RES_ACO_ID_INT = {idAcomodacao};";
 
             SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);

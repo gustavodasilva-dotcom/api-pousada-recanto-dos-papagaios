@@ -647,6 +647,27 @@ CREATE TABLE PAGAMENTO_CHECK_OUT
 
 
 /****************************************************************************************************************************************
+Tabela utilizada para armazenar os alertas criados pelos funcionários:
+****************************************************************************************************************************************/
+DROP TABLE IF EXISTS ALERTAS
+CREATE TABLE ALERTAS
+(
+	 ALERTAS_ID_INT					INT				NOT NULL IDENTITY(10000001, 1)
+	,ALERTAS_TITULO_STR				VARCHAR(50)		NOT NULL
+	,ALERTAS_MENSAGEM_STR			VARCHAR(200)	NOT NULL
+	,ALERTAS_FUNC_ID_INT			INT				NOT NULL
+	,ALERTAS_EXCLUIDO_BIT			BIT				NOT NULL
+	,ALERTAS_DATA_CADASTRO_DATETIME	DATETIME		NOT NULL
+
+	CONSTRAINT PK_ALERTAS_ID_INT PRIMARY KEY(ALERTAS_ID_INT)
+
+	CONSTRAINT FK_ALERTAS_FUNC_ID_INT FOREIGN KEY(ALERTAS_FUNC_ID_INT)
+	REFERENCES FUNCIONARIO(FUNC_ID_INT)
+);
+
+
+
+/****************************************************************************************************************************************
 Tabela utilizada para armazenar logs de erros de TRANSACTIONS ao longo realizadas ao longo das procedures.
 ****************************************************************************************************************************************/
 DROP TABLE IF EXISTS LOGSERROS
@@ -682,19 +703,4 @@ CREATE TABLE LOGSINTEGRACOES
 	,LOG_INTE_DATE				DATETIME		NOT NULL
 
 	CONSTRAINT PK_LOG_INTE_ID_INT PRIMARY KEY(LOG_INTE_ID_INT)
-);
-
-
-
-/****************************************************************************************************************************************
-Tabela utilizada para armazenar logs de integrações realizadas no momento das chamadas à API.
-****************************************************************************************************************************************/
-DROP TABLE IF EXISTS MENSAGENSDEERROS
-CREATE TABLE MENSAGENSDEERROS
-(
-	 MEN_ID_INT				INT				NOT NULL IDENTITY(10000001, 1)
-	,MEN_DESCRICAO_STR		VARCHAR(50)		NOT NULL
-	,MEN_STATUS_CODE_INT	INT				NOT NULL
-
-	CONSTRAINT PK_MEN_ID_INT PRIMARY KEY(MEN_ID_INT)
 );

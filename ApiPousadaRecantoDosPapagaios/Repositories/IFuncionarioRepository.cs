@@ -11,6 +11,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<Funcionario> Obter(int idFuncionario);
 
+        Task<Funcionario> Obter(string cpf);
+
         Task<Retorno> Inserir(Funcionario funcionario, string json);
 
         Task<Retorno> Atualizar(int idFuncionario, Funcionario funcionario, string json);

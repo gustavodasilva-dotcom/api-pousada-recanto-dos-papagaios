@@ -65,6 +65,28 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
         }
 
+        [HttpGet("{cpf}")]
+        public async Task<ActionResult<FuncionarioViewModel>> Obter([FromRoute] string cpf)
+        {
+            if (cpf.Length != 11)
+                return BadRequest();
+
+            try
+            {
+                var funcionario = await _funcionarioService.Obter(cpf);
+
+                return Ok(funcionario);
+            }
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
         {

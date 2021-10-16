@@ -46,7 +46,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             {
                 var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
 
-                return StatusCode(200, acomodacao);
+                return Ok(acomodacao);
             }
             catch (NaoEncontradoException)
             {
