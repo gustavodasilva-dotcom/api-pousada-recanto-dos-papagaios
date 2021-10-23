@@ -2,6 +2,7 @@
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{idReserva:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ReservaViewModel>> Obter([FromRoute] int idReserva)
         {
             if (idReserva == 0)
@@ -44,6 +49,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{cpf}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ReservaViewModel>>> Obter([FromRoute] string cpf)
         {
             if (cpf.Length != 11)
@@ -69,6 +78,11 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] ReservaInputModel reservaInputModel)
         {
             try
@@ -84,6 +98,12 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPut("{idReserva:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Atualizar([FromRoute] int idReserva, [FromBody] ReservaUpdateInputModel reservaInputModel)
         {
             if (idReserva == 0)
@@ -102,6 +122,11 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpDelete("{idReserva:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Deletar([FromRoute] int idReserva)
         {
             if (idReserva == 0)

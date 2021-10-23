@@ -2,6 +2,7 @@
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -20,8 +21,15 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{idReserva:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CheckInViewModel>> Obter([FromRoute] int idReserva)
         {
+            if (idReserva == 0)
+                return BadRequest();
+
             try
             {
                 var checkIn = await _checkInService.Obter(idReserva);
@@ -39,6 +47,11 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] CheckInInputModel checkInInputModel)
         {
             try

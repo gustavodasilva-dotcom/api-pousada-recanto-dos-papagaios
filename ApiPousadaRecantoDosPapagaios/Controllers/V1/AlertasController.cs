@@ -1,6 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -19,8 +20,15 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AlertaViewModel>> Obter([FromQuery] int pagina = 1, [FromQuery] int quantidade = 10)
         {
+            if (pagina == 0 || quantidade == 0)
+                return BadRequest();
+
             try
             {
                 var alertas = await _alertaService.Obter(pagina, quantidade);
@@ -37,6 +45,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] AlertaInputModel alertaInput)
         {
             try
@@ -52,6 +63,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpDelete("{idAlerta:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Deletar([FromRoute] int idAlerta)
         {
             if (idAlerta.ToString().Length < 8)

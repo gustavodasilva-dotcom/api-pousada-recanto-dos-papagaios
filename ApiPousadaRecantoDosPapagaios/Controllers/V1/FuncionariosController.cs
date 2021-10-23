@@ -1,11 +1,12 @@
-﻿using ApiPousadaRecantoDosPapagaios.Business;
-using ApiPousadaRecantoDosPapagaios.Exceptions;
+﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -22,6 +23,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<FuncionarioViewModel>>> Obter([FromQuery] int pagina, [FromQuery] int quantidade)
         {
             if (pagina == 0 || quantidade == 0)
@@ -44,6 +49,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{idFuncionario:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<FuncionarioViewModel>> Obter([FromRoute] int idFuncionario)
         {
             if (idFuncionario == 0)
@@ -61,14 +70,21 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
         [HttpGet("{cpf}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<FuncionarioViewModel>> Obter([FromRoute] string cpf)
         {
             if (cpf.Length != 11)
+                return BadRequest();
+
+            if (!Regex.IsMatch(cpf, @"^\d+$"))
                 return BadRequest();
 
             try
@@ -83,11 +99,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Inserir([FromBody] FuncionarioInputModel funcionarioInputModel)
         {
             try
@@ -98,13 +119,21 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
         [HttpPut("{idFuncionario:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Atualizar([FromRoute] int idFuncionario, [FromBody] FuncionarioInputModel funcionarioInputModel)
         {
+            if (idFuncionario == 0)
+                return BadRequest();
+
             try
             {
                 var retorno = await _funcionarioService.Atualizar(idFuncionario, funcionarioInputModel);
@@ -113,9 +142,8 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
-
     }
 }

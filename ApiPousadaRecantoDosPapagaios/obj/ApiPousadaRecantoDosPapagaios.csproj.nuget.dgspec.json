@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj": {}
+    "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj": {}
   },
   "projects": {
-    "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj": {
+    "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
+        "projectUniqueName": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
         "projectName": "ApiPousadaRecantoDosPapagaios",
-        "projectPath": "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
+        "projectPath": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\ApiPousadaRecantoDosPapagaios\\ApiPousadaRecantoDosPapagaios.csproj",
         "packagesPath": "C:\\Users\\gusta\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\gusta\\source\\repos\\api\\ApiPousadaRecantoDosPapagaios\\obj\\",
+        "outputPath": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\ApiPousadaRecantoDosPapagaios\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

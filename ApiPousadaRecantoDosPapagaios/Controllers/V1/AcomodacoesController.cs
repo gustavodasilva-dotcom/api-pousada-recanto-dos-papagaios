@@ -1,6 +1,7 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<AcomodacaoViewModel>>> Obter()
         {
             try
@@ -40,6 +44,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{idAcomodacao:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AcomodacaoUnitariaViewModel>> Obter([FromRoute] int idAcomodacao)
         {
             try

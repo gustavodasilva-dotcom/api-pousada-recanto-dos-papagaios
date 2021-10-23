@@ -1382,11 +1382,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\gusta\\source\\repos\\api\\VerificarReservas\\VerificarReservas.csproj",
+      "projectUniqueName": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\VerificarReservas\\VerificarReservas.csproj",
       "projectName": "VerificarReservas",
-      "projectPath": "C:\\Users\\gusta\\source\\repos\\api\\VerificarReservas\\VerificarReservas.csproj",
+      "projectPath": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\VerificarReservas\\VerificarReservas.csproj",
       "packagesPath": "C:\\Users\\gusta\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\gusta\\source\\repos\\api\\VerificarReservas\\obj\\",
+      "outputPath": "C:\\Users\\gusta\\source\\repos\\api-pousada-recanto-dos-papagaios\\VerificarReservas\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

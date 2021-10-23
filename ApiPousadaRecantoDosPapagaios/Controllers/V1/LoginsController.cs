@@ -2,8 +2,10 @@
 using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
@@ -20,6 +22,9 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<LoginViewModel>> Inserir([FromBody] LoginInputModel login) 
         {
             try
@@ -35,6 +40,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<RetornoViewModel>> Atualizar([FromBody] DefinicaoSenhaInputModel definicaoSenha)
         {
             try
@@ -50,9 +59,16 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
         }
 
         [HttpGet("{cpf}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PerguntaDeSegurancaViewModel>> Obter([FromRoute] string cpf)
         {
             if (cpf.Length != 11)
+                return BadRequest();
+
+            if (!Regex.IsMatch(cpf, @"^\d+$"))
                 return BadRequest();
 
             try
