@@ -1,8 +1,11 @@
-﻿using ApiPousadaRecantoDosPapagaios.Entities;
+﻿using ApiPousadaRecantoDosPapagaios.Business;
+using ApiPousadaRecantoDosPapagaios.Entities;
 using ApiPousadaRecantoDosPapagaios.Exceptions;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels.ReservaViewModels;
 using ApiPousadaRecantoDosPapagaios.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +16,13 @@ namespace ApiPousadaRecantoDosPapagaios.Services
     {
         private readonly IAcomodacaoRepository _acomodacaoRepository;
 
+        private readonly Json _json;
+
         public AcomodacaoService(IAcomodacaoRepository acomodacaoRepository)
         {
             _acomodacaoRepository = acomodacaoRepository;
+
+            _json = new Json();
         }
 
         public async Task<List<AcomodacaoViewModel>> Obter()
@@ -102,6 +109,50 @@ namespace ApiPousadaRecantoDosPapagaios.Services
             }
 
             return retorno;
+        }
+
+        public async Task<RetornoViewModel> Atualizar(AcomodacaoInputModel acomodacao)
+        {
+            try
+            {
+                var existe = await _acomodacaoRepository.Obter(acomodacao.IdAcomodacao);
+
+                if (existe == null)
+                    throw new NaoEncontradoException();
+
+                var update = new Acomodacao
+                {
+                    Id = acomodacao.IdAcomodacao,
+                    Nome = acomodacao.Nome,
+                    CategoriaAcomodacao = new CategoriaAcomodacao
+                    {
+                        Id = acomodacao.Categoria.Id
+                    },
+                    InformacoesAcomodacao = new InformacoesAcomodacao
+                    {
+                        Capacidade = acomodacao.InformacoesAcomodacao.Capacidade,
+                        MetrosQuadrados = acomodacao.InformacoesAcomodacao.Tamanho,
+                        TipoDeCama = acomodacao.InformacoesAcomodacao.TipoDeCama,
+                        Preco = acomodacao.InformacoesAcomodacao.Preco
+                    }
+                };
+
+                acomodacao.Categoria.Descricao = null;
+
+                var json = _json.ConverterModelParaJson(acomodacao);
+
+                var retorno = await _acomodacaoRepository.Atualizar(update, json);
+
+                return new RetornoViewModel
+                {
+                    StatusCode = retorno.StatusCode,
+                    Mensagem = retorno.Mensagem
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

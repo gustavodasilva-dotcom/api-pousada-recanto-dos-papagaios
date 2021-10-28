@@ -137,6 +137,57 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             return acomodacao;
         }
 
+        public async Task<Retorno> Atualizar(Acomodacao acomodacao, string json)
+        {
+            #region SQL
+
+            var dataTable = new DataTable();
+
+            Retorno retorno;
+
+            var procedure = @"[RECPAPAGAIOS].[dbo].[uspAtualizarAcomodacao]";
+
+            var command = new SqlCommand(procedure, sqlConnection);
+
+            command.CommandType = CommandType.StoredProcedure;
+
+            command.Parameters.Add("@IdAcomodacao", SqlDbType.Int).Value = acomodacao.Id;
+            command.Parameters.Add("@Nome", SqlDbType.VarChar).Value = acomodacao.Nome;
+            command.Parameters.Add("@Categoria", SqlDbType.Int).Value = acomodacao.CategoriaAcomodacao.Id;
+            command.Parameters.Add("@Capacidade", SqlDbType.Int).Value = acomodacao.InformacoesAcomodacao.Capacidade;
+            command.Parameters.Add("@Tamanho", SqlDbType.Float).Value = acomodacao.InformacoesAcomodacao.MetrosQuadrados;
+            command.Parameters.Add("@TipoDeCama", SqlDbType.VarChar).Value = acomodacao.InformacoesAcomodacao.TipoDeCama;
+            command.Parameters.Add("@Preco", SqlDbType.Float).Value = acomodacao.InformacoesAcomodacao.Preco;
+            command.Parameters.Add("@Json", SqlDbType.VarChar).Value = json;
+
+            try
+            {
+                await sqlConnection.OpenAsync();
+
+                var adapter = new SqlDataAdapter(command);
+
+                adapter.Fill(dataTable);
+
+                retorno = new Retorno
+                {
+                    StatusCode = (int)dataTable.Rows[0]["Codigo"],
+                    Mensagem = dataTable.Rows[0]["Mensagem"].ToString()
+                };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+
+            #endregion SQL
+
+            return retorno;
+        }
+
         public async Task<List<ReservaResumida>> ObterProximasReservas(int idAcomodacao)
         {
             #region SQL

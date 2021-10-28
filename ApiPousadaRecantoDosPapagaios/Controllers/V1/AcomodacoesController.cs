@@ -1,4 +1,5 @@
 ﻿using ApiPousadaRecantoDosPapagaios.Exceptions;
+using ApiPousadaRecantoDosPapagaios.Models.InputModels;
 using ApiPousadaRecantoDosPapagaios.Models.ViewModels;
 using ApiPousadaRecantoDosPapagaios.Services;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +55,25 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
                 var acomodacao = await _acomodacaoService.Obter(idAcomodacao);
 
                 return Ok(acomodacao);
+            }
+            catch (NaoEncontradoException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<RetornoViewModel>> Atualizar([FromBody] AcomodacaoInputModel acomodacao)
+        {
+            try
+            {
+                var atualizar = await _acomodacaoService.Atualizar(acomodacao);
+
+                return Ok(atualizar);
             }
             catch (NaoEncontradoException)
             {

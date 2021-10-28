@@ -1,7 +1,19 @@
-﻿namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
 {
     public class InformacoesAcomodacaoInputModel
     {
-        public int Id { get; set; }
+        [Required]
+        public int Capacidade { get; set; }
+
+        [Required]
+        public double Tamanho { get; set; }
+
+        [Required]
+        public string TipoDeCama { get; set; }
+
+        [Required]
+        public double Preco { get; set; }
     }
 }

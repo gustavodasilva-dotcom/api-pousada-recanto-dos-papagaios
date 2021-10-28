@@ -11,6 +11,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
 
         Task<AcomodacaoUnitaria> Obter(int idAcomodacao);
 
+        Task<Retorno> Atualizar(Acomodacao acomodacao, string json);
+
         Task<List<ReservaResumida>> ObterProximasReservas(int idAcomodacao);
     }
 }
