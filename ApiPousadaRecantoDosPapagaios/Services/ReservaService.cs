@@ -159,8 +159,8 @@ namespace ApiPousadaRecantoDosPapagaios.Services
         {
             var reservaInsert = new Reserva
             {
-                DataCheckIn = DateTime.ParseExact(reservaInputModel.DataCheckIn, "yyyy-MM-dd HH:mm:ssZ", null),
-                DataCheckOut = DateTime.ParseExact(reservaInputModel.DataCheckOut, "yyyy-MM-dd HH:mm:ssZ", null),
+                DataCheckIn = DateTime.ParseExact(reservaInputModel.DataCheckIn, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
+                DataCheckOut = DateTime.ParseExact(reservaInputModel.DataCheckOut, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
                 Hospede = new Hospede
                 {
                     Id = reservaInputModel.IdHospede
@@ -218,7 +218,6 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Deletar(int idReserva)
         {
-            RetornoViewModel retorno;
             Retorno resultado;
 
             try

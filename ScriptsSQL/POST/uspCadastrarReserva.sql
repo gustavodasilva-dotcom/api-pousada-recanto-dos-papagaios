@@ -1,4 +1,4 @@
-USE RECPAPAGAIOS
+USE RECPAPAGAIOS;
 GO
 
 ALTER PROCEDURE [dbo].[uspCadastrarReserva]
@@ -14,6 +14,14 @@ AS
 /*************************************************************************************************************************************
 Descrição: Procedure utilizada para cadastro de reservas.
 Data.....: 26/09/2021
+
+2021-11-02: Correções #01
+Validação que verifica se o check-in e check-out serão feitos no mesmo dia. Em caso positivo, é adicionado um dia a mais na data de
+check-out, para que, no DATEDIFF, a diferença de dias seja um, e não zero.
+
+2021-11-02: Correções #02
+No caso da aplicação web, será passado, por padrão, id de pagamento 7. Nesse caso, o status será 3, ou seja, não autorizado. Isso
+poderá ser corrigido atualizando a reserva por aplicação desktop.
 *************************************************************************************************************************************/
 		SET NOCOUNT ON;
 /*************************************************************************************************************************************
@@ -228,6 +236,12 @@ Validações da forma de pagamento:
 						SET @StatusPagamento = (SELECT ST_PGTO_ID_INT FROM STATUS_PAGAMENTO WHERE ST_PGTO_ID_INT = 4);
 					END;
 
+				-- 2021-11-02: Correções #02
+				IF @Pagamento = 7
+				BEGIN
+					SET @StatusPagamento = (SELECT ST_PGTO_ID_INT FROM STATUS_PAGAMENTO WHERE ST_PGTO_ID_INT = 3);
+				END;
+
 				PRINT 'Forma de pagamento selecionada: ' + CAST(@Pagamento AS VARCHAR) + ' e o status é: '
 				+ CAST(@StatusPagamento AS VARCHAR)
 			END;
@@ -336,7 +350,21 @@ Validação da acomodação e do número de acompanhantes, e, a partir disso, calculo
 										WHERE	INFO_ACOMOD_ID_INT = @Acomodacao
 									END;
 
-								SET @ValorTotal = dbo.CalcularValorDaReserva(@ValorAcomodacao, @DataCheckIn, @DataCheckOut, @Acompanhantes);
+								-- 2021-	11-02: Correções #01
+								IF @DataCheckIn = @DataCheckOut
+									BEGIN
+
+										DECLARE @DataCheckOutValida DATETIME = DATEADD(DAY, 1, CAST(@DataCheckOut AS DATE));
+
+										SET @ValorTotal = dbo.CalcularValorDaReserva(@ValorAcomodacao, @DataCheckIn, @DataCheckOutValida, @Acompanhantes);
+
+									END;
+								ELSE
+									BEGIN
+
+										SET @ValorTotal = dbo.CalcularValorDaReserva(@ValorAcomodacao, @DataCheckIn, @DataCheckOut, @Acompanhantes);
+
+									END;
 
 								PRINT 'Acomodacao selecionada: Chalé ' + CAST(@Chale AS VARCHAR);
 								PRINT 'Valor total da reserva: R$ ' + CAST(@ValorTotal AS VARCHAR) + '.';

@@ -13,7 +13,7 @@ namespace ApiPousadaRecantoDosPapagaios.Models.InputModels
         [Range(1, 10, ErrorMessage = "O id da acomodação deve estar entre 1 e 10.")]
         public int IdAcomodacao { get; set; }
 
-        [Range(1, 6, ErrorMessage = "O id do pagamento deve estar entre 1 e 6.")]
+        [Range(1, 7, ErrorMessage = "O id do pagamento deve estar entre 1 e 6.")]
         public int IdPagamento { get; set; }
 
         [DataValidacao(ErrorMessage = "O dado informado não corresponde a uma data.")]
