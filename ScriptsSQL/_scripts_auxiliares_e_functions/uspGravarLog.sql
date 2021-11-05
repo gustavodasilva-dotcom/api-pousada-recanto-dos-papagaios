@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspGravarLog]
+CREATE PROCEDURE [dbo].[uspGravarLog]
 	 @Json			nvarchar(600) = NULL
 	,@Entidade		nvarchar(50)
 	,@Mensagem		nvarchar(255)

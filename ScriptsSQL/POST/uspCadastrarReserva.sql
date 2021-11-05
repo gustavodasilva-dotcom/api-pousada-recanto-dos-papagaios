@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarReserva]
+CREATE PROCEDURE [dbo].[uspCadastrarReserva]
 	 @IdHospede		int
 	,@Chale			int
 	,@Pagamento		int
@@ -19,7 +19,7 @@ Data.....: 26/09/2021
 Validação que verifica se o check-in e check-out serão feitos no mesmo dia. Em caso positivo, é adicionado um dia a mais na data de
 check-out, para que, no DATEDIFF, a diferença de dias seja um, e não zero.
 
-2021-11-02: Correções #02
+2021-11-02: Correções #02 [ATUALIZAÇÃO REMOVIDA]
 No caso da aplicação web, será passado, por padrão, id de pagamento 7. Nesse caso, o status será 3, ou seja, não autorizado. Isso
 poderá ser corrigido atualizando a reserva por aplicação desktop.
 *************************************************************************************************************************************/
@@ -236,11 +236,14 @@ Validações da forma de pagamento:
 						SET @StatusPagamento = (SELECT ST_PGTO_ID_INT FROM STATUS_PAGAMENTO WHERE ST_PGTO_ID_INT = 4);
 					END;
 
-				-- 2021-11-02: Correções #02
-				IF @Pagamento = 7
-				BEGIN
-					SET @StatusPagamento = (SELECT ST_PGTO_ID_INT FROM STATUS_PAGAMENTO WHERE ST_PGTO_ID_INT = 3);
-				END;
+				/**
+				 * 2021-11-02: Correções #02 [ATUALIZAÇÃO REMOVIDA]
+				 *
+				 * IF @Pagamento = 7
+				 * BEGIN
+				 *	SET @StatusPagamento = (SELECT ST_PGTO_ID_INT FROM STATUS_PAGAMENTO WHERE ST_PGTO_ID_INT = 3);
+				 * END;
+				 */
 
 				PRINT 'Forma de pagamento selecionada: ' + CAST(@Pagamento AS VARCHAR) + ' e o status é: '
 				+ CAST(@StatusPagamento AS VARCHAR)

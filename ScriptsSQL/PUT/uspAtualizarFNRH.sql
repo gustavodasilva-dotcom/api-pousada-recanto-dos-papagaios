@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspAtualizarFNRH]
+CREATE PROCEDURE [dbo].[uspAtualizarFNRH]
 	 @IdFNRH			int
 	,@Profissao			nvarchar(255)
 	,@Nacionalidade		nvarchar(50)

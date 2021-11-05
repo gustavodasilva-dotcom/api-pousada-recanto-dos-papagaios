@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspRelatorioFaturamentoChaleMensal]
+CREATE PROCEDURE [dbo].[uspRelatorioFaturamentoChaleMensal]
 	 @DataInicio	date
 	,@DataFim		date
 AS

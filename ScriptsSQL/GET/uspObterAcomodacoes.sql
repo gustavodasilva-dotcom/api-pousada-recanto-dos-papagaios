@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterAcomodacoes]
+CREATE PROCEDURE [dbo].[uspObterAcomodacoes]
 	 @Tipo	int
 	,@Id	int	= NULL
 AS

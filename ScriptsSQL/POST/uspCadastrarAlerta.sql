@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarAlerta]
+CREATE PROCEDURE [dbo].[uspCadastrarAlerta]
 	 @Titulo		varchar(50)
 	,@Corpo			varchar(200)
 	,@IdFuncionario	int

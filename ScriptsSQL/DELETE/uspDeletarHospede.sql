@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspDeletarHospede]
+CREATE PROCEDURE [dbo].[uspDeletarHospede]
 	@IdHospede	int
 AS
 	BEGIN

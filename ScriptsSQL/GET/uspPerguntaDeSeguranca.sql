@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspPerguntaDeSeguranca]
+CREATE PROCEDURE [dbo].[uspPerguntaDeSeguranca]
 	 @Cpf		nchar(11)
 	,@Reposta	nvarchar(max)
 AS

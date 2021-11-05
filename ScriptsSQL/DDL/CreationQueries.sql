@@ -2,6 +2,7 @@
 ----------------------------------------------------- CRIAÇÃO DO BANCO DE DADOS ---------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
+DROP DATABASE IF EXISTS RECPAPAGAIOS
 CREATE DATABASE RECPAPAGAIOS;
 GO
 
@@ -9,7 +10,7 @@ GO
 -------------------------------------------------------- CRIAÇÃO DAS TABELAS ------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-USE RECPAPAGAIOS
+USE RECPAPAGAIOS;
 GO
 
 
@@ -385,6 +386,89 @@ CREATE TABLE ACOMODACAO
 	REFERENCES STATUS_ACOMODACAO(ST_ACOMOD_ID_INT)
 );
 
+
+/************************************************************************************************************************************
+CRIAÇÃO DE PROCEDURE PARA, AUTOMATICAMENTE, CRIAR AS ACOMODAÇÕES.
+************************************************************************************************************************************/
+
+USE RECPAPAGAIOS;
+GO
+
+CREATE PROCEDURE [dbo].[uspCriarAcomodacao]
+	@NomeAcomodacao nvarchar(50),
+	@InfoAcomodacao int
+AS
+	BEGIN
+		DECLARE
+		@ValidacaoNome	varchar(50),
+		@Msg			varchar(255),
+		@MsgResul		varchar(255)
+
+		SELECT @ValidacaoNome = ACO_NOME_STR FROM RECPAPAGAIOS.dbo.[ACOMODACAO] WHERE ACO_NOME_STR = @NomeAcomodacao;
+
+		IF @ValidacaoNome IS NOT NULL
+			BEGIN
+				SET @MsgResul = 'Já existe uma acomodação cadastrada com o nome ' + @ValidacaoNome;
+
+				RAISERROR(@MsgResul, 20, -1) WITH LOG;
+			END
+		
+		IF @InfoAcomodacao > 3
+		BEGIN
+			SET @Msg = 'O id das informações da acomodação deve ser igual ou menor a 3. *'
+				+ 'O id do chalé deve ser correspondente aos seguintes: *'
+				+ '1 - Chalé Standard *'
+				+ '2 - Chalé Superior *'
+				+ '3 - Chalé Master *';
+			SET @MsgResul = REPLACE(@Msg, '*', CHAR(10));
+
+			RAISERROR(@MsgResul, 20, -1) WITH LOG;
+		END
+
+		BEGIN TRANSACTION;
+
+			BEGIN TRY
+
+				INSERT INTO RECPAPAGAIOS.dbo.[ACOMODACAO]
+				VALUES
+				(
+					@NomeAcomodacao,
+					3,
+					@InfoAcomodacao,
+					0,
+					GETDATE()
+				);
+
+			END TRY
+
+			BEGIN CATCH
+
+				IF @@TRANCOUNT > 0
+					ROLLBACK TRANSACTION;
+
+			END CATCH;
+		
+		IF @@TRANCOUNT > 0
+			COMMIT TRANSACTION;
+		
+		SELECT		TOP 1
+					A.ACO_ID_INT,
+					A.ACO_NOME_STR,
+					C.CAT_ACOMOD_DESCRICAO_STR,
+					S.ST_ACOMOD_DESCRICAO_STR,
+					I.INFO_ACOMOD_METROS_QUADRADOS_FLOAT,
+					I.INFO_ACOMOD_CAPACIDADE_INT,
+					I.INFO_ACOMOD_TIPO_DE_CAMA_STR,
+					I.INFO_ACOMOD_PRECO_FLOAT
+		FROM		[ACOMODACAO]				AS A
+		INNER JOIN  [STATUS_ACOMODACAO]			AS S ON A.ACO_ST_ACOMOD_INT			= S.ST_ACOMOD_ID_INT
+		INNER JOIN  [INFORMACOES_ACOMODACAO]	AS I ON A.ACO_INFO_ACOMOD_ID_INT	= I.INFO_ACOMOD_ID_INT
+		INNER JOIN  [CATEGORIA_ACOMODACAO]		AS C ON C.CAT_ACOMOD_ID_INT			= I.INFO_ACOMOD_CAT_ACOMOD_ID_INT
+		ORDER BY	A.ACO_ID_INT DESC;
+
+	END;
+GO
+
 EXEC uspCriarAcomodacao 'Chalé 1'	, 1;
 EXEC uspCriarAcomodacao 'Chalé 2'	, 1;
 EXEC uspCriarAcomodacao 'Chalé 3'	, 1;
@@ -396,6 +480,10 @@ EXEC uspCriarAcomodacao 'Chalé 8'	, 2;
 EXEC uspCriarAcomodacao 'Chalé 9'	, 3;
 EXEC uspCriarAcomodacao 'Chalé 10'	, 3;
 
+
+/************************************************************************************************************************************
+CRIAÇÃO DE PROCEDURE PARA, AUTOMATICAMENTE, CRIAR AS ACOMODAÇÕES.
+************************************************************************************************************************************/
 
 
 /****************************************************************************************************************************************

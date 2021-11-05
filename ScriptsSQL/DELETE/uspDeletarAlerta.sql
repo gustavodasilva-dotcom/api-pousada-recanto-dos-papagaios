@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspDeletarAlerta]
+CREATE PROCEDURE [dbo].[uspDeletarAlerta]
 	 @IdAlerta	int
 AS
 	BEGIN

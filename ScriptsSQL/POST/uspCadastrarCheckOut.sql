@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarCheckOut]
+CREATE PROCEDURE [dbo].[uspCadastrarCheckOut]
 	 @IdReserva				int
 	,@IdFuncionario			int
 	,@PagamentoAdicional	bit

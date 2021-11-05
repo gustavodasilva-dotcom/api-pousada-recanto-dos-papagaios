@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspAtualizarAcomodacao]
+CREATE PROCEDURE [dbo].[uspAtualizarAcomodacao]
 	 @IdAcomodacao	int
 	,@Nome			varchar(100)
 	,@Categoria		int

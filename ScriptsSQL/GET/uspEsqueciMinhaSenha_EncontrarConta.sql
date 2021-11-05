@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspEsqueciMinhaSenha_EncontrarConta]
+CREATE PROCEDURE [dbo].[uspEsqueciMinhaSenha_EncontrarConta]
 	@Cpf	nchar(11)
 AS
 	BEGIN

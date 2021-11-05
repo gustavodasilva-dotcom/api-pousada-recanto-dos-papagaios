@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspRelatorioPerformanceFuncionarios]
+CREATE PROCEDURE [dbo].[uspRelatorioPerformanceFuncionarios]
 	
 AS
 	BEGIN

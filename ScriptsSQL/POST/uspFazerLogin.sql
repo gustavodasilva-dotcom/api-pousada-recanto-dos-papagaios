@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspFazerLogin]
+CREATE PROCEDURE [dbo].[uspFazerLogin]
 	@NomeUsuario	nvarchar(45),
 	@Senha			nvarchar(200),
 	@Json			nvarchar(max)

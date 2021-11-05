@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarCheckIn]
+CREATE PROCEDURE [dbo].[uspCadastrarCheckIn]
 	 @IdReserva		int
 	,@IdFuncionario	int
 	,@CheckOutJson	varchar(max)

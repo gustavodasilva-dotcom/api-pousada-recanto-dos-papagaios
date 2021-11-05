@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspAtualizarFuncionario]
+CREATE PROCEDURE [dbo].[uspAtualizarFuncionario]
 	 @IdFuncionarioRota	int
 	,@Nome				nvarchar(255)
 	,@Cpf				nchar(11)

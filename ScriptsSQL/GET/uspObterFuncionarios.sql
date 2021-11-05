@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterFuncionarios]
+CREATE PROCEDURE [dbo].[uspObterFuncionarios]
 	 @Cpf			nchar(11)	= NULL
 	,@IdFuncionario	int			= NULL
 	,@Pagina		int			= NULL

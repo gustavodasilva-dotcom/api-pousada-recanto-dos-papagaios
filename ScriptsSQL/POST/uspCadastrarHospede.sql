@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarHospede]
+CREATE PROCEDURE [dbo].[uspCadastrarHospede]
 	 @NomeCompleto		nvarchar(255)
 	,@Cpf				char(11)
 	,@DataDeNascimento	date

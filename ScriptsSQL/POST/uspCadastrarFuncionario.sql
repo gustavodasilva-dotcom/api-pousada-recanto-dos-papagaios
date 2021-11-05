@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarFuncionario]
+CREATE PROCEDURE [dbo].[uspCadastrarFuncionario]
 	 @Nome				nvarchar(255)
 	,@Cpf				nchar(11)
 	,@Nacionalidade		nvarchar(255)

@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterFNRH]
+CREATE PROCEDURE [dbo].[uspObterFNRH]
 	 @Id		int
 	,@Tipo		int
 AS

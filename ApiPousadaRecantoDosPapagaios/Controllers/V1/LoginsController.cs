@@ -35,7 +35,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
@@ -54,7 +54,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
 
@@ -83,7 +83,7 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
             }
             catch (Exception)
             {
-                return StatusCode(500, "Ops! Ocorreu um erro do nosso lado. Por gentileza, tente novamente.");
+                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
             }
         }
     }

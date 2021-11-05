@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspRelatorioVisaoGeralMensal]
+CREATE PROCEDURE [dbo].[uspRelatorioVisaoGeralMensal]
 	 @DataInicio	date
 	,@DataFim		date
 AS

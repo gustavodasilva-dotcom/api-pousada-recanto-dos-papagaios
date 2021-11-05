@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspAtualizarReserva]
+CREATE PROCEDURE [dbo].[uspAtualizarReserva]
 	 @IdReserva		int
 	,@Chale			int
 	,@Pagamento		int

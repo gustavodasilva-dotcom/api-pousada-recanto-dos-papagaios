@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspCadastrarFNRH]
+CREATE PROCEDURE [dbo].[uspCadastrarFNRH]
 	 @IdHospede			int
 	,@Profissao			nvarchar(255)
 	,@Nacionalidade		nvarchar(255)

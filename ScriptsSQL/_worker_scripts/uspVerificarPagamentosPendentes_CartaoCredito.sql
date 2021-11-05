@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspVerificarPagamentosPendentes_CartaoCredito]
+CREATE PROCEDURE [dbo].[uspVerificarPagamentosPendentes_CartaoCredito]
 AS
 	BEGIN
 /*************************************************************************************************************************************

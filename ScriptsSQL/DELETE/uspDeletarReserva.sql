@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspDeletarReserva]
+CREATE PROCEDURE [dbo].[uspDeletarReserva]
 	 @IdReserva		int
 AS
 	BEGIN

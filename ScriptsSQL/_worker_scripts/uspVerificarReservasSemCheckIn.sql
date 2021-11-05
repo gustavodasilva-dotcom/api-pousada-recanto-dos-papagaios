@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspVerificarReservasSemCheckIn]
+CREATE PROCEDURE [dbo].[uspVerificarReservasSemCheckIn]
 AS
 	BEGIN
 /*************************************************************************************************************************************

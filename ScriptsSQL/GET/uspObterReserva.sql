@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterReserva]
+CREATE PROCEDURE [dbo].[uspObterReserva]
 	 @IdReserva	int		 = NULL
 	,@IdHospede	int		 = NULL
 	,@Cpf		char(11) = NULL

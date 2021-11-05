@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS;
 GO
 
-ALTER PROCEDURE [dbo].[uspDefinirNovaSenha]
+CREATE PROCEDURE [dbo].[uspDefinirNovaSenha]
 	 @Cpf				nchar(11)
 	,@NovaSenha			nvarchar(200)
 	,@RepeticaoSenha	nvarchar(200)

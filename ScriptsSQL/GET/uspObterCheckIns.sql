@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterCheckIns]
+CREATE PROCEDURE [dbo].[uspObterCheckIns]
 	 @IdReserva int
 AS
 	BEGIN

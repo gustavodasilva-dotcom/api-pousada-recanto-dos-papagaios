@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspObterHospedes]
+CREATE PROCEDURE [dbo].[uspObterHospedes]
 	@Pagina		int			= NULL,
 	@Quantidade int			= NULL,
 	@IdHospede	int			= NULL,

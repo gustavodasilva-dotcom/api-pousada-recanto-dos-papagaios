@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspMarcarAcomodacaoComoDisponivel]
+CREATE PROCEDURE [dbo].[uspMarcarAcomodacaoComoDisponivel]
 AS
 	BEGIN
 /*************************************************************************************************************************************

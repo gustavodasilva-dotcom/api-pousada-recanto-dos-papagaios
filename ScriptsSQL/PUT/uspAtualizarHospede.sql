@@ -1,7 +1,7 @@
 USE RECPAPAGAIOS
 GO
 
-ALTER PROCEDURE [dbo].[uspAtualizarHospede]
+CREATE PROCEDURE [dbo].[uspAtualizarHospede]
 	 @IdHospedeRota		char(11)
 	,@NomeCompleto		nvarchar(255)
 	,@Cpf				char(11)
