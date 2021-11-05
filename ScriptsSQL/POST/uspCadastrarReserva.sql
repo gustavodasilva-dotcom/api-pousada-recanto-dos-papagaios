@@ -22,6 +22,10 @@ check-out, para que, no DATEDIFF, a diferença de dias seja um, e não zero.
 2021-11-02: Correções #02 [ATUALIZAÇÃO REMOVIDA]
 No caso da aplicação web, será passado, por padrão, id de pagamento 7. Nesse caso, o status será 3, ou seja, não autorizado. Isso
 poderá ser corrigido atualizando a reserva por aplicação desktop.
+
+2021-11-05: Correções #03
+Removendo trava para permitir que reservas com data de check-in para mais de três dias além da data de registro da reserva, sejam
+registradas.
 *************************************************************************************************************************************/
 		SET NOCOUNT ON;
 /*************************************************************************************************************************************
@@ -148,19 +152,22 @@ Verificando se ambos os dias do check-in ou dia do check-out são menores do que 
 /*************************************************************************************************************************************
 Verificando se o dia do check-in está a mais de 3 dias de distância do dia em que a reserva está sendo realizada:
 *************************************************************************************************************************************/
-		IF @Mensagem IS NULL AND @DataCheckIn > DATEADD(DAY, 3, GETDATE())
-		BEGIN
-			SET @Codigo = 422;
-			SET	@Mensagem = 'A data de check-in selecionada está a mais do que 3 dias de hoje. ' +
-								'Em casos assim, deve-se contatar a Pousada para realizar a reserva.'
-
-			EXEC [dbo].[uspGravarLog]
-			@Json		= @Json,
-			@Entidade	= @Entidade,
-			@Mensagem	= @Mensagem,
-			@Acao		= @Acao,
-			@StatusCode	= @Codigo;
-		END;
+		/* 2021-11-05: Correções #03 
+		 *
+		 * IF @Mensagem IS NULL AND @DataCheckIn > DATEADD(DAY, 3, GETDATE())
+		 * BEGIN
+		 * 	SET @Codigo = 422;
+		 * 	SET	@Mensagem = 'A data de check-in selecionada está a mais do que 3 dias de hoje. ' +
+		 * 						'Em casos assim, deve-se contatar a Pousada para realizar a reserva.'
+		 * 
+		 * 	EXEC [dbo].[uspGravarLog]
+		 * 	@Json		= @Json,
+		 * 	@Entidade	= @Entidade,
+		 * 	@Mensagem	= @Mensagem,
+		 * 	@Acao		= @Acao,
+		 * 	@StatusCode	= @Codigo;
+		 * END;
+		 */
 
 /*************************************************************************************************************************************
 Verificando se o dia do check-in é maior que o dia do check-out:
