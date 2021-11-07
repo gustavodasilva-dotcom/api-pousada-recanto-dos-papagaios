@@ -112,7 +112,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             {
                 await sqlConnection.CloseAsync();
             }
-            
+
             #endregion SQL
 
             return reserva;
@@ -346,6 +346,109 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             #endregion SQL
 
             return retorno;
+        }
+
+        public async Task<bool> PeriodoDisponivel(Reserva reservaInsert)
+        {
+            #region SQL
+
+            var datas = new List<Datas>();
+
+            var query =
+            $@" SELECT	RES_DATA_CHECKIN_DATE,
+                		RES_DATA_CHECKOUT_DATE
+                FROM	RESERVA
+                WHERE	RES_ACO_ID_INT = {reservaInsert.Acomodacao.Id};";
+
+            var command = new SqlCommand(query, sqlConnection)
+            {
+                CommandType = CommandType.Text
+            };
+
+            try
+            {
+                await sqlConnection.OpenAsync();
+
+                var reader = await command.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    datas.Add(new Datas
+                    {
+                        DataCheckIn = (DateTime)reader["RES_DATA_CHECKIN_DATE"],
+                        DataCheckOut = (DateTime)reader["RES_DATA_CHECKOUT_DATE"]
+                    });
+                }
+
+                return EstaDisponivel(datas, reservaInsert);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                await sqlConnection.CloseAsync();
+            }
+
+            #endregion SQL
+        }
+
+        private bool EstaDisponivel(List<Datas> datas, Reserva reservaInsert)
+        {
+            #region Codigo
+
+            foreach (var data in datas)
+            {
+                if (Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) < Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                {
+                    if (Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) <= Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")) &&
+                        Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) >= Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                    {
+                        return false;
+                    }
+                }
+
+                if (Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) > Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")))
+                {
+                    if (Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) >= Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")) &&
+                        Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) <= Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")))
+                    {
+                        return false;
+                    }
+                }
+
+                if (Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) < Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                {
+                    if (Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) <= Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")) &&
+                        Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) >= Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                    {
+                        return false;
+                    }
+                }
+
+                if (Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) < Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")))
+                {
+                    if (Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) >= Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")) &&
+                        Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) <= Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")))
+                    {
+                        return false;
+                    }
+                }
+
+                if (Convert.ToDateTime(reservaInsert.DataCheckIn.ToString("yyy-MM-dd")) > Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                {
+                    if (Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) <= Convert.ToDateTime(data.DataCheckOut.ToString("yyy-MM-dd")) &&
+                        Convert.ToDateTime(reservaInsert.DataCheckOut.ToString("yyy-MM-dd")) >= Convert.ToDateTime(data.DataCheckIn.ToString("yyy-MM-dd")))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            #endregion Codigo
+
+            return true;
         }
     }
 }

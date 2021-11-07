@@ -16,5 +16,7 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
         Task<Retorno> Atualizar(Reserva reserva, string json);
 
         Task<Retorno> Deletar(int idReserva);
+
+        Task<bool> PeriodoDisponivel(Reserva reservaInsert);
     }
 }

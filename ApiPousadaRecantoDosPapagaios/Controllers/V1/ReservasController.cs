@@ -91,9 +91,10 @@ namespace ApiPousadaRecantoDosPapagaios.Controllers.V1
 
                 return StatusCode(retorno.StatusCode, retorno);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
+                //return StatusCode(500, "Um erro inesperado aconteceu. Por favor, tente mais tarde.");
+                return StatusCode(500, e.Message);
             }
         }
 

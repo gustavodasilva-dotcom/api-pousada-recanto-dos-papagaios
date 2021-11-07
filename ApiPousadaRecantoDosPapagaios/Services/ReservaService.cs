@@ -157,34 +157,50 @@ namespace ApiPousadaRecantoDosPapagaios.Services
 
         public async Task<RetornoViewModel> Inserir(ReservaInputModel reservaInputModel)
         {
-            var reservaInsert = new Reserva
+            try
             {
-                DataCheckIn = DateTime.ParseExact(reservaInputModel.DataCheckIn, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
-                DataCheckOut = DateTime.ParseExact(reservaInputModel.DataCheckOut, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
-                Hospede = new Hospede
+                var reservaInsert = new Reserva
                 {
-                    Id = reservaInputModel.IdHospede
-                },
-                Acomodacao = new Acomodacao
+                    DataCheckIn = DateTime.ParseExact(reservaInputModel.DataCheckIn, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
+                    DataCheckOut = DateTime.ParseExact(reservaInputModel.DataCheckOut, "yyyy-MM-dd HH:mm:ssZ", null).AddDays(1),
+                    Hospede = new Hospede
+                    {
+                        Id = reservaInputModel.IdHospede
+                    },
+                    Acomodacao = new Acomodacao
+                    {
+                        Id = reservaInputModel.IdAcomodacao
+                    },
+                    Pagamento = new Pagamento
+                    {
+                        Id = reservaInputModel.IdPagamento
+                    },
+                    Acompanhantes = reservaInputModel.Acompanhantes
+                };
+
+                if (!await _reservaRepository.PeriodoDisponivel(reservaInsert))
                 {
-                    Id = reservaInputModel.IdAcomodacao
-                },
-                Pagamento = new Pagamento
+                    return new RetornoViewModel
+                    {
+                        StatusCode = 409,
+                        Mensagem = "A acomodação está ocupada no período que você selecionou."
+                    };
+                }
+
+                var json = _json.ConverterModelParaJson(reservaInputModel);
+
+                var reserva = await _reservaRepository.Inserir(reservaInsert, json);
+
+                return new RetornoViewModel
                 {
-                    Id = reservaInputModel.IdPagamento
-                },
-                Acompanhantes = reservaInputModel.Acompanhantes
-            };
-
-            var json = _json.ConverterModelParaJson(reservaInputModel);
-
-            var reserva = await _reservaRepository.Inserir(reservaInsert, json);
-
-            return new RetornoViewModel
+                    StatusCode = reserva.StatusCode,
+                    Mensagem = reserva.Mensagem
+                };
+            }
+            catch (Exception)
             {
-                StatusCode = reserva.StatusCode,
-                Mensagem = reserva.Mensagem
-            };
+                throw;
+            }
         }
 
         public async Task<RetornoViewModel> Atualizar(int idReserva, ReservaUpdateInputModel reservaInputModel)

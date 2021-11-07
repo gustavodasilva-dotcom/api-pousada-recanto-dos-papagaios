@@ -8,6 +8,13 @@ AS
 /*************************************************************************************************************************************
 Descrição: Procedure utilizada para deleção de reservas (no momento, apenas na API).
 Data.....: 21/09/2021
+
+--2021-11-06: Correções #1
+Alterando as validações do status. Agora, a rotina valida se a reserva está iniciada. Estando com um status de reserva diferente de
+iniciada, a solicitação é barrada.
+
+--2021-11-06: Correções #2
+Quando a reserva for cancelada, o status da reserva será alterado para cancelada.
 *************************************************************************************************************************************/
 		SET NOCOUNT ON;
 /*************************************************************************************************************************************
@@ -15,7 +22,7 @@ Declaração das variáveis:
 *************************************************************************************************************************************/
 		DECLARE @Mensagem				nvarchar(255);
 		DECLARE @IdReservaCadastrada	int;
-		DECLARE @StatusPagamento		int;
+		DECLARE @StatusReserva			int;
 		DECLARE @Chale					int;
 		DECLARE @Codigo					int;
 		DECLARE @Entidade				nvarchar(50);
@@ -49,8 +56,9 @@ FIM: Gravando log de início de análise.
 /*************************************************************************************************************************************
 SELECT principal que atribui valor às variáveis que, posteriormente, serão validadas:
 *************************************************************************************************************************************/
+		--2021-11-06: Correções #1
 		SELECT		 @IdReservaCadastrada	= R.RES_ID_INT
-					,@StatusPagamento		= PR.PGTO_RES_ST_PGTO_ID_INT
+					,@StatusReserva			= R.RES_ST_RES_INT
 					,@Chale					= R.RES_ACO_ID_INT
 		FROM		RESERVA				AS R
 		INNER JOIN	PAGAMENTO_RESERVA	AS PR ON PR.PGTO_RES_ID_INT		= R.RES_ID_INT
@@ -80,10 +88,11 @@ Se o pagamento estiver "Em processamento", não será possível excluir a reserva:
 *************************************************************************************************************************************/
 		IF @Mensagem IS NULL
 		BEGIN
-			IF @StatusPagamento = 4
+			--2021-11-06: Correções #1
+			IF @StatusReserva <> 1
 			BEGIN
 				SET @Codigo = 409;
-				SET @Mensagem = 'Não é possível excluir uma reserva que possua um pagamento com status de "Em Processamento".';
+				SET @Mensagem = 'Não é possível excluir uma reserva que está iniciada.';
 
 				EXEC [dbo].[uspGravarLog]
 				@Json		= NULL,
@@ -107,7 +116,9 @@ INÍCIO: Atualizando tabela RESERVA:
 
 					UPDATE	RESERVA
 					SET
-							RES_EXCLUIDO_BIT = 1
+							 --2021-11-06: Correções #2
+							 RES_ST_RES_INT		= 4
+							,RES_EXCLUIDO_BIT	= 1
 					WHERE	RES_ID_INT = @IdReserva;
 
 				END TRY
