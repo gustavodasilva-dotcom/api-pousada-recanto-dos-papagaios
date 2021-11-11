@@ -204,7 +204,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             FROM		RESERVA AS R
             INNER JOIN	HOSPEDE AS H ON R.RES_HSP_ID_INT = H.HSP_ID_INT
             WHERE		RES_DATA_CHECKIN_DATE > GETDATE() - 1
-              AND		RES_ACO_ID_INT = {idAcomodacao};";
+              AND		RES_ACO_ID_INT = {idAcomodacao}
+              AND       RES_ST_RES_INT <> 4;";
 
             SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
 
