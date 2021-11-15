@@ -55,7 +55,8 @@ Verificando se existe, nos próximos três dias, reservas para o chalé em @IdAcomo
 		(
 			SELECT TOP 1 RES_DATA_CHECKOUT_DATE FROM #DATAS_DE_CHECKOUT
 		)
-		AND		RES_ACO_ID_INT = @IdAcomodacao;
+		AND		RES_ACO_ID_INT = @IdAcomodacao
+		AND		RES_ST_RES_INT = 1;
 
 /*************************************************************************************************************************************
 Caso seja nulo, colocar a acomodação (chalé) para "Disponível":
