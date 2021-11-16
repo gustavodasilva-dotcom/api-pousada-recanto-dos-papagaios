@@ -486,7 +486,7 @@ INÍCIO: Inserindo na tabela HOSPEDE.
 						@DataDeNascimento,
 						@IdEndereco,
 						@IdUsuario,
-						@IdEndereco,
+						@IdContatos,
 						0,
 						GETDATE()
 					);
