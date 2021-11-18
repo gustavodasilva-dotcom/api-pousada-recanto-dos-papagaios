@@ -358,7 +358,8 @@ namespace ApiPousadaRecantoDosPapagaios.Repositories
             $@" SELECT	RES_DATA_CHECKIN_DATE,
                 		RES_DATA_CHECKOUT_DATE
                 FROM	RESERVA
-                WHERE	RES_ACO_ID_INT = {reservaInsert.Acomodacao.Id};";
+                WHERE	RES_ACO_ID_INT = {reservaInsert.Acomodacao.Id}
+                  AND   RES_ST_RES_INT IN(1, 2);";
 
             var command = new SqlCommand(query, sqlConnection)
             {
