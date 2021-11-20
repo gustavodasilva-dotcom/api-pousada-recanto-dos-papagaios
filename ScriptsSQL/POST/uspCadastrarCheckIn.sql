@@ -1,4 +1,4 @@
-USE RECPAPAGAIOS
+USE RECPAPAGAIOS;
 GO
 
 CREATE PROCEDURE [dbo].[uspCadastrarCheckIn]
@@ -10,6 +10,10 @@ AS
 /*************************************************************************************************************************************
 Descrição: Procedure utilizada para executar o check-in sobre reservas (no momento, apenas na aplicação desktop).
 Data.....: 27/09/2021
+
+-- ALTERAÇÕES:
+-- Correção #01 (2021-11-20):
+-- Toda reserva que estiver com o status de pagamento diferente de "Aprovado", será atualizado para "Aprovado".
 *************************************************************************************************************************************/
 		SET NOCOUNT ON;
 /*************************************************************************************************************************************
@@ -194,16 +198,59 @@ Verificando os dados de pagamento da reserva:
 
 			IF @IdStatusPagamento <> 1
 			BEGIN
-				SET @Codigo = 409;
-				SET @Mensagem = 'A forma de pagamento selecionada para essa reserva foi ' + @DescricaoPagamento + ' e, no momento,' +
-								' encontra-se ' + @StatusPagamento + '.';
+				
+				-- Correção #01:
+				-- 2021-11-20
+				BEGIN TRANSACTION;
 
-				EXEC [dbo].[uspGravarLog]
-				@Json		= @CheckOutJson,
-				@Entidade	= @Entidade,
-				@Mensagem	= @Mensagem,
-				@Acao		= @Acao,
-				@StatusCode	= @Codigo;
+					BEGIN TRY;
+
+						UPDATE	PAGAMENTO_RESERVA
+						SET
+								PGTO_RES_ST_PGTO_ID_INT = 1
+						WHERE	PGTO_RES_RES_ID_INT = @IdReserva;
+
+					END TRY
+
+					BEGIN CATCH
+						
+						INSERT INTO LOGSERROS
+						(
+							 LOG_ERR_ERRORNUMBER_INT
+							,LOG_ERR_ERRORSEVERITY_INT
+							,LOG_ERR_ERRORSTATE_INT
+							,LOG_ERR_ERRORPROCEDURE_VARCHAR
+							,LOG_ERR_ERRORLINE_INT
+							,LOG_ERR_ERRORMESSAGE_VARCHAR
+							,LOG_ERR_DATE
+						)
+						SELECT
+							 ERROR_NUMBER()
+							,ERROR_SEVERITY()
+							,ERROR_STATE()
+							,ERROR_PROCEDURE()
+							,ERROR_LINE()
+							,ERROR_MESSAGE()
+							,GETDATE();
+
+						IF @@TRANCOUNT > 0 
+							ROLLBACK TRANSACTION;
+
+						SELECT @Codigo = ERROR_NUMBER();
+						SELECT @Mensagem = ERROR_MESSAGE();
+
+						EXEC [dbo].[uspGravarLog]
+						@Json		= @CheckOutJson,
+						@Entidade	= @Entidade,
+						@Mensagem	= @Mensagem,
+						@Acao		= @Acao,
+						@StatusCode	= @Codigo;
+
+					END CATCH;
+
+				IF @@TRANCOUNT > 0
+					COMMIT TRANSACTION;
+
 			END;
 
 		END;
