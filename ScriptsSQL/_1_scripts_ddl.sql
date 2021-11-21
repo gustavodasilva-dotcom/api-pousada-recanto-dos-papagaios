@@ -798,7 +798,115 @@ CREATE TABLE LOGSINTEGRACOES
 /****************************************************************************************************************************************
 INÍCIO: Criação de usuário padrão:
 ****************************************************************************************************************************************/
+-- Inserindo um funcionário:
+DECLARE @EnderecoFuncionarioID INT;
+DECLARE @UsuarioFuncionarioID INT;
+DECLARE @PerguntaSegurancaID INT;
+DECLARE @ContatoFuncionarioID INT;
+DECLARE @FuncionarioID INT;
+DECLARE @DadosBancariosID INT;
+DECLARE @ReservaID INT;
+DECLARE @PagamentoReservaID INT;
 
+INSERT INTO ENDERECO
+VALUES
+(
+	 '15370496'
+	,'Avenida Paulista'
+	,'123'
+	,''
+	,'São Paulo'
+	,'Sede'
+	,'SP'
+	,'Brasil'
+	,0
+	,GETDATE()
+);
+
+SET @EnderecoFuncionarioID = @@IDENTITY;
+
+SELECT * FROM ENDERECO WHERE END_ID_INT = @EnderecoFuncionarioID;
+
+INSERT INTO USUARIO
+VALUES
+(
+	 '12345678910'
+	,'admin'
+	,ENCRYPTBYPASSPHRASE('key', 'Admin123@')
+	,0
+	,GETDATE()
+);
+
+SET @UsuarioFuncionarioID = @@IDENTITY;
+
+SELECT * FROM USUARIO WHERE USU_ID_INT = @UsuarioFuncionarioID;
+
+INSERT INTO PERGUNTA_SEGURANCA
+VALUES
+(
+	 'Qual o nome do estabelecimento?'
+	,'Pousada Recanto dos Papagaios'
+	,@UsuarioFuncionarioID
+	,0
+	,GETDATE()
+);
+
+SET @PerguntaSegurancaID = @@IDENTITY;
+
+SELECT * FROM PERGUNTA_SEGURANCA WHERE PERG_SEG_ID_INT = @PerguntaSegurancaID;
+
+INSERT INTO CONTATOS
+VALUES
+(
+	 'admin@admin.com'
+	,'11900001111'
+	,'1120001111'
+	,0
+	,GETDATE()
+);
+
+SET @ContatoFuncionarioID = @@IDENTITY;
+
+SELECT * FROM CONTATOS WHERE CONT_ID_INT = @ContatoFuncionarioID;
+
+INSERT INTO FUNCIONARIO
+VALUES
+(
+	 'Admin'
+	,'12345678910'
+	,'Brasileiro'
+	,'2000-01-01'
+	,'O'
+	,'123456789'
+	,'Administrador'
+	,'Administração'
+	,1000
+	,@EnderecoFuncionarioID
+	,@UsuarioFuncionarioID
+	,2
+	,@ContatoFuncionarioID
+	,0
+	,GETDATE()
+);
+
+SET @FuncionarioID = @@IDENTITY;
+
+SELECT * FROM FUNCIONARIO WHERE FUNC_ID_INT = @FuncionarioID;
+
+INSERT INTO DADOSBANCARIOS
+VALUES
+(
+	 'Banco Teste'
+	,'00000'
+	,'1234567'
+	,@FuncionarioID
+	,0
+	,GETDATE()
+);
+
+SET @DadosBancariosID = @@IDENTITY;
+
+SELECT * FROM DADOSBANCARIOS WHERE DADOSBC_ID_INT = @DadosBancariosID;
 /****************************************************************************************************************************************
 FIM: Criação de usuário padrão.
 ****************************************************************************************************************************************/
